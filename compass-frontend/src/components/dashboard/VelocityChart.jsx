@@ -45,8 +45,7 @@ const CustomTooltip = ({ active, payload }) => {
         <p className="text-gray-500">
           Change:{' '}
           <span className={d.mastery_change >= 0 ? 'text-green-600 font-medium' : 'text-red-500 font-medium'}>
-            {d.mastery_change >= 0 ? '+' : ''}
-            {Math.round(d.mastery_change * 100)}%
+            {d.changeLabel}
           </span>
         </p>
       </div>
@@ -55,17 +54,19 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-const CustomLabel = ({ x, y, width, value, entry }) => {
-  const label = `${entry.mastery_change >= 0 ? '+' : ''}${Math.round(entry.mastery_change * 100)}%`;
+// Receives `value` = the changeLabel string, `isPositive` from the payload via dataKey
+const CustomLabel = ({ x, y, width, value }) => {
+  if (value === undefined || value === null) return null;
+  const isPositive = !String(value).startsWith('-');
   return (
     <text
       x={x + width + 6}
       y={y + 10}
-      fill={entry.mastery_change >= 0 ? '#16a34a' : '#dc2626'}
+      fill={isPositive ? '#16a34a' : '#dc2626'}
       fontSize={11}
       fontWeight={600}
     >
-      {label}
+      {value}
     </text>
   );
 };
@@ -77,6 +78,7 @@ export default function VelocityChart({ velocity }) {
     ...v,
     displayTopic: formatTopic(v.topic),
     absChange: Math.abs(v.mastery_change * 100),
+    changeLabel: `${v.mastery_change >= 0 ? '+' : ''}${Math.round(v.mastery_change * 100)}%`,
   }));
 
   return (
@@ -87,10 +89,7 @@ export default function VelocityChart({ velocity }) {
       <div className="flex items-center gap-4 mb-4 text-xs text-gray-500">
         {['improving', 'plateauing', 'regressing'].map((v) => (
           <span key={v} className="flex items-center gap-1">
-            <span
-              className="inline-block w-3 h-3 rounded"
-              style={{ background: COLORS[v] }}
-            />
+            <span className="inline-block w-3 h-3 rounded" style={{ background: COLORS[v] }} />
             {v.charAt(0).toUpperCase() + v.slice(1)}
           </span>
         ))}
@@ -118,7 +117,7 @@ export default function VelocityChart({ velocity }) {
             {data.map((entry, index) => (
               <Cell key={index} fill={COLORS[entry.velocity] || '#9ca3af'} />
             ))}
-            <LabelList content={<CustomLabel />} />
+            <LabelList dataKey="changeLabel" content={<CustomLabel />} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
