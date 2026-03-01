@@ -50,7 +50,7 @@ Recommended Approach When Struggling: {topic.get('remediation', 'N/A')}"""
         ids.append(topic["name"].lower().replace(" ", "_"))
         metadatas.append({"topic": topic["name"], "level": topic.get("level", "O-Level")})
 
-    collection.add(documents=documents, ids=ids, metadatas=metadatas)
+    collection.upsert(documents=documents, ids=ids, metadatas=metadatas)
     print(f"Embedded {len(documents)} topics into RAG database.")
 
 

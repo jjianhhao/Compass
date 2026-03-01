@@ -71,7 +71,7 @@ export const api = {
 
   getVelocity: async (studentId) => {
     if (USE_MOCK) { await delay(); return null; }
-    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/velocity`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/velocity`);
     if (!res.ok) return null;
     const data = await res.json();
     // Person B returns a dict keyed by topic name; convert to the array that VelocityChart expects

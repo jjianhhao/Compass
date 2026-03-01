@@ -197,7 +197,7 @@ export default function StudentDetail({ studentId }) {
               <tbody className="divide-y divide-gray-100">
                 {sortedTopics.map((t, i) => (
                   <tr key={i} className={t.mastery_score < 0.4 ? 'bg-red-50' : ''}>
-                    <td className="px-4 py-3 font-medium text-gray-800">{t.topic}</td>
+                    <td className="px-4 py-3 font-medium text-gray-800">{t.topic.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</td>
                     <td className="px-4 py-3 w-36">
                       <MasteryBar score={t.mastery_score} />
                     </td>

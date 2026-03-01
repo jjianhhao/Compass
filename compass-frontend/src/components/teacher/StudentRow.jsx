@@ -78,7 +78,7 @@ export default function StudentRow({ student, recStatus = 'pending' }) {
       <td className="px-4 py-3 text-sm text-gray-700">
         {weakest ? (
           <span>
-            {weakest.topic}{' '}
+            {weakest.topic.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}{' '}
             <span className="text-gray-400">({Math.round(weakest.mastery_score * 100)}%)</span>
           </span>
         ) : '—'}
