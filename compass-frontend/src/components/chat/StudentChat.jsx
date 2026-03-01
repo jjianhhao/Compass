@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, RotateCcw } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import ConfidenceBadge from '../shared/ConfidenceBadge';
 import { api, getAIResponseDirect } from '../../api/client';
 
@@ -13,14 +14,14 @@ const SUGGESTIONS = [
 const OPENAI_KEY = import.meta.env.VITE_OPENAI_KEY || '';
 
 export default function StudentChat({ knowledgeMap, studentName }) {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      role: 'ai',
-      text: `Hi ${studentName || 'there'}! I'm your AI learning companion. I can see your progress across all your A-Math topics. What would you like to know?`,
-      confidence: 'high',
-    },
-  ]);
+  const initialMessage = {
+    id: 1,
+    role: 'ai',
+    text: `Hi ${studentName || 'there'}! I'm your AI learning companion. I can see your progress across all your A-Math topics. What would you like to know?`,
+    confidence: 'high',
+  };
+
+  const [messages, setMessages] = useState([initialMessage]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const bottomRef = useRef(null);
@@ -69,15 +70,25 @@ export default function StudentChat({ knowledgeMap, studentName }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col h-[480px]">
-      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-        <div className="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center">
-          <Bot size={14} className="text-indigo-600" />
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col" style={{ height: 'calc(100vh - 160px)' }}>
+      <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center">
+            <Bot size={14} className="text-indigo-600" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-gray-800">AI Learning Companion</p>
+            <p className="text-xs text-gray-400">Powered by your knowledge map</p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold text-gray-800">AI Learning Companion</p>
-          <p className="text-xs text-gray-400">Powered by your knowledge map</p>
-        </div>
+        <button
+          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-200 px-2.5 py-1.5 rounded-lg transition-colors"
+          onClick={() => setMessages([{ ...initialMessage, id: Date.now() }])}
+          title="Clear chat history"
+        >
+          <RotateCcw size={11} />
+          New Chat
+        </button>
       </div>
 
       {/* Messages */}
@@ -99,7 +110,23 @@ export default function StudentChat({ knowledgeMap, studentName }) {
                     : 'bg-gray-100 text-gray-800 rounded-tl-sm'
                 }`}
               >
-                {msg.text}
+                {msg.role === 'ai' ? (
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                      strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                      em: ({ children }) => <em className="italic">{children}</em>,
+                      ul: ({ children }) => <ul className="list-disc list-inside space-y-1 mb-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 mb-2">{children}</ol>,
+                      li: ({ children }) => <li>{children}</li>,
+                      code: ({ children }) => <code className="bg-gray-200 rounded px-1 font-mono text-xs">{children}</code>,
+                    }}
+                  >
+                    {msg.text}
+                  </ReactMarkdown>
+                ) : (
+                  msg.text
+                )}
               </div>
               {msg.role === 'user' && (
                 <div className="flex items-center gap-1 justify-end mt-1 mr-1">

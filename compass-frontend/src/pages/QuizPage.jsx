@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import QuizInterface from '../components/quiz/QuizInterface';
 import allQuestions from '../data/questions.json';
 import { api } from '../api/client';
+import { saveInteraction } from '../api/localStore';
 
 export default function QuizPage() {
   const { studentId } = useParams();
@@ -24,10 +25,12 @@ export default function QuizPage() {
   }, [topicFilter]);
 
   const handleAnswer = async (answerData) => {
+    // Always save locally so dashboard updates immediately
+    saveInteraction(studentId, answerData);
     try {
       await api.logInteraction({ student_id: studentId, ...answerData });
     } catch {
-      // silently fail — interaction logging shouldn't block the quiz
+      // API not available — local store already saved it
     }
   };
 

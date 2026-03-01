@@ -96,7 +96,8 @@ export default function StudentDashboard({
           ))}
         </div>
 
-        {activeTab === 'overview' && (
+        {/* Overview tab — always mounted, hidden when not active */}
+        <div className={activeTab === 'overview' ? '' : 'hidden'}>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {/* Left: Knowledge map + Mastery + Velocity */}
             <div className="lg:col-span-3 flex flex-col gap-6">
@@ -126,13 +127,12 @@ export default function StudentDashboard({
               />
             </div>
           </div>
-        )}
+        </div>
 
-        {activeTab === 'chat' && (
-          <div className="max-w-2xl">
-            <StudentChat knowledgeMap={knowledgeMap} studentName={studentName} />
-          </div>
-        )}
+        {/* Chat tab — always mounted, hidden when not active */}
+        <div className={activeTab === 'chat' ? '' : 'hidden'}>
+          <StudentChat knowledgeMap={knowledgeMap} studentName={studentName} />
+        </div>
       </div>
     </div>
   );

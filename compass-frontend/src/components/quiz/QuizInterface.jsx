@@ -9,33 +9,48 @@ const formatTopic = (t) =>
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 
-// Normalise a string for loose comparison:
-// lowercase, collapse whitespace, strip spaces around operators
+// Normalise a string for loose comparison
 const normalise = (s) =>
   s
     .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim()
-    // allow "x=3" to match "x = 3"
-    .replace(/\s*([=+\-*/÷×<>])\s*/g, '$1')
-    // unify common alternatives
+    .replace(/\s+/g, '')          // strip ALL whitespace
     .replace(/×/g, '*')
     .replace(/÷/g, '/')
     .replace(/−/g, '-');
+
+// Split a product of bracketed factors like "(2x+5)(3x-2)" → ["(2x+5)","(3x-2)"]
+const splitFactors = (s) => {
+  const factors = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '(') { if (depth === 0) start = i; depth++; }
+    else if (s[i] === ')') {
+      depth--;
+      if (depth === 0) factors.push(s.slice(start, i + 1));
+    }
+  }
+  return factors.length > 1 ? factors.sort() : null;
+};
 
 const checkFreeText = (studentAnswer, correctAnswer) => {
   const a = normalise(studentAnswer);
   const b = normalise(correctAnswer);
   if (a === b) return true;
 
-  // Also accept if the student omitted "x =" prefix (e.g. "3" for "x = 3")
-  const bStripped = b.replace(/^[a-z]\s*=\s*/, '');
+  // Accept omitted "x=" prefix (e.g. "3" for "x=3")
+  const bStripped = b.replace(/^[a-z]=/, '');
   if (a === bStripped) return true;
 
-  // Accept answers separated by "or" / "and" in any order
-  const split = (str) => str.split(/\s*(or|and|,)\s*/i).filter(Boolean).sort();
-  const aParts = split(a);
-  const bParts = split(b);
+  // Accept bracketed factors in any order: (3x-2)(2x+5) == (2x+5)(3x-2)
+  const aFactors = splitFactors(a);
+  const bFactors = splitFactors(b);
+  if (aFactors && bFactors && JSON.stringify(aFactors) === JSON.stringify(bFactors)) return true;
+
+  // Accept "or"/"and" separated values in any order
+  const splitOr = (str) => str.split(/or|and|,/i).map(normalise).filter(Boolean).sort();
+  const aParts = splitOr(a);
+  const bParts = splitOr(b);
   if (aParts.length > 1 && JSON.stringify(aParts) === JSON.stringify(bParts)) return true;
 
   return false;
@@ -271,7 +286,18 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
             </span>
           </div>
 
-          <p className="text-gray-900 font-medium leading-relaxed mb-6">{current.question}</p>
+          <p className="text-gray-900 font-medium leading-relaxed mb-4">{current.question}</p>
+
+          {/* Diagram image (optional) */}
+          {current.diagram && (
+            <div className="mb-6 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center">
+              <img
+                src={current.diagram}
+                alt="Question diagram"
+                className="max-w-full max-h-72 object-contain p-2"
+              />
+            </div>
+          )}
 
           {/* MCQ options */}
           {!isFreeText && (
