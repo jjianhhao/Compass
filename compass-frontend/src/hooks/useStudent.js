@@ -1,6 +1,53 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../api/client';
 
+// --- Transforms between frontend flat format and Person A's backend schema ---
+
+const formatTopicName = (t) =>
+  t
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+
+/** Convert flat knowledgeMap → Person A's KnowledgeMap Pydantic schema */
+function toBackendKnowledgeMap(flatKM, studentId) {
+  const entries = Object.entries(flatKM);
+  return {
+    student_id: studentId || 'student_001',
+    topic_masteries: entries.map(([topic, data]) => ({
+      topic: formatTopicName(topic),
+      mastery_score: data.mastery_score,
+      velocity: data.velocity,
+      attempt_count: data.attempt_count || 0,
+      error_types: data.error_types || {},
+    })),
+    overall_mastery:
+      entries.reduce((sum, [, d]) => sum + d.mastery_score, 0) / entries.length,
+  };
+}
+
+/** Convert Person A's AgentPipelineOutput → shape RecommendationPanel expects */
+function fromBackendAgentOutput(raw) {
+  return {
+    diagnosis: raw.diagnosis?.root_cause_analysis || '',
+    plan: (raw.final_recommendations || []).map((rec, i) => ({
+      id: `rec_${String(i + 1).padStart(3, '0')}`,
+      topic: rec.topic.toLowerCase().replace(/ /g, '_'),
+      action: rec.action,
+      reasoning: rec.reasoning,
+      priority: rec.priority,
+      confidence: raw.overall_confidence || 'medium',
+    })),
+    study_plan_summary: raw.plan?.study_plan_summary || '',
+    evaluator_verdict: {
+      approved: raw.evaluator_verdict?.approved ?? true,
+      concerns: raw.evaluator_verdict?.concerns || [],
+    },
+    overall_confidence: raw.overall_confidence || 'medium',
+    reasoning_trail: raw.reasoning_trail || '',
+  };
+}
+
 const MOCK_KNOWLEDGE_MAP = {
   algebraic_manipulation: { mastery_score: 0.72, attempt_count: 15, velocity: 'improving' },
   quadratic_equations: { mastery_score: 0.58, attempt_count: 12, velocity: 'plateauing' },
@@ -81,29 +128,35 @@ export function useStudent(studentId) {
   const loadStudentData = useCallback(async () => {
     setLoading(true);
     setError(null);
+
+    // Step 1: Try Person B's engine, fall back to mock data
+    let resolvedKM;
+    let resolvedVel;
     try {
       const [km, vel] = await Promise.all([
         api.getKnowledgeMap(studentId),
         api.getVelocity(studentId),
       ]);
-
-      const resolvedKM = km || MOCK_KNOWLEDGE_MAP;
-      setKnowledgeMap(resolvedKM);
-      setVelocity(vel?.topics || vel || MOCK_VELOCITY);
-
-      try {
-        const diagnosis = await api.getDiagnosis(resolvedKM);
-        setAgentOutput(diagnosis || MOCK_AGENT_OUTPUT);
-      } catch {
-        setAgentOutput(MOCK_AGENT_OUTPUT);
-      }
+      resolvedKM = km || MOCK_KNOWLEDGE_MAP;
+      resolvedVel = vel?.topics || vel || MOCK_VELOCITY;
     } catch {
-      setKnowledgeMap(MOCK_KNOWLEDGE_MAP);
-      setVelocity(MOCK_VELOCITY);
-      setAgentOutput(MOCK_AGENT_OUTPUT);
-    } finally {
-      setLoading(false);
+      resolvedKM = MOCK_KNOWLEDGE_MAP;
+      resolvedVel = MOCK_VELOCITY;
     }
+
+    setKnowledgeMap(resolvedKM);
+    setVelocity(resolvedVel);
+
+    // Step 2: Always try Person A's diagnosis pipeline (even if Person B is down)
+    try {
+      const backendKM = toBackendKnowledgeMap(resolvedKM, studentId);
+      const raw = await api.getDiagnosis(backendKM);
+      setAgentOutput(raw ? fromBackendAgentOutput(raw) : MOCK_AGENT_OUTPUT);
+    } catch {
+      setAgentOutput(MOCK_AGENT_OUTPUT);
+    }
+
+    setLoading(false);
   }, [studentId]);
 
   useEffect(() => {
