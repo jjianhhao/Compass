@@ -63,3 +63,6 @@ htmlcov/
 # Misc
 *.bak
 *.tmp
+
+# Compass RAG database
+rag_db/
