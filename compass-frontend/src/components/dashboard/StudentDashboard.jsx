@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, BookOpen, Map, LogOut } from 'lucide-react';
+import { MessageSquare, BookOpen, LogOut, Map } from 'lucide-react';
 import MasteryOverview from './MasteryOverview';
 import RecommendationPanel from './RecommendationPanel';
 import VelocityChart from './VelocityChart';
 import StudentChat from '../chat/StudentChat';
+import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
 
 
 export default function StudentDashboard({
@@ -109,13 +110,8 @@ export default function StudentDashboard({
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               <div className="lg:col-span-3 flex flex-col gap-6">
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                  <h2 className="text-sm font-semibold text-gray-700 mb-1">Knowledge Map</h2>
-                  <p className="text-xs text-gray-400 mb-4">Topic dependency graph — Person B integration</p>
-                  <div className="h-48 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border-2 border-dashed border-indigo-200 flex flex-col items-center justify-center gap-2">
-                    <Map size={28} className="text-indigo-300" />
-                    <p className="text-sm text-indigo-400 font-medium">Knowledge graph coming soon</p>
-                    <p className="text-xs text-indigo-300">Connect Person B's graph component here</p>
-                  </div>
+                  <h2 className="text-sm font-semibold text-gray-700 mb-3">Knowledge Map</h2>
+                  <KnowledgeMapGraph knowledgeMap={knowledgeMap ?? {}} />
                 </div>
                 <MasteryOverview knowledgeMap={knowledgeMap} />
                 <VelocityChart velocity={velocity} />

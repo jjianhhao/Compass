@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import RecommendationReview from './RecommendationReview';
 import OverrideLog from './OverrideLog';
+import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
 
 function MasteryBar({ score, showPct = true }) {
   const pct = Math.round(score * 100);
@@ -212,11 +213,17 @@ export default function StudentDetail({ studentId }) {
             </table>
           </div>
 
-          {/* Knowledge map graph placeholder — Person B embeds their component here */}
-          <div className="bg-white rounded-xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-400">
-            <p className="font-medium text-gray-500 mb-1">Knowledge Map Graph</p>
-            <p className="text-xs">Person B's <code className="bg-gray-100 px-1 rounded">KnowledgeMapGraph</code> component goes here.</p>
-            <p className="text-xs mt-1">Props: topic graph nodes + edges + mastery scores</p>
+          {/* Knowledge map graph */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Prerequisite Dependency Graph</h3>
+            <KnowledgeMapGraph knowledgeMap={
+              Object.fromEntries(
+                (knowledgeMap?.topic_masteries ?? []).map(t => [
+                  t.topic.toLowerCase().replace(/ /g, '_'),
+                  { mastery_score: t.mastery_score, velocity: t.velocity, attempt_count: t.attempt_count }
+                ])
+              )
+            } />
           </div>
         </div>
 

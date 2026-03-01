@@ -87,17 +87,19 @@ export function computeVelocity(studentId, knowledgeMap, baseMockVelocity) {
     byTopic[i.topic].push(i);
   }
 
-  return Object.entries(byTopic).map(([topic, items]) => {
+  // Start with ALL base topics so we don't erase entries for topics not yet quizzed.
+  // Only update topics that have actual quiz interactions.
+  return baseMockVelocity.map((base) => {
+    const items = byTopic[base.topic];
+    if (!items || items.length === 0) return base; // no quiz data — keep base unchanged
+
     const correct = items.filter((i) => i.is_correct).length / items.length;
-    const base = baseMockVelocity.find((v) => v.topic === topic);
-    const baseChange = base?.mastery_change ?? 0;
-    // Blend the recorded mock change with the actual quiz delta
-    const quizDelta = correct - 0.5; // positive = doing better than 50%
-    const blendedChange = baseChange * 0.5 + quizDelta * 0.1;
+    const quizDelta = correct - 0.5;
+    const blendedChange = base.mastery_change * 0.5 + quizDelta * 0.1;
 
     return {
-      topic,
-      velocity: knowledgeMap[topic]?.velocity ?? 'plateauing',
+      topic: base.topic,
+      velocity: knowledgeMap[base.topic]?.velocity ?? base.velocity,
       mastery_change: Math.round(blendedChange * 100) / 100,
       data_points: items.length,
     };
