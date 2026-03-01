@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compass — Feature-Based Task Breakdown</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface-2: #1a2235;
+    --border: #2a3550;
+    --text: #e2e8f0;
+    --text-muted: #8896b3;
+    --accent-blue: #3b82f6;
+    --accent-cyan: #06b6d4;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --accent-violet: #8b5cf6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; padding: 40px 32px; }
+  .container { max-width: 1300px; margin: 0 auto; }
+  h1 {
+    font-size: 2.4rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .subtitle { color: var(--text-muted); margin-bottom: 12px; font-weight: 300; }
+  .principle {
+    background: var(--surface); border: 1px solid var(--accent-cyan); border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 32px; font-size: 0.9rem; line-height: 1.6; font-weight: 300;
+  }
+  .principle strong { color: var(--accent-cyan); }
+
+  /* Shared Contracts Section */
+  .contracts {
+    background: var(--surface); border: 1px solid var(--accent-amber); border-radius: 14px;
+    padding: 24px 28px; margin-bottom: 32px;
+  }
+  .contracts h2 { font-size: 1.2rem; font-weight: 600; color: var(--accent-amber); margin-bottom: 6px; }
+  .contracts .contracts-sub { font-size: 0.85rem; color: var(--text-muted); font-weight: 300; margin-bottom: 16px; }
+  .contract-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+  .contract-item {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+  }
+  .contract-item .ci-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600;
+    color: var(--accent-amber); margin-bottom: 4px;
+  }
+  .contract-item .ci-detail { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
+  .contract-item code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+    background: rgba(245,158,11,0.1); padding: 1px 5px; border-radius: 3px; color: var(--accent-amber);
+  }
+
+  /* Feature Cards */
+  .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 36px; }
+  .feature {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 24px 26px; position: relative; overflow: hidden;
+  }
+  .feature::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 14px 14px 0 0;
+  }
+  .feat-a::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-violet)); }
+  .feat-b::before { background: linear-gradient(90deg, var(--accent-emerald), var(--accent-cyan)); }
+  .feat-c::before { background: linear-gradient(90deg, var(--accent-amber), var(--accent-rose)); }
+  .feat-d::before { background: linear-gradient(90deg, var(--accent-rose), var(--accent-violet)); }
+
+  .feat-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .feat-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 5px; letter-spacing: 0.08em;
+  }
+  .feat-a .feat-badge { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+  .feat-b .feat-badge { background: rgba(16,185,129,0.15); color: var(--accent-emerald); }
+  .feat-c .feat-badge { background: rgba(245,158,11,0.15); color: var(--accent-amber); }
+  .feat-d .feat-badge { background: rgba(244,63,94,0.15); color: var(--accent-rose); }
+
+  .feat-title { font-size: 1.15rem; font-weight: 600; }
+  .feat-owner { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; margin-bottom: 4px; }
+  .feat-pitch {
+    font-size: 0.85rem; color: var(--accent-cyan); font-weight: 400;
+    margin-bottom: 14px; font-style: italic; line-height: 1.5;
+  }
+  .feat-scope {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted);
+    letter-spacing: 0.05em; margin-bottom: 10px;
+  }
+
+  .task-list { list-style: none; }
+  .task-list li {
+    padding: 7px 0; border-bottom: 1px solid rgba(42,53,80,0.4);
+    font-size: 0.85rem; line-height: 1.5; font-weight: 300;
+  }
+  .task-list li:last-child { border-bottom: none; }
+
+  .phase-label {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; padding: 2px 6px; border-radius: 4px;
+    margin-right: 6px; font-weight: 600; letter-spacing: 0.05em;
+  }
+  .ph-1 { background: rgba(6,182,212,0.15); color: var(--accent-cyan); }
+  .ph-2 { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+  .ph-3 { background: rgba(245,158,11,0.15); color: var(--accent-amber); }
+  .ph-4 { background: rgba(16,185,129,0.15); color: var(--accent-emerald); }
+  .ph-5 { background: rgba(244,63,94,0.15); color: var(--accent-rose); }
+
+  .feat-deliverable {
+    margin-top: 14px; padding: 12px 14px;
+    background: var(--surface-2); border: 1px dashed var(--border); border-radius: 8px;
+  }
+  .feat-deliverable .fd-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    color: var(--accent-emerald); letter-spacing: 0.06em; margin-bottom: 4px;
+  }
+  .feat-deliverable .fd-text { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
+
+  /* Timeline */
+  .timeline { margin-bottom: 32px; }
+  .timeline h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 16px; }
+  .tl-phase {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 22px; margin-bottom: 12px;
+  }
+  .tl-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .tl-time {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600;
+    padding: 4px 10px; border-radius: 6px; letter-spacing: 0.06em;
+    background: rgba(6,182,212,0.15); color: var(--accent-cyan);
+  }
+  .tl-name { font-size: 1rem; font-weight: 500; }
+  .tl-goal { font-size: 0.85rem; color: var(--text-muted); font-weight: 300; margin-bottom: 12px; line-height: 1.5; }
+  .tl-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tl-item {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; font-size: 0.78rem; font-weight: 300; line-height: 1.4;
+  }
+  .tl-item .tl-who {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; margin-bottom: 4px;
+  }
+  .tl-who.a { color: var(--accent-blue); }
+  .tl-who.b { color: var(--accent-emerald); }
+  .tl-who.c { color: var(--accent-amber); }
+  .tl-who.d { color: var(--accent-rose); }
+
+  /* Milestones */
+  .milestones {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 24px;
+  }
+  .milestones h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 14px; }
+  .ms {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 8px 0; border-bottom: 1px solid rgba(42,53,80,0.4);
+    font-size: 0.85rem; font-weight: 300; line-height: 1.5;
+  }
+  .ms:last-child { border-bottom: none; }
+  .ms-time {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600;
+    color: var(--accent-cyan); min-width: 72px; padding-top: 2px;
+  }
+
+  /* Demo Script */
+  .demo-script {
+    background: var(--surface); border: 1px solid var(--accent-violet); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 24px;
+  }
+  .demo-script h2 { font-size: 1.2rem; font-weight: 600; color: var(--accent-violet); margin-bottom: 14px; }
+  .persona {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .persona-name { font-weight: 500; font-size: 0.92rem; margin-bottom: 4px; }
+  .persona-detail { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
+
+  /* Risk */
+  .risks {
+    background: var(--surface); border: 1px solid var(--accent-rose); border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .risks h2 { font-size: 1.2rem; font-weight: 600; color: var(--accent-rose); margin-bottom: 14px; }
+  .risk {
+    padding: 8px 0; border-bottom: 1px solid rgba(42,53,80,0.4);
+    font-size: 0.85rem; font-weight: 300; line-height: 1.5;
+  }
+  .risk:last-child { border-bottom: none; }
+  .risk strong { color: var(--accent-rose); font-weight: 500; }
+  .risk em { color: var(--accent-emerald); font-style: normal; }
+
+  @media (max-width: 900px) {
+    .features { grid-template-columns: 1fr; }
+    .tl-grid { grid-template-columns: 1fr 1fr; }
+    .contract-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 1.8rem; }
+    body { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🧭 Compass — Feature-Based Task Breakdown</h1>
+<div class="subtitle">4 people × 48 hours • Each person owns a vertical slice • Microsoft Track • DLW 2026</div>
+
+<div class="principle">
+  <strong>Principle:</strong> Each person owns their feature end-to-end — backend logic, agent prompts (if applicable), and the frontend component that displays it. Build independently with mock data first, integrate at Hour 30. Nobody is blocked by anyone else. Use Claude Code and Cursor to move fast.
+</div>
+
+<!-- SHARED CONTRACTS -->
+<div class="contracts">
+  <h2>⚠️ Step Zero: Agree on These Contracts (First 30 Minutes)</h2>
+  <div class="contracts-sub">Before anyone writes a line of code, spend 30 minutes together defining these shared interfaces. This is what allows 4 independent streams to merge cleanly.</div>
+  <div class="contract-grid">
+    <div class="contract-item">
+      <div class="ci-name">1. INTERACTION EVENT</div>
+      <div class="ci-detail">The atomic unit of data. Every time a student answers a question:<br>
+      <code>student_id</code> <code>question_id</code> <code>topic</code> <code>subtopic</code> <code>difficulty</code> <code>student_answer</code> <code>correct_answer</code> <code>is_correct</code> <code>time_taken_sec</code> <code>timestamp</code></div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-name">2. KNOWLEDGE MAP</div>
+      <div class="ci-detail">Per-student state returned by the knowledge engine:<br>
+      <code>student_id</code> → array of <code>{ topic, subtopic, mastery_score (0-1), velocity (improving/plateau/regressing), last_practiced, attempt_count, prerequisite_status }</code></div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-name">3. AGENT OUTPUT</div>
+      <div class="ci-detail">What the agent pipeline returns:<br>
+      <code>diagnosis</code> (structured findings) + <code>recommendations</code> (actionable steps) + <code>reasoning_trail</code> (human-readable chain) + <code>confidence</code> (high/medium/low) + <code>evaluator_verdict</code> (approved/flagged)</div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-name">4. TOPIC GRAPH</div>
+      <div class="ci-detail">Prerequisite structure as JSON edge list:<br>
+      <code>{ "edges": [{"from": "differentiation", "to": "integration"}, ...] }</code><br>
+      + topic metadata: <code>{ "topic_id", "name", "subtopics": [...], "level" }</code></div>
+    </div>
+    <div class="contract-item">
+      <div class="ci-name">5. DEMO SUBJECT</div>
+      <div class="ci-detail">Decide NOW and don't change. Recommended: <strong>O-Level Additional Mathematics</strong> — Ajitesh teaches this, knows the pain points, can speak to it authentically in the pitch.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+
+  <!-- FEATURE A -->
+  <div class="feature feat-a">
+    <div class="feat-header">
+      <span class="feat-badge">FEATURE A</span>
+      <span class="feat-title">AI Diagnosis & Maker-Checker</span>
+    </div>
+    <div class="feat-owner">Owner: Ajitesh (You)</div>
+    <div class="feat-pitch">"The AI brain that diagnoses learning gaps, generates recommendations, and audits itself before speaking."</div>
+    <div class="feat-scope">SCOPE: 3-Agent Pipeline + RAG + Reasoning Trails + Confidence Scoring</div>
+    <ul class="task-list">
+      <li><span class="phase-label ph-1">HR 0-2</span> Set up Azure OpenAI / OpenAI API. Define JSON output schemas for each agent. Write initial system prompts.</li>
+      <li><span class="phase-label ph-1">HR 2-6</span> Build Diagnosis Agent: takes a knowledge map JSON → outputs structured diagnosis (topic weaknesses, error type classification, root cause analysis via prerequisite check). Test with mock knowledge map data.</li>
+      <li><span class="phase-label ph-2">HR 6-12</span> Build Planner Agent: takes diagnosis → outputs actionable study plan with specific topics, difficulty, reasoning. Ground with RAG — embed the syllabus topic structure from Person B's graph into a vector store or context window.</li>
+      <li><span class="phase-label ph-2">HR 12-18</span> Build Evaluator Agent (maker-checker): independently reviews diagnosis + plan. Checks consistency with data, validates confidence levels, flags potential bias. Build the pipeline: Diagnosis → Planner → Evaluator → approved output OR flagged for adjustment.</li>
+      <li><span class="phase-label ph-3">HR 18-24</span> Implement error classification: for each wrong answer, LLM classifies as conceptual gap / careless mistake / time-pressure error based on question type + time taken + topic mastery context.</li>
+      <li><span class="phase-label ph-3">HR 24-30</span> Build your frontend component: a "Diagnosis & Recommendations" panel that shows the reasoning trail, confidence badges, error classifications, and evaluator verdict. This is what appears on both the student and teacher dashboards.</li>
+      <li><span class="phase-label ph-4">HR 30-36</span> Integration: connect to Person B's live knowledge engine (replace mock data). Connect your output to Person C's student dashboard and Person D's teacher dashboard.</li>
+      <li><span class="phase-label ph-4">HR 36-42</span> Polish: edge cases (new student with 0 data, student who's mastered everything, conflicting signals). Ensure reasoning trails read naturally. Tune prompts based on demo personas.</li>
+      <li><span class="phase-label ph-5">HR 42-48</span> Code freeze. Demo rehearsal. Help with pitch — explain the technical architecture to judges.</li>
+    </ul>
+    <div class="feat-deliverable">
+      <div class="fd-label">✅ DEMO MOMENT</div>
+      <div class="fd-text">Judge sees: Student has been struggling with integration. The Diagnosis Agent explains WHY (prerequisite gap in differentiation), the Planner suggests a specific action, the Evaluator confirms with "high confidence — validated against 12 data points." The reasoning trail is visible. The judge can read the AI's full thought process.</div>
+    </div>
+  </div>
+
+  <!-- FEATURE B -->
+  <div class="feature feat-b">
+    <div class="feat-header">
+      <span class="feat-badge">FEATURE B</span>
+      <span class="feat-title">Knowledge State Engine & Topic Graph</span>
+    </div>
+    <div class="feat-owner">Owner: Teammate B</div>
+    <div class="feat-pitch">"The living model of what a student knows right now — with prerequisite tracking and learning velocity."</div>
+    <div class="feat-scope">SCOPE: Mastery Tracker + Prerequisite DAG + Learning Velocity + Data Layer + API</div>
+    <ul class="task-list">
+      <li><span class="phase-label ph-1">HR 0-2</span> Set up Python project + FastAPI. Define the interaction event schema and knowledge map response schema (from the shared contracts).</li>
+      <li><span class="phase-label ph-1">HR 2-6</span> Build the O-Level A-Math topic prerequisite graph as a NetworkX DAG. Cover ~15-20 topics with clear prerequisite edges. Store as JSON. Create topic metadata (name, subtopics, difficulty tier).</li>
+      <li><span class="phase-label ph-2">HR 6-12</span> Implement mastery tracker: per-topic score (0-1) that goes up when student answers correctly, down when wrong, weighted by question difficulty. Add temporal decay — mastery decreases towards a baseline if the student hasn't practiced in N days.</li>
+      <li><span class="phase-label ph-2">HR 12-18</span> Implement learning velocity: sliding window over last N attempts per topic. Calculate rate of change. Classify as improving / plateauing / regressing. Store velocity history for trend visualization.</li>
+      <li><span class="phase-label ph-3">HR 18-24</span> Implement prerequisite propagation: when a student is weak at Topic X, traverse the prerequisite graph to check foundational topics. Flag if root cause is upstream. Build the API endpoints: POST /interaction, GET /student/{id}/knowledge-map, GET /student/{id}/velocity, GET /topics/graph.</li>
+      <li><span class="phase-label ph-3">HR 24-30</span> Build your frontend component: the Knowledge Map Visualization. An interactive topic graph/tree where each node is colored by mastery (green ≥0.7, yellow 0.4-0.7, red <0.4). Show prerequisite edges. Show velocity indicators (↑ ↓ →) on each topic. This is the visual centerpiece of the student dashboard.</li>
+      <li><span class="phase-label ph-4">HR 30-36</span> Generate synthetic student data: create 3 demo personas with 30-50 pre-loaded interactions each, showing realistic patterns (improving student, struggling student, returning-after-break student). Integration with Ajitesh's agent pipeline.</li>
+      <li><span class="phase-label ph-4">HR 36-42</span> Polish: ensure decay works visually (demo the "student returns after 3 weeks" scenario). Edge case handling. API stability.</li>
+      <li><span class="phase-label ph-5">HR 42-48</span> Code freeze. Demo rehearsal.</li>
+    </ul>
+    <div class="feat-deliverable">
+      <div class="fd-label">✅ DEMO MOMENT</div>
+      <div class="fd-text">Judge sees: A beautiful topic graph where some nodes are green, some yellow, some red. Clicking a red node (e.g., "Integration by Parts") shows that its prerequisite ("Basic Integration") is also yellow — revealing the root cause. Learning velocity arrows show the student is improving in algebra but plateauing in calculus. The judge immediately understands "this isn't just a gradebook."</div>
+    </div>
+  </div>
+
+  <!-- FEATURE C -->
+  <div class="feature feat-c">
+    <div class="feat-header">
+      <span class="feat-badge">FEATURE C</span>
+      <span class="feat-title">Student Experience & Quiz Interface</span>
+    </div>
+    <div class="feat-owner">Owner: Teammate C</div>
+    <div class="feat-pitch">"Where the student interacts — answering questions, seeing their progress, and having a conversation with the AI about their learning."</div>
+    <div class="feat-scope">SCOPE: Quiz UI + Student Dashboard Shell + Chat + Student Override + Sample Questions</div>
+    <ul class="task-list">
+      <li><span class="phase-label ph-1">HR 0-2</span> Scaffold React app (use Cursor). Set up routing: /quiz, /student/dashboard, /teacher/dashboard. Choose a clean UI library (shadcn/ui or Tailwind).</li>
+      <li><span class="phase-label ph-1">HR 2-6</span> Build the quiz interface: display a math question → student selects/types answer → submit → show correct/incorrect → auto-log the interaction event to the backend. Include a timer per question (captures time_taken).</li>
+      <li><span class="phase-label ph-2">HR 6-12</span> Create 30-50 sample O-Level A-Math questions across key topics (use your tutoring knowledge + Claude/Cursor to generate). Tag each with: topic, subtopic, difficulty, correct_answer. Store as JSON.</li>
+      <li><span class="phase-label ph-2">HR 12-18</span> Build the Student Dashboard shell: layout with panels for Knowledge Map (from Person B), Recommendations (from Person A), Learning Velocity chart, and "What to Study Next" summary. Use mock data initially.</li>
+      <li><span class="phase-label ph-3">HR 18-24</span> Build the chat interface: student can ask "Why am I struggling with trigonometry?" → sends their knowledge map context to an LLM → returns a grounded, personalized explanation with confidence level shown.</li>
+      <li><span class="phase-label ph-3">HR 24-30</span> Build student override flow: student sees a recommendation → clicks "I already know this" or "I revised this offline" → system logs the override → recalibrates (or flags for teacher review). Visual feedback on override.</li>
+      <li><span class="phase-label ph-4">HR 30-36</span> Integration: connect quiz to Person B's POST /interaction endpoint. Connect dashboard panels to Person B's knowledge map and Person A's agent outputs. Replace all mock data with live data.</li>
+      <li><span class="phase-label ph-4">HR 36-42</span> Polish: loading states, error handling, responsive design, animations on mastery changes. Make the quiz feel good to use.</li>
+      <li><span class="phase-label ph-5">HR 42-48</span> Code freeze. Demo rehearsal.</li>
+    </ul>
+    <div class="feat-deliverable">
+      <div class="fd-label">✅ DEMO MOMENT</div>
+      <div class="fd-text">Judge sees: A student answers 5 questions on the quiz. The dashboard updates in real-time — mastery scores shift, learning velocity arrows change, and a new recommendation appears with a full reasoning trail. The student asks the chat: "Why do I keep getting integration wrong?" and gets a personalized, grounded answer. The student clicks "I already revised this" on a recommendation and the system acknowledges it.</div>
+    </div>
+  </div>
+
+  <!-- FEATURE D -->
+  <div class="feature feat-d">
+    <div class="feat-header">
+      <span class="feat-badge">FEATURE D</span>
+      <span class="feat-title">Teacher Experience & Presentation</span>
+    </div>
+    <div class="feat-owner">Owner: Teammate D</div>
+    <div class="feat-pitch">"Where the human stays in control — the teacher sees everything, approves or rejects AI suggestions, and the story we tell the judges."</div>
+    <div class="feat-scope">SCOPE: Teacher Dashboard + Human-in-the-Loop + Responsible AI Docs + Pitch Deck + Demo Script</div>
+    <ul class="task-list">
+      <li><span class="phase-label ph-1">HR 0-2</span> Start drafting the pitch deck outline: Problem → Solution → Architecture → Demo → Responsible AI → Team Story. Identify the narrative arc.</li>
+      <li><span class="phase-label ph-1">HR 2-6</span> Build the Teacher Dashboard — Class Overview: table/cards showing all students with summary mastery, weakest topic, learning velocity, last active. Sort/filter by concern level. Use mock data.</li>
+      <li><span class="phase-label ph-2">HR 6-12</span> Build per-student drilldown: teacher clicks a student → sees their full knowledge map + AI diagnosis + recommended next actions. Build the ACCEPT / MODIFY / REJECT buttons for each recommendation.</li>
+      <li><span class="phase-label ph-2">HR 12-18</span> Implement the human-in-the-loop flow end-to-end: teacher rejects a recommendation → system logs the override with teacher's reason → AI acknowledges ("Teacher overrode: student revised this topic externally") → recommendation is removed/adjusted. Show an override history log.</li>
+      <li><span class="phase-label ph-3">HR 18-24</span> Design the 3 demo personas and pre-load their data:<br>
+        <strong>Persona 1:</strong> Strong student plateauing on advanced topics — system detects velocity stalling.<br>
+        <strong>Persona 2:</strong> Weak student with foundational gaps — prerequisite graph reveals root cause.<br>
+        <strong>Persona 3:</strong> Student returning after 3-week break — temporal decay shows honestly reduced mastery.</li>
+      <li><span class="phase-label ph-3">HR 24-30</span> Write the Responsible AI section of the pitch: concrete examples from the system for each point (explainability, consistency, bias/fairness, privacy, human agency). Not abstract — show screenshots and specific scenarios.</li>
+      <li><span class="phase-label ph-4">HR 30-36</span> Integration: connect teacher dashboard to live backend. Finalize pitch deck with real screenshots from the working system. Script the exact demo flow (which clicks, which personas, what to highlight).</li>
+      <li><span class="phase-label ph-4">HR 36-42</span> Demo rehearsal × 3. Time it. Prepare for Q&A — anticipate judge questions: "What if the AI is wrong?" "How do you handle privacy?" "Can this scale?" "What about subjects other than math?"</li>
+      <li><span class="phase-label ph-5">HR 42-48</span> Final pitch polish. Record video if required. Submit to Devpost. README for GitHub.</li>
+    </ul>
+    <div class="feat-deliverable">
+      <div class="fd-label">✅ DEMO MOMENT</div>
+      <div class="fd-text">Judge sees: Teacher opens class overview → spots a struggling student (red indicators) → clicks in → sees the AI's diagnosis with full reasoning trail → AI suggests "Go back to foundational topic X" → Teacher thinks about it, agrees, clicks ACCEPT. Then shows another scenario where the teacher REJECTS a suggestion and writes "Student told me they revised this at home" → system adjusts. The judge thinks: "The human is always in control."</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline">
+<h2>⏱ 48-Hour Timeline</h2>
+
+<div class="tl-phase">
+  <div class="tl-header">
+    <span class="tl-time">HR 0-6</span>
+    <span class="tl-name">Foundation — Everyone Builds Independently</span>
+  </div>
+  <div class="tl-goal">Goal: Each person has their feature scaffolded with mock data. Shared contracts are agreed.</div>
+  <div class="tl-grid">
+    <div class="tl-item"><div class="tl-who a">AJITESH</div>Azure/OpenAI setup. Agent system prompts drafted. Diagnosis Agent working with mock knowledge map.</div>
+    <div class="tl-item"><div class="tl-who b">PERSON B</div>FastAPI scaffolded. Topic graph built in NetworkX. Mastery tracker started.</div>
+    <div class="tl-item"><div class="tl-who c">PERSON C</div>React app scaffolded. Quiz interface working (displays question, captures answer + time).</div>
+    <div class="tl-item"><div class="tl-who d">PERSON D</div>Pitch outline done. Teacher class overview UI built with mock student data.</div>
+  </div>
+</div>
+
+<div class="tl-phase">
+  <div class="tl-header">
+    <span class="tl-time">HR 6-18</span>
+    <span class="tl-name">Core Build — Make Each Feature Work</span>
+  </div>
+  <div class="tl-goal">Goal: Each person can independently demo their feature end-to-end with mock data.</div>
+  <div class="tl-grid">
+    <div class="tl-item"><div class="tl-who a">AJITESH</div>Planner Agent + Evaluator Agent built. Full pipeline working: mock data in → structured diagnosis + recommendations + reasoning trail out.</div>
+    <div class="tl-item"><div class="tl-who b">PERSON B</div>Mastery tracker + velocity working. Prerequisite propagation working. API endpoints live. Sample questions created.</div>
+    <div class="tl-item"><div class="tl-who c">PERSON C</div>Student dashboard with all panels (mock data). 30+ sample questions tagged and loaded. Quiz logs interactions.</div>
+    <div class="tl-item"><div class="tl-who d">PERSON D</div>Teacher drilldown + accept/modify/reject flow working (mock data). Human-in-the-loop flow complete.</div>
+  </div>
+</div>
+
+<div class="tl-phase">
+  <div class="tl-header">
+    <span class="tl-time">HR 18-30</span>
+    <span class="tl-name">Depth & Differentiation</span>
+  </div>
+  <div class="tl-goal">Goal: Features are polished individually. Error classification, chat, RAG, override logging, demo personas all done.</div>
+  <div class="tl-grid">
+    <div class="tl-item"><div class="tl-who a">AJITESH</div>Error classification added. RAG with syllabus data. Confidence scoring. Reasoning trails polished. Frontend panel for diagnosis display built.</div>
+    <div class="tl-item"><div class="tl-who b">PERSON B</div>Prerequisite propagation. Synthetic demo personas generated. Knowledge map visualization (topic graph) built. Temporal decay implemented.</div>
+    <div class="tl-item"><div class="tl-who c">PERSON C</div>Chat interface. Student override flow. Learning velocity chart. Dashboard polish.</div>
+    <div class="tl-item"><div class="tl-who d">PERSON D</div>3 demo personas designed. Responsible AI documentation written. Pitch deck halfway done. Override history log built.</div>
+  </div>
+</div>
+
+<div class="tl-phase">
+  <div class="tl-header">
+    <span class="tl-time">HR 30-40</span>
+    <span class="tl-name">Integration & Polish</span>
+  </div>
+  <div class="tl-goal">Goal: All 4 features connected. Full flow works end-to-end with real data. Demo-able.</div>
+  <div class="tl-grid">
+    <div class="tl-item"><div class="tl-who a">AJITESH</div>Connect agent pipeline to live knowledge engine. Tune prompts for demo personas. Edge case handling.</div>
+    <div class="tl-item"><div class="tl-who b">PERSON B</div>Ensure API serves all consumers correctly. Load demo persona data. Stability and performance.</div>
+    <div class="tl-item"><div class="tl-who c">PERSON C</div>Replace all mock data with live APIs. UI polish, loading states, error handling.</div>
+    <div class="tl-item"><div class="tl-who d">PERSON D</div>Connect teacher dashboard to live data. Pitch deck with real screenshots. Script the demo flow exactly.</div>
+  </div>
+</div>
+
+<div class="tl-phase">
+  <div class="tl-header">
+    <span class="tl-time">HR 40-48</span>
+    <span class="tl-name">Code Freeze → Demo → Submit</span>
+  </div>
+  <div class="tl-goal">Goal: Code frozen at Hour 40. Last 8 hours = demo rehearsal, pitch polish, submission.</div>
+  <div class="tl-grid">
+    <div class="tl-item"><div class="tl-who a">AJITESH</div>Code freeze. Demo rehearsal. Prepare to explain architecture and agent design to judges.</div>
+    <div class="tl-item"><div class="tl-who b">PERSON B</div>Code freeze. Write technical README. Ensure demo data is stable and loaded.</div>
+    <div class="tl-item"><div class="tl-who c">PERSON C</div>Code freeze. Final UI screenshots for pitch. Ensure demo environment stable.</div>
+    <div class="tl-item"><div class="tl-who d">PERSON D</div>Lead 3+ demo rehearsals. Time the pitch. Record video if needed. Submit to Devpost. Final polish.</div>
+  </div>
+</div>
+
+</div>
+
+<!-- MILESTONES -->
+<div class="milestones">
+  <h2>✅ Critical Milestones</h2>
+  <div class="ms"><span class="ms-time">Hour 0</span> 30-minute team sync: agree on all 5 shared contracts. Then split and GO.</div>
+  <div class="ms"><span class="ms-time">Hour 6</span> Each person can show their feature scaffolded and working with mock data. Quick 10-min sync call.</div>
+  <div class="ms"><span class="ms-time">Hour 18</span> Each person can demo their feature independently. This is the "are we on track?" checkpoint. 15-min sync.</div>
+  <div class="ms"><span class="ms-time">Hour 30</span> INTEGRATION STARTS. All features connect to each other. Full flow works end-to-end. This is the most critical sync.</div>
+  <div class="ms"><span class="ms-time">Hour 36</span> Full demo flow works with demo personas. Pitch deck has real screenshots. If it doesn't work at Hour 36, cut scope.</div>
+  <div class="ms"><span class="ms-time">Hour 40</span> 🔴 CODE FREEZE. Nothing new after this. Only bug fixes for demo stability.</div>
+  <div class="ms"><span class="ms-time">Hour 44</span> Demo rehearsed 3+ times. All team members can explain any part of the system.</div>
+  <div class="ms"><span class="ms-time">Hour 48</span> Submitted. Done. Breathe.</div>
+</div>
+
+<!-- DEMO PERSONAS -->
+<div class="demo-script">
+  <h2>🎭 Demo Personas — Pre-Build These</h2>
+  <div class="persona">
+    <div class="persona-name">📊 Sarah — The Plateauing High-Achiever</div>
+    <div class="persona-detail">Strong student (80%+ in most topics). But her velocity on "Integration" topics has flatlined for 2 weeks. System detects the plateau, classifies her errors as time-pressure (she knows the method but takes too long), and recommends timed practice drills instead of more theory. Shows the system is nuanced — not every struggle needs the same intervention.</div>
+  </div>
+  <div class="persona">
+    <div class="persona-name">🔴 James — The Foundational Gap Student</div>
+    <div class="persona-detail">Struggling with "Trigonometric Identities" (35% accuracy). The prerequisite graph reveals his "Algebraic Manipulation" mastery is also low (45%). The Diagnosis Agent traces the root cause: "Your struggles with trig identities may stem from weak algebraic manipulation — the prerequisite topic." Recommends going back to basics first. This is the killer demo moment — it's exactly what a real tutor would do.</div>
+  </div>
+  <div class="persona">
+    <div class="persona-name">⏸️ Aisha — The Returning Student</div>
+    <div class="persona-detail">Was active 3 weeks ago, disappeared, just came back. Temporal decay has honestly reduced her mastery estimates. System says: "Welcome back! Your estimated mastery in these topics has decreased due to time away. We recommend a quick diagnostic to see where you actually are right now." The system doesn't pretend she still knows everything — it's honest, and it's kind about it.</div>
+  </div>
+</div>
+
+<!-- RISKS -->
+<div class="risks">
+  <h2>🚨 Risks & Mitigations</h2>
+  <div class="risk"><strong>Risk:</strong> Integration at Hour 30 fails — APIs don't match. <em>Mitigation:</em> Agree on exact JSON schemas at Hour 0. Each person validates their output matches the contract before integration.</div>
+  <div class="risk"><strong>Risk:</strong> Azure setup takes too long. <em>Mitigation:</em> Have a fallback — use OpenAI API directly with your $100 credits. Azure is nicer for the Microsoft judges but the agents work the same either way.</div>
+  <div class="risk"><strong>Risk:</strong> Agent outputs are inconsistent / hallucinate. <em>Mitigation:</em> Use structured output (JSON mode). Pin the prompts early. The Evaluator Agent is literally your safety net — that's why you built it.</div>
+  <div class="risk"><strong>Risk:</strong> Scope creep — someone tries to add a feature at Hour 35. <em>Mitigation:</em> Code freeze at Hour 40 is non-negotiable. If it's not working by Hour 36, cut it, don't fix it.</div>
+  <div class="risk"><strong>Risk:</strong> Demo breaks live on stage. <em>Mitigation:</em> Person D pre-records a backup demo video. Have screenshots in the pitch deck as fallback. Pre-load all demo data so you're not dependent on real-time API calls.</div>
+</div>
+
+</div>
+</body>
+</html>
