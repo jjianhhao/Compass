@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, ChevronRight, Trophy, RotateCcw } from 'lucide-react';
+import { Clock, ChevronRight, Trophy, RotateCcw, CheckCircle, XCircle } from 'lucide-react';
 import QuestionCard from './QuestionCard';
+import MathInput from './MathInput';
 
 const formatTopic = (t) =>
   t
@@ -9,11 +10,45 @@ const formatTopic = (t) =>
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 
+// Normalise a string for loose comparison:
+// lowercase, collapse whitespace, strip spaces around operators
+const normalise = (s) =>
+  s
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+    // allow "x=3" to match "x = 3"
+    .replace(/\s*([=+\-*/÷×<>])\s*/g, '$1')
+    // unify common alternatives
+    .replace(/×/g, '*')
+    .replace(/÷/g, '/')
+    .replace(/−/g, '-');
+
+const checkFreeText = (studentAnswer, correctAnswer) => {
+  const a = normalise(studentAnswer);
+  const b = normalise(correctAnswer);
+  if (a === b) return true;
+
+  // Also accept if the student omitted "x =" prefix (e.g. "3" for "x = 3")
+  const bStripped = b.replace(/^[a-z]\s*=\s*/, '');
+  if (a === bStripped) return true;
+
+  // Accept answers separated by "or" / "and" in any order
+  const split = (str) => str.split(/\s*(or|and|,)\s*/i).filter(Boolean).sort();
+  const aParts = split(a);
+  const bParts = split(b);
+  if (aParts.length > 1 && JSON.stringify(aParts) === JSON.stringify(bParts)) return true;
+
+  return false;
+};
+
 export default function QuizInterface({ questions, studentId, onAnswer, onComplete }) {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selected, setSelected] = useState(null);
+  const [selectedMCQ, setSelectedMCQ] = useState(null);
+  const [freeTextInput, setFreeTextInput] = useState('');
   const [answered, setAnswered] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(null);
   const [timer, setTimer] = useState(0);
   const [results, setResults] = useState([]);
   const [showSummary, setShowSummary] = useState(false);
@@ -21,6 +56,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
   const startTimeRef = useRef(Date.now());
 
   const current = questions[currentIndex];
+  const isFreeText = current?.type === 'free_text';
 
   const startTimer = useCallback(() => {
     clearInterval(timerRef.current);
@@ -36,12 +72,16 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
     return () => clearInterval(timerRef.current);
   }, [currentIndex, startTimer]);
 
-  const handleSelect = (option) => {
+  const submitAnswer = (studentAnswer) => {
     if (answered) return;
     clearInterval(timerRef.current);
     const timeTaken = Math.floor((Date.now() - startTimeRef.current) / 1000);
-    const isCorrect = option === current.correct_answer;
-    setSelected(option);
+
+    const correct = isFreeText
+      ? checkFreeText(studentAnswer, current.correct_answer)
+      : studentAnswer === current.correct_answer;
+
+    setIsCorrect(correct);
     setAnswered(true);
 
     const answerData = {
@@ -49,9 +89,10 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
       topic: current.topic,
       subtopic: current.subtopic,
       difficulty: current.difficulty,
-      student_answer: option,
+      type: current.type,
+      student_answer: studentAnswer,
       correct_answer: current.correct_answer,
-      is_correct: isCorrect,
+      is_correct: correct,
       time_taken_sec: timeTaken,
       timestamp: new Date().toISOString(),
     };
@@ -60,20 +101,36 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
     onAnswer?.(answerData);
   };
 
+  const handleMCQSelect = (option) => {
+    if (answered) return;
+    setSelectedMCQ(option);
+    submitAnswer(option);
+  };
+
+  const handleFreeTextSubmit = () => {
+    if (!freeTextInput.trim() || answered) return;
+    submitAnswer(freeTextInput.trim());
+  };
+
   const handleNext = () => {
     if (currentIndex + 1 >= questions.length) {
       setShowSummary(true);
     } else {
       setCurrentIndex((i) => i + 1);
-      setSelected(null);
+      setSelectedMCQ(null);
+      setFreeTextInput('');
       setAnswered(false);
+      setIsCorrect(null);
     }
   };
 
+  // ── Summary screen ──────────────────────────────────────────────
   if (showSummary) {
-    const correct = results.filter((r) => r.is_correct).length;
+    const correctCount = results.filter((r) => r.is_correct).length;
     const total = results.length;
     const totalTime = results.reduce((sum, r) => sum + r.time_taken_sec, 0);
+    const percentage = Math.round((correctCount / total) * 100);
+
     const topicBreakdown = results.reduce((acc, r) => {
       if (!acc[r.topic]) acc[r.topic] = { correct: 0, total: 0 };
       acc[r.topic].total += 1;
@@ -81,18 +138,14 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
       return acc;
     }, {});
 
-    const percentage = Math.round((correct / total) * 100);
-
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-lg">
           <div className="text-center mb-6">
             <Trophy className="mx-auto text-yellow-400 mb-3" size={48} />
             <h1 className="text-2xl font-bold text-gray-900">Quiz Complete!</h1>
-            <div className="text-5xl font-bold mt-3 mb-1">
-              <span className={percentage >= 70 ? 'text-green-500' : percentage >= 50 ? 'text-yellow-500' : 'text-red-500'}>
-                {correct}/{total}
-              </span>
+            <div className={`text-5xl font-bold mt-3 mb-1 ${percentage >= 70 ? 'text-green-500' : percentage >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
+              {correctCount}/{total}
             </div>
             <p className="text-gray-500 text-sm">
               {percentage}% correct · {Math.floor(totalTime / 60)}m {totalTime % 60}s total
@@ -127,8 +180,10 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
               className="flex-1 flex items-center justify-center gap-2 border border-indigo-200 text-indigo-600 text-sm font-medium py-2.5 rounded-xl hover:bg-indigo-50 transition-colors"
               onClick={() => {
                 setCurrentIndex(0);
-                setSelected(null);
+                setSelectedMCQ(null);
+                setFreeTextInput('');
                 setAnswered(false);
+                setIsCorrect(null);
                 setResults([]);
                 setShowSummary(false);
               }}
@@ -150,6 +205,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
     );
   }
 
+  // ── Question screen ─────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
       <div className="w-full max-w-xl">
@@ -183,8 +239,8 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
         {/* Question Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
-          {/* Topic badge */}
-          <div className="flex items-center gap-2 mb-4">
+          {/* Topic badges */}
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
             <span className="text-xs bg-indigo-50 text-indigo-600 font-medium px-2.5 py-1 rounded-full">
               {formatTopic(current.topic)}
             </span>
@@ -197,35 +253,73 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
             }`}>
               {current.difficulty}
             </span>
+            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+              isFreeText ? 'bg-purple-50 text-purple-600' : 'bg-gray-50 text-gray-500'
+            }`}>
+              {isFreeText ? '✏️ Free text' : '☑ MCQ'}
+            </span>
           </div>
 
           <p className="text-gray-900 font-medium leading-relaxed mb-6">{current.question}</p>
 
-          <div className="space-y-2.5">
-            {current.options.map((option, i) => (
-              <QuestionCard
-                key={i}
-                option={option}
-                index={i}
-                selected={selected}
-                correct={current.correct_answer}
-                answered={answered}
-                onClick={() => handleSelect(option)}
-              />
-            ))}
-          </div>
+          {/* MCQ options */}
+          {!isFreeText && (
+            <div className="space-y-2.5">
+              {current.options.map((option, i) => (
+                <QuestionCard
+                  key={i}
+                  option={option}
+                  index={i}
+                  selected={selectedMCQ}
+                  correct={current.correct_answer}
+                  answered={answered}
+                  onClick={() => handleMCQSelect(option)}
+                />
+              ))}
+            </div>
+          )}
 
-          {/* Hint */}
+          {/* Free-text input */}
+          {isFreeText && (
+            <div className="space-y-3">
+              <MathInput
+                value={freeTextInput}
+                onChange={setFreeTextInput}
+                placeholder="Type your answer using the keyboard or symbol palette…"
+                disabled={answered}
+              />
+              {!answered && (
+                <button
+                  className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  onClick={handleFreeTextSubmit}
+                  disabled={!freeTextInput.trim()}
+                >
+                  Submit Answer
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Feedback after answering */}
           {answered && (
-            <div className={`mt-5 p-4 rounded-xl text-sm leading-relaxed ${
-              selected === current.correct_answer
-                ? 'bg-green-50 border border-green-200 text-green-800'
-                : 'bg-amber-50 border border-amber-200 text-amber-800'
+            <div className={`mt-5 p-4 rounded-xl text-sm leading-relaxed border ${
+              isCorrect
+                ? 'bg-green-50 border-green-200 text-green-800'
+                : 'bg-amber-50 border-amber-200 text-amber-800'
             }`}>
-              <span className="font-semibold">
-                {selected === current.correct_answer ? '✓ Correct! ' : '✗ Not quite. '}
-              </span>
-              {current.hint}
+              <div className="flex items-center gap-2 font-semibold mb-1">
+                {isCorrect
+                  ? <><CheckCircle size={15} className="text-green-600" /> Correct!</>
+                  : <><XCircle size={15} className="text-red-500" /> Not quite.</>
+                }
+              </div>
+              {!isCorrect && (
+                <p className="mb-1">
+                  <span className="font-medium">Correct answer: </span>
+                  <span className="font-mono">{current.correct_answer}</span>
+                </p>
+              )}
+              <p className="opacity-80">{current.hint}</p>
             </div>
           )}
         </div>

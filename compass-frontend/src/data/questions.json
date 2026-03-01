@@ -4,16 +4,17 @@
     "topic": "algebraic_manipulation",
     "subtopic": "Factorisation",
     "difficulty": "easy",
+    "type": "free_text",
     "question": "Factorise completely: 6x² + 11x - 10",
-    "options": ["(2x + 5)(3x - 2)", "(2x - 5)(3x + 2)", "(6x + 5)(x - 2)", "(3x + 5)(2x - 2)"],
     "correct_answer": "(2x + 5)(3x - 2)",
-    "hint": "Look for two numbers that multiply to give 6×(-10) = -60 and add to give 11"
+    "hint": "Look for two numbers that multiply to give 6×(−10) = −60 and add to give 11"
   },
   {
     "id": "alg_002",
     "topic": "algebraic_manipulation",
     "subtopic": "Simplification",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "Simplify: (x² - 9)/(x² + 5x + 6)",
     "options": ["(x - 3)/(x + 2)", "(x + 3)/(x + 2)", "(x - 3)/(x - 2)", "(x + 3)/(x - 2)"],
     "correct_answer": "(x - 3)/(x + 2)",
@@ -24,16 +25,17 @@
     "topic": "quadratic_equations",
     "subtopic": "Quadratic formula",
     "difficulty": "medium",
-    "question": "Solve 2x² - 5x - 3 = 0 using the quadratic formula",
-    "options": ["x = 3 or x = -0.5", "x = -3 or x = 0.5", "x = 3 or x = 0.5", "x = -3 or x = -0.5"],
-    "correct_answer": "x = 3 or x = -0.5",
-    "hint": "a=2, b=-5, c=-3. Use x = (-b ± √(b²-4ac)) / 2a"
+    "type": "free_text",
+    "question": "Solve 2x² - 5x - 3 = 0. Give both values of x.",
+    "correct_answer": "x = 3 or x = -1/2",
+    "hint": "Use x = (−b ± √(b²−4ac)) / 2a with a=2, b=−5, c=−3"
   },
   {
     "id": "quad_002",
     "topic": "quadratic_equations",
     "subtopic": "Discriminant",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "For what values of k does kx² + 6x + 1 = 0 have two distinct real roots?",
     "options": ["k < 9", "k > 9", "k < 9, k ≠ 0", "k > 0"],
     "correct_answer": "k < 9, k ≠ 0",
@@ -44,6 +46,7 @@
     "topic": "trigonometric_functions",
     "subtopic": "Trig equations",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "Solve sin(x) = 0.5 for 0° ≤ x ≤ 360°",
     "options": ["30° and 150°", "30° and 210°", "30° and 330°", "150° and 210°"],
     "correct_answer": "30° and 150°",
@@ -54,66 +57,69 @@
     "topic": "trigonometric_identities",
     "subtopic": "Double angle formulae",
     "difficulty": "hard",
-    "question": "If sin(A) = 3/5 and A is acute, find the exact value of sin(2A)",
-    "options": ["24/25", "12/25", "7/25", "6/25"],
+    "type": "free_text",
+    "question": "If sin A = 3/5 and A is acute, find the exact value of sin 2A.",
     "correct_answer": "24/25",
-    "hint": "sin(2A) = 2sin(A)cos(A). Find cos(A) using sin²A + cos²A = 1"
+    "hint": "sin 2A = 2 sin A cos A. Find cos A using sin²A + cos²A = 1"
   },
   {
     "id": "diff_001",
     "topic": "differentiation",
     "subtopic": "Power rule",
     "difficulty": "easy",
+    "type": "free_text",
     "question": "Differentiate y = 3x⁴ - 2x² + 7x - 5",
-    "options": ["12x³ - 4x + 7", "12x³ - 4x + 7x", "12x⁴ - 4x² + 7", "3x³ - 2x + 7"],
     "correct_answer": "12x³ - 4x + 7",
-    "hint": "Bring the power down and reduce by 1: d/dx(xⁿ) = nxⁿ⁻¹"
+    "hint": "d/dx(xⁿ) = nxⁿ⁻¹. Differentiate each term separately."
   },
   {
     "id": "diff_002",
     "topic": "differentiation",
     "subtopic": "Chain rule",
     "difficulty": "hard",
+    "type": "mcq",
     "question": "Differentiate y = (2x + 3)⁵",
     "options": ["10(2x + 3)⁴", "5(2x + 3)⁴", "10(2x + 3)⁵", "5(2x + 3)⁴ · 2x"],
     "correct_answer": "10(2x + 3)⁴",
-    "hint": "Chain rule: d/dx[f(g(x))] = f'(g(x)) · g'(x). The inner derivative is 2."
+    "hint": "Chain rule: multiply by the inner derivative (2)"
   },
   {
     "id": "integ_001",
     "topic": "integration",
     "subtopic": "Definite integrals",
     "difficulty": "medium",
+    "type": "free_text",
     "question": "Evaluate ∫₁³ (2x + 1) dx",
-    "options": ["10", "12", "8", "14"],
     "correct_answer": "10",
-    "hint": "Integrate to get x² + x, then substitute limits: [x² + x]₁³"
+    "hint": "Integrate to get x² + x, then evaluate [x² + x]₁³ = (9+3) − (1+1)"
   },
   {
     "id": "integ_002",
     "topic": "integration",
     "subtopic": "Area under curve",
     "difficulty": "hard",
+    "type": "mcq",
     "question": "Find the area enclosed between y = x² and y = 4",
     "options": ["32/3", "16/3", "8/3", "64/3"],
     "correct_answer": "32/3",
-    "hint": "Find intersection points (x = ±2), then integrate (4 - x²) from -2 to 2"
+    "hint": "Find intersection points (x = ±2), then integrate (4 − x²) from −2 to 2"
   },
   {
     "id": "log_001",
     "topic": "indices_and_logarithms",
     "subtopic": "Laws of logarithms",
     "difficulty": "medium",
-    "question": "Simplify: log₂(8) + log₂(4)",
-    "options": ["5", "7", "12", "32"],
+    "type": "free_text",
+    "question": "Simplify log₂ 8 + log₂ 4",
     "correct_answer": "5",
-    "hint": "log₂(8) = 3, log₂(4) = 2, or use log(a) + log(b) = log(ab)"
+    "hint": "log₂ 8 = 3, log₂ 4 = 2. Or use log a + log b = log(ab)"
   },
   {
     "id": "log_002",
     "topic": "indices_and_logarithms",
     "subtopic": "Solving exponential equations",
     "difficulty": "hard",
+    "type": "mcq",
     "question": "Solve 3^(2x+1) = 27^x",
     "options": ["x = 1", "x = 3", "x = 1/2", "x = -1"],
     "correct_answer": "x = 1",
@@ -124,16 +130,17 @@
     "topic": "surds",
     "subtopic": "Simplifying surds",
     "difficulty": "easy",
-    "question": "Simplify: √48 + √75 - √12",
-    "options": ["8√3", "6√3", "10√3", "4√3"],
+    "type": "free_text",
+    "question": "Simplify √48 + √75 − √12",
     "correct_answer": "8√3",
-    "hint": "√48 = 4√3, √75 = 5√3, √12 = 2√3. Now add and subtract."
+    "hint": "√48 = 4√3, √75 = 5√3, √12 = 2√3"
   },
   {
     "id": "surd_002",
     "topic": "surds",
     "subtopic": "Rationalising the denominator",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "Rationalise the denominator: 6 / (3 - √3)",
     "options": ["3 + √3", "3(3 + √3)/2", "3 - √3", "(3 + √3)/2"],
     "correct_answer": "3(3 + √3)/2",
@@ -144,8 +151,8 @@
     "topic": "polynomials",
     "subtopic": "Remainder theorem",
     "difficulty": "medium",
+    "type": "free_text",
     "question": "When p(x) = x³ - 3x² + ax + 5 is divided by (x - 2), the remainder is 3. Find a.",
-    "options": ["a = -3", "a = 3", "a = 1", "a = -1"],
     "correct_answer": "a = -3",
     "hint": "By the Remainder Theorem, p(2) = 3. Substitute x = 2 and solve for a."
   },
@@ -154,179 +161,187 @@
     "topic": "polynomials",
     "subtopic": "Factor theorem",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "Given that (x - 3) is a factor of x³ - 2x² - 5x + 6, find all the factors.",
     "options": ["(x-3)(x-1)(x+2)", "(x-3)(x+1)(x-2)", "(x-3)(x+1)(x+2)", "(x-3)(x-1)(x-2)"],
     "correct_answer": "(x-3)(x-1)(x+2)",
-    "hint": "Divide x³ - 2x² - 5x + 6 by (x - 3) using synthetic or long division, then factorise the quotient"
+    "hint": "Divide by (x - 3) using synthetic division, then factorise the quotient"
   },
   {
     "id": "binom_001",
     "topic": "binomial_theorem",
     "subtopic": "Binomial expansion",
     "difficulty": "medium",
+    "type": "free_text",
     "question": "Find the coefficient of x³ in the expansion of (1 + 2x)⁵",
-    "options": ["80", "40", "160", "10"],
     "correct_answer": "80",
-    "hint": "Use nCr × (2x)³ where n=5, r=3: C(5,3) × 2³ = 10 × 8 = 80"
+    "hint": "C(5,3) × (2x)³ = 10 × 8x³ = 80x³"
   },
   {
     "id": "binom_002",
     "topic": "binomial_theorem",
     "subtopic": "General term",
     "difficulty": "hard",
+    "type": "mcq",
     "question": "Find the term independent of x in the expansion of (x + 2/x)⁶",
     "options": ["240", "160", "480", "60"],
     "correct_answer": "240",
-    "hint": "General term: C(6,r) × x^(6-r) × (2/x)^r = C(6,r) × 2^r × x^(6-2r). Set 6-2r=0, r=3."
+    "hint": "General term: C(6,r) × 2^r × x^(6−2r). Set 6−2r = 0 → r = 3"
   },
   {
     "id": "coord_001",
     "topic": "coordinate_geometry",
     "subtopic": "Equation of a line",
     "difficulty": "easy",
-    "question": "Find the equation of the line passing through (2, 5) and (4, 11)",
-    "options": ["y = 3x - 1", "y = 3x + 1", "y = 2x + 1", "y = 3x - 2"],
+    "type": "free_text",
+    "question": "Find the equation of the line passing through (2, 5) and (4, 11).",
     "correct_answer": "y = 3x - 1",
-    "hint": "Find gradient m = (11-5)/(4-2) = 3, then use y - y₁ = m(x - x₁)"
+    "hint": "Gradient m = (11−5)/(4−2) = 3, then use y − y₁ = m(x − x₁)"
   },
   {
     "id": "coord_002",
     "topic": "coordinate_geometry",
     "subtopic": "Circle",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "Find the centre and radius of the circle x² + y² - 6x + 4y - 12 = 0",
-    "options": ["Centre (3,-2), radius 5", "Centre (-3,2), radius 5", "Centre (3,-2), radius 25", "Centre (3,2), radius 5"],
-    "correct_answer": "Centre (3,-2), radius 5",
-    "hint": "Complete the square: (x-3)² + (y+2)² = 9 + 4 + 12 = 25, so radius = 5"
+    "options": ["Centre (3,−2), radius 5", "Centre (−3,2), radius 5", "Centre (3,−2), radius 25", "Centre (3,2), radius 5"],
+    "correct_answer": "Centre (3,−2), radius 5",
+    "hint": "Complete the square: (x−3)² + (y+2)² = 9 + 4 + 12 = 25"
   },
   {
     "id": "diff_app_001",
     "topic": "applications_of_differentiation",
     "subtopic": "Stationary points",
     "difficulty": "medium",
-    "question": "Find the x-coordinates of the stationary points of y = x³ - 6x² + 9x + 2",
-    "options": ["x = 1 and x = 3", "x = 2 and x = 3", "x = 1 and x = 2", "x = 0 and x = 3"],
+    "type": "free_text",
+    "question": "Find the x-coordinates of the stationary points of y = x³ - 6x² + 9x + 2.",
     "correct_answer": "x = 1 and x = 3",
-    "hint": "Differentiate and set dy/dx = 0: 3x² - 12x + 9 = 0 → x² - 4x + 3 = 0"
+    "hint": "Set dy/dx = 3x² − 12x + 9 = 0, then solve x² − 4x + 3 = 0"
   },
   {
     "id": "diff_app_002",
     "topic": "applications_of_differentiation",
     "subtopic": "Rates of change",
     "difficulty": "hard",
-    "question": "A spherical balloon is inflated at 100 cm³/s. At the instant when the radius is 5 cm, find the rate of increase of the radius.",
+    "type": "mcq",
+    "question": "A sphere is inflated at 100 cm³/s. When radius = 5 cm, find the rate of increase of the radius.",
     "options": ["1/π cm/s", "4/π cm/s", "1/(4π) cm/s", "2/π cm/s"],
     "correct_answer": "1/π cm/s",
-    "hint": "V = (4/3)πr³, so dV/dt = 4πr² × dr/dt. Substitute dV/dt = 100, r = 5."
+    "hint": "V = (4/3)πr³, dV/dt = 4πr² × dr/dt. Sub dV/dt=100, r=5"
   },
   {
     "id": "kine_001",
     "topic": "kinematics",
-    "subtopic": "Displacement and velocity",
+    "subtopic": "Velocity from displacement",
     "difficulty": "medium",
-    "question": "A particle moves in a straight line with displacement s = t³ - 6t² + 9t. Find the velocity when t = 2.",
-    "options": ["-3 m/s", "3 m/s", "0 m/s", "6 m/s"],
+    "type": "free_text",
+    "question": "A particle moves with displacement s = t³ - 6t² + 9t metres. Find the velocity when t = 2 s.",
     "correct_answer": "-3 m/s",
-    "hint": "v = ds/dt = 3t² - 12t + 9. Substitute t = 2: 12 - 24 + 9 = -3"
+    "hint": "v = ds/dt = 3t² − 12t + 9. Substitute t = 2."
   },
   {
     "id": "kine_002",
     "topic": "kinematics",
     "subtopic": "Acceleration",
     "difficulty": "medium",
+    "type": "mcq",
     "question": "A particle has velocity v = 3t² - 4t + 1. Find the acceleration at t = 3.",
     "options": ["14 m/s²", "10 m/s²", "18 m/s²", "12 m/s²"],
     "correct_answer": "14 m/s²",
-    "hint": "a = dv/dt = 6t - 4. Substitute t = 3: 18 - 4 = 14"
+    "hint": "a = dv/dt = 6t − 4. Substitute t = 3."
   },
   {
     "id": "linlaw_001",
     "topic": "linear_law",
     "subtopic": "Reducing to linear form",
     "difficulty": "medium",
-    "question": "The equation y = ax^n can be written in linear form as Y = mX + c. Which of the following is correct?",
-    "options": ["Y = log y, X = log x, m = n, c = log a", "Y = log y, X = log x, m = log n, c = a", "Y = y, X = x^n, m = a, c = 0", "Y = y², X = x, m = n, c = a"],
-    "correct_answer": "Y = log y, X = log x, m = n, c = log a",
-    "hint": "Take log of both sides: log y = n log x + log a. So Y = log y, X = log x, gradient = n, intercept = log a"
+    "type": "mcq",
+    "question": "The equation y = ax^n is linearised by taking logarithms. Which is the correct linear form?",
+    "options": ["log y = n log x + log a", "log y = n log x + a", "y = n log x + log a", "log y = log n · log x + a"],
+    "correct_answer": "log y = n log x + log a",
+    "hint": "Take log of both sides: log y = n log x + log a. Gradient = n, intercept = log a"
   },
   {
     "id": "linlaw_002",
     "topic": "linear_law",
     "subtopic": "Interpreting graphs",
     "difficulty": "hard",
-    "question": "A graph of log y against x gives a straight line with gradient 0.3 and y-intercept 1.2. Find the relationship between y and x.",
-    "options": ["y = 10^1.2 × 10^(0.3x)", "y = 1.2 × 0.3^x", "y = 0.3x + 1.2", "y = e^1.2 × e^(0.3x)"],
+    "type": "free_text",
+    "question": "A log y vs x graph has gradient 0.3 and y-intercept 1.2. Write y in terms of x.",
     "correct_answer": "y = 10^1.2 × 10^(0.3x)",
     "hint": "log y = 0.3x + 1.2 means y = 10^(0.3x + 1.2) = 10^1.2 × 10^(0.3x)"
   },
   {
     "id": "trig_003",
     "topic": "trigonometric_functions",
-    "subtopic": "R sin(x + alpha) form",
+    "subtopic": "R sin form",
     "difficulty": "hard",
-    "question": "Express 3sin(x) + 4cos(x) in the form R sin(x + α). What is R?",
-    "options": ["5", "7", "3.5", "12"],
-    "correct_answer": "5",
-    "hint": "R = √(3² + 4²) = √(9 + 16) = √25 = 5"
+    "type": "free_text",
+    "question": "Express 3 sin x + 4 cos x in the form R sin(x + α). State the value of R.",
+    "correct_answer": "R = 5",
+    "hint": "R = √(3² + 4²) = √25 = 5"
   },
   {
     "id": "integ_003",
     "topic": "integration",
     "subtopic": "Integration by substitution",
     "difficulty": "hard",
+    "type": "mcq",
     "question": "Evaluate ∫ 2x(x² + 1)³ dx",
     "options": ["(x² + 1)⁴/4 + C", "(x² + 1)⁴ + C", "2(x² + 1)⁴ + C", "(x² + 1)³/3 + C"],
     "correct_answer": "(x² + 1)⁴/4 + C",
-    "hint": "Let u = x² + 1, then du = 2x dx. The integral becomes ∫ u³ du = u⁴/4 + C"
+    "hint": "Let u = x² + 1, du = 2x dx. Integral becomes ∫ u³ du = u⁴/4 + C"
   },
   {
     "id": "diff_003",
     "topic": "differentiation",
     "subtopic": "Product rule",
     "difficulty": "medium",
-    "question": "Differentiate y = x² sin(x)",
-    "options": ["2x sin(x) + x² cos(x)", "2x cos(x)", "x² cos(x) + sin(x)", "2x sin(x)"],
-    "correct_answer": "2x sin(x) + x² cos(x)",
-    "hint": "Product rule: d/dx[uv] = u'v + uv'. Here u = x², v = sin(x)"
+    "type": "free_text",
+    "question": "Differentiate y = x² sin x",
+    "correct_answer": "2x sin x + x² cos x",
+    "hint": "Product rule: d/dx[uv] = u'v + uv'. Here u = x², v = sin x"
   },
   {
     "id": "quad_003",
     "topic": "quadratic_equations",
     "subtopic": "Completing the square",
     "difficulty": "medium",
-    "question": "Express x² - 8x + 5 in the form (x + p)² + q. What is q?",
-    "options": ["-11", "11", "-59", "21"],
-    "correct_answer": "-11",
-    "hint": "(x - 4)² = x² - 8x + 16, so x² - 8x + 5 = (x - 4)² - 16 + 5 = (x - 4)² - 11"
+    "type": "free_text",
+    "question": "Express x² - 8x + 5 in the form (x + p)² + q. State the value of q.",
+    "correct_answer": "q = -11",
+    "hint": "(x − 4)² = x² − 8x + 16, so subtract 16 and add 5"
   },
   {
     "id": "coord_003",
     "topic": "coordinate_geometry",
-    "subtopic": "Midpoint and distance",
+    "subtopic": "Distance formula",
     "difficulty": "easy",
-    "question": "Find the length of the line segment joining A(1, 3) and B(5, 6)",
-    "options": ["5", "4", "3", "7"],
+    "type": "free_text",
+    "question": "Find the length of the line segment joining A(1, 3) and B(5, 6).",
     "correct_answer": "5",
-    "hint": "Distance = √((5-1)² + (6-3)²) = √(16 + 9) = √25 = 5"
+    "hint": "Distance = √((5−1)² + (6−3)²) = √(16 + 9) = √25"
   },
   {
     "id": "log_003",
     "topic": "indices_and_logarithms",
     "subtopic": "Change of base",
     "difficulty": "medium",
-    "question": "Solve: log₃(x) + log₉(x) = 3",
+    "type": "mcq",
+    "question": "Solve: log₃ x + log₉ x = 3",
     "options": ["x = 27", "x = 9", "x = 81", "x = 3"],
-    "correct_answer": "x = 27",
-    "hint": "Convert log₉(x) to base 3: log₉(x) = log₃(x)/2. So (3/2)log₃(x) = 3, log₃(x) = 2... wait, let p = log₃x, then p + p/2 = 3, p = 2, x = 9. Re-check: actually x = 27. Use log₃27 + log₉27 = 3 + 3/2 = 4.5. Try x=9: log₃9=2, log₉9=1, sum=3. So x=9."
+    "correct_answer": "x = 9",
+    "hint": "Convert log₉ x to base 3: log₉ x = (log₃ x)/2. Let p = log₃ x: p + p/2 = 3 → p = 2 → x = 9"
   },
   {
     "id": "surd_003",
     "topic": "surds",
-    "subtopic": "Solving equations with surds",
+    "subtopic": "Solving surd equations",
     "difficulty": "hard",
-    "question": "Solve: √(2x + 1) + √(x - 1) = 4",
-    "options": ["x = 5", "x = 4", "x = 3", "x = 8"],
+    "type": "free_text",
+    "question": "Solve √(2x + 1) + √(x − 1) = 4",
     "correct_answer": "x = 5",
-    "hint": "Isolate one surd, square both sides, then square again. Check for extraneous solutions."
+    "hint": "Isolate one surd, square both sides, rearrange and square again. Check for extraneous solutions."
   }
 ]
