@@ -94,9 +94,15 @@ export default function LoginPage() {
           })}
         </div>
 
-        <p className="text-center text-xs text-gray-400">
-          Demo mode — no authentication required
-        </p>
+        <div className="text-center">
+          <p className="text-xs text-gray-400 mb-2">Demo mode — no authentication required</p>
+          <button
+            className="text-xs text-indigo-500 hover:text-indigo-700 hover:underline transition-colors"
+            onClick={() => navigate('/teacher')}
+          >
+            Teacher view →
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -51,13 +51,13 @@ export default function StudentChat({ knowledgeMap, studentName }) {
 
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 1, role: 'ai', text: reply, confidence: 'medium' },
+        { id: `ai_${Date.now()}_${prev.length}`, role: 'ai', text: reply, confidence: 'medium' },
       ]);
     } catch {
       setMessages((prev) => [
         ...prev,
         {
-          id: Date.now() + 1,
+          id: `ai_${Date.now()}_err`,
           role: 'ai',
           text: "Sorry, I couldn't connect right now. Please try again shortly.",
           confidence: 'low',
@@ -180,8 +180,9 @@ function generateFallbackReply(message, knowledgeMap) {
   }
 
   const entries = Object.entries(knowledgeMap).map(([topic, data]) => ({ topic, ...data }));
-  const weakest = entries.sort((a, b) => a.mastery_score - b.mastery_score)[0];
-  const strongest = entries.sort((a, b) => b.mastery_score - a.mastery_score)[0];
+  const sorted = [...entries].sort((a, b) => a.mastery_score - b.mastery_score);
+  const weakest = sorted[0];
+  const strongest = sorted[sorted.length - 1];
   const regressing = entries.filter((e) => e.velocity === 'regressing');
   const improving = entries.filter((e) => e.velocity === 'improving');
 
@@ -191,7 +192,10 @@ function generateFallbackReply(message, knowledgeMap) {
     return `Based on your data, you're finding ${formatT(weakest.topic)} most challenging — you're at ${Math.round(weakest.mastery_score * 100)}% mastery${weakest.velocity === 'regressing' ? ' and it has been regressing lately' : ''}. I'd recommend spending focused time on this before your next quiz. Would you like some tips on how to approach it?`;
   }
   if (msg.includes('study first') || msg.includes('start') || msg.includes('priority')) {
-    return `Your top priority should be ${formatT(weakest.topic)} (${Math.round(weakest.mastery_score * 100)}% mastery). After that, work on ${regressing.slice(0, 2).map((e) => formatT(e.topic)).join(' and ')} since they're showing a downward trend. Your strongest topic is ${formatT(strongest.topic)} at ${Math.round(strongest.mastery_score * 100)}% — maintain that!`;
+    const regressingStr = regressing.length > 0
+      ? `After that, work on ${regressing.slice(0, 2).map((e) => formatT(e.topic)).join(' and ')} since they're showing a downward trend. `
+      : '';
+    return `Your top priority should be ${formatT(weakest.topic)} (${Math.round(weakest.mastery_score * 100)}% mastery). ${regressingStr}Your strongest topic is ${formatT(strongest.topic)} at ${Math.round(strongest.mastery_score * 100)}% — maintain that!`;
   }
   if (msg.includes('improv') || msg.includes('progress') || msg.includes('better')) {
     return `You're improving in ${improving.length} topic(s): ${improving.map((e) => formatT(e.topic)).join(', ')}. ${regressing.length > 0 ? `However, ${regressing.map((e) => formatT(e.topic)).join(' and ')} need attention as they're regressing.` : 'Keep up the great work!'}`;

@@ -32,10 +32,10 @@ export default function TeacherDashboard() {
       });
   }, []);
 
-  const alertStudents = students.filter(s =>
+  const alertStudents = useMemo(() => students.filter(s =>
     s.overall_mastery < 0.3 ||
     (s.last_active && Date.now() - new Date(s.last_active).getTime() > 14 * 86400000)
-  );
+  ), [students]);
 
   const sorted = useMemo(() => {
     return [...students].sort((a, b) => {

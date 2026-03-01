@@ -1,0 +1,141 @@
+{
+  "subject": "O-Level Additional Mathematics",
+  "level": "Secondary 3-4",
+  "topics": [
+    {
+      "id": "algebraic_manipulation",
+      "name": "Algebraic Manipulation",
+      "subtopics": ["Expansion", "Factorisation", "Simplification of algebraic fractions"],
+      "prerequisites": [],
+      "objectives": "Manipulate algebraic expressions fluently",
+      "common_mistakes": "Sign errors during expansion, forgetting to factorise completely",
+      "remediation": "Start with simple expansion drills, then progress to multi-step problems"
+    },
+    {
+      "id": "quadratic_equations",
+      "name": "Quadratic Equations",
+      "subtopics": ["Factorisation method", "Completing the square", "Quadratic formula", "Discriminant"],
+      "prerequisites": ["algebraic_manipulation"],
+      "objectives": "Solve quadratic equations using multiple methods and interpret discriminant",
+      "common_mistakes": "Forgetting ± in quadratic formula, errors in completing the square",
+      "remediation": "Practice all three methods on the same equation to build flexibility"
+    },
+    {
+      "id": "surds",
+      "name": "Surds",
+      "subtopics": ["Simplification", "Rationalisation", "Operations with surds"],
+      "prerequisites": ["algebraic_manipulation"],
+      "objectives": "Simplify and rationalise surd expressions",
+      "common_mistakes": "Incorrect rationalisation of denominators with two terms",
+      "remediation": "Focus on conjugate pairs for rationalisation"
+    },
+    {
+      "id": "indices_and_logarithms",
+      "name": "Indices and Logarithms",
+      "subtopics": ["Laws of indices", "Laws of logarithms", "Solving exponential equations", "Change of base"],
+      "prerequisites": ["algebraic_manipulation"],
+      "objectives": "Apply index and logarithm laws to solve equations",
+      "common_mistakes": "Confusing log(a+b) with log(a)+log(b), wrong application of power rule",
+      "remediation": "Drill individual laws before combining them in equations"
+    },
+    {
+      "id": "polynomials",
+      "name": "Polynomials and Partial Fractions",
+      "subtopics": ["Remainder theorem", "Factor theorem", "Cubic equations", "Partial fractions"],
+      "prerequisites": ["algebraic_manipulation", "quadratic_equations"],
+      "objectives": "Use factor/remainder theorem and decompose into partial fractions",
+      "common_mistakes": "Sign errors in synthetic division, wrong form for partial fractions",
+      "remediation": "Practice factor theorem to find first root, then polynomial division"
+    },
+    {
+      "id": "binomial_theorem",
+      "name": "Binomial Theorem",
+      "subtopics": ["Expansion of (a+b)^n", "General term", "Applications"],
+      "prerequisites": ["algebraic_manipulation", "indices_and_logarithms"],
+      "objectives": "Expand binomial expressions and find specific terms",
+      "common_mistakes": "Errors in nCr calculation, forgetting to apply power to both terms",
+      "remediation": "Start with Pascal's triangle for small n, then transition to formula"
+    },
+    {
+      "id": "coordinate_geometry",
+      "name": "Coordinate Geometry",
+      "subtopics": ["Distance formula", "Midpoint", "Gradient", "Equation of line", "Parallel and perpendicular lines"],
+      "prerequisites": ["algebraic_manipulation", "quadratic_equations"],
+      "objectives": "Apply coordinate geometry to solve problems involving lines and curves",
+      "common_mistakes": "Mixing up gradient conditions for parallel vs perpendicular",
+      "remediation": "Visualise on graph paper, connect algebraic and geometric interpretations"
+    },
+    {
+      "id": "trigonometric_functions",
+      "name": "Trigonometric Functions",
+      "subtopics": ["Six trig ratios", "Graphs of trig functions", "Trig equations", "Basic identities"],
+      "prerequisites": ["algebraic_manipulation"],
+      "objectives": "Understand and apply trigonometric functions and solve trig equations",
+      "common_mistakes": "Wrong quadrant for solutions, forgetting principal values",
+      "remediation": "Always draw the ASTC diagram, practice finding all solutions in range"
+    },
+    {
+      "id": "trigonometric_identities",
+      "name": "Trigonometric Identities and Equations",
+      "subtopics": ["Addition formulae", "Double angle formulae", "R-formula", "Proving identities"],
+      "prerequisites": ["trigonometric_functions", "algebraic_manipulation"],
+      "objectives": "Apply trig identities to prove results and solve complex equations",
+      "common_mistakes": "Confusing sin(A+B) with sinA+sinB, errors in R-formula",
+      "remediation": "Memorise the three key identities, practice proving before solving"
+    },
+    {
+      "id": "differentiation",
+      "name": "Differentiation",
+      "subtopics": ["Power rule", "Chain rule", "Product rule", "Quotient rule", "Tangent and normal"],
+      "prerequisites": ["algebraic_manipulation", "indices_and_logarithms", "trigonometric_functions"],
+      "objectives": "Differentiate functions and apply to tangent/normal problems",
+      "common_mistakes": "Chain rule errors with composite functions, forgetting to multiply by inner derivative",
+      "remediation": "Practice chain rule separately before combining with product/quotient rules"
+    },
+    {
+      "id": "applications_of_differentiation",
+      "name": "Applications of Differentiation",
+      "subtopics": ["Increasing/decreasing functions", "Stationary points", "Rate of change", "Maximum/minimum problems"],
+      "prerequisites": ["differentiation", "coordinate_geometry"],
+      "objectives": "Apply differentiation to optimisation and rate of change problems",
+      "common_mistakes": "Not verifying nature of stationary point, setting up wrong equation for optimisation",
+      "remediation": "Practice setting up the function to optimise from word problems"
+    },
+    {
+      "id": "integration",
+      "name": "Integration",
+      "subtopics": ["Reverse of differentiation", "Definite integrals", "Area under curve", "Area between curves"],
+      "prerequisites": ["differentiation", "algebraic_manipulation"],
+      "objectives": "Integrate functions and apply to area calculations",
+      "common_mistakes": "Forgetting +C for indefinite integrals, wrong limits for area between curves",
+      "remediation": "Connect integration to differentiation first, then build to area applications"
+    },
+    {
+      "id": "kinematics",
+      "name": "Kinematics",
+      "subtopics": ["Displacement", "Velocity", "Acceleration", "v-t and s-t graphs"],
+      "prerequisites": ["differentiation", "integration"],
+      "objectives": "Apply calculus to motion problems",
+      "common_mistakes": "Confusing when to differentiate vs integrate, sign conventions for direction",
+      "remediation": "Always start from the relationship: differentiate s→v→a, integrate a→v→s"
+    },
+    {
+      "id": "linear_law",
+      "name": "Linear Law",
+      "subtopics": ["Reducing equations to linear form", "Plotting linear graphs", "Estimating values"],
+      "prerequisites": ["coordinate_geometry", "indices_and_logarithms"],
+      "objectives": "Convert non-linear relationships to linear form and extract parameters",
+      "common_mistakes": "Wrong substitution for Y and X variables, reading gradient/intercept incorrectly",
+      "remediation": "Practice the algebraic manipulation to get Y = mX + c form"
+    },
+    {
+      "id": "proofs_in_plane_geometry",
+      "name": "Proofs in Plane Geometry",
+      "subtopics": ["Circle properties", "Tangent-chord angle", "Alternate segment theorem"],
+      "prerequisites": ["trigonometric_functions", "coordinate_geometry"],
+      "objectives": "Apply circle theorems to prove geometric results",
+      "common_mistakes": "Not identifying which theorem applies, incomplete proof structure",
+      "remediation": "Learn to recognise visual patterns for each theorem"
+    }
+  ]
+}

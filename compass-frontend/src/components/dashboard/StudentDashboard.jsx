@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, MessageSquare, BookOpen, Map } from 'lucide-react';
+import { MessageSquare, BookOpen, Map } from 'lucide-react';
 import MasteryOverview from './MasteryOverview';
 import RecommendationPanel from './RecommendationPanel';
 import VelocityChart from './VelocityChart';
 import StudentChat from '../chat/StudentChat';
 
-const formatDate = (d) =>
-  new Date(d).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' });
 
 export default function StudentDashboard({
   studentName,
@@ -68,10 +66,6 @@ export default function StudentDashboard({
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-gray-400">
-              <Calendar size={12} />
-              Last active: {formatDate(new Date())}
-            </div>
             <button
               className="flex items-center gap-1.5 bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors"
               onClick={onStartQuiz}
@@ -128,7 +122,7 @@ export default function StudentDashboard({
             <div className="lg:col-span-2">
               <RecommendationPanel
                 agentOutput={agentOutput}
-                onOverride={(data) => console.log('Override:', data)}
+                onOverride={() => {}}
               />
             </div>
           </div>

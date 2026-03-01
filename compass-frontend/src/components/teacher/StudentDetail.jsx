@@ -117,7 +117,13 @@ export default function StudentDetail({ studentId }) {
     return <div className="text-center py-16 text-gray-400">No data found for this student.</div>;
   }
 
-  const { student_name, overall_mastery, last_active, topic_masteries, prerequisite_flags } = knowledgeMap;
+  const {
+    student_name,
+    overall_mastery,
+    last_active,
+    topic_masteries = [],
+    prerequisite_flags = [],
+  } = knowledgeMap;
 
   const overallVelocity = topic_masteries.length
     ? (() => {
@@ -228,10 +234,10 @@ export default function StudentDetail({ studentId }) {
               <div className="space-y-3">
                 <p className="text-sm text-gray-700">{agentOutput.diagnosis.root_cause_analysis}</p>
 
-                {agentOutput.diagnosis.error_classifications.length > 0 && (
+                {(agentOutput.diagnosis.error_classifications ?? []).length > 0 && (
                   <div>
                     <p className="text-xs font-semibold text-gray-600 mb-1">Error Types</p>
-                    {agentOutput.diagnosis.error_classifications.map((ec, i) => (
+                    {(agentOutput.diagnosis.error_classifications ?? []).map((ec, i) => (
                       <div key={i} className="text-xs flex items-start gap-2 mb-1">
                         <span className={`px-1.5 py-0.5 rounded font-medium ${
                           ec.error_type === 'conceptual_gap' ? 'bg-red-100 text-red-700' :

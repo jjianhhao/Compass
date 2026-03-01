@@ -2,6 +2,7 @@ import { CheckCircle, XCircle } from 'lucide-react';
 
 export default function QuestionCard({ option, index, selected, correct, answered, onClick }) {
   const letters = ['A', 'B', 'C', 'D'];
+  const letter = letters[index] ?? String.fromCharCode(65 + index);
 
   let baseStyle =
     'w-full text-left px-4 py-3.5 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 group';
@@ -28,7 +29,7 @@ export default function QuestionCard({ option, index, selected, correct, answere
       <span
         className={`flex-shrink-0 w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center transition-colors ${letterStyle}`}
       >
-        {letters[index]}
+        {letter}
       </span>
       <span className="text-sm text-gray-800 flex-1">{option}</span>
       {answered && option === correct && (

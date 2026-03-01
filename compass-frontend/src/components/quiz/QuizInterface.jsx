@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronRight, Trophy, RotateCcw, CheckCircle, XCircle } from 'lucide-react';
 import QuestionCard from './QuestionCard';
 import MathInput from './MathInput';
@@ -43,7 +42,6 @@ const checkFreeText = (studentAnswer, correctAnswer) => {
 };
 
 export default function QuizInterface({ questions, studentId, onAnswer, onComplete }) {
-  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedMCQ, setSelectedMCQ] = useState(null);
   const [freeTextInput, setFreeTextInput] = useState('');
@@ -54,6 +52,22 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
   const [showSummary, setShowSummary] = useState(false);
   const timerRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+
+  if (!questions || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center max-w-sm">
+          <p className="text-gray-500">No questions available for this topic.</p>
+          <button
+            className="mt-4 bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors"
+            onClick={() => onComplete?.()}
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const current = questions[currentIndex];
   const isFreeText = current?.type === 'free_text';
@@ -192,10 +206,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
             </button>
             <button
               className="flex-1 bg-indigo-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-indigo-700 transition-colors"
-              onClick={() => {
-                onComplete?.();
-                navigate(`/dashboard/${studentId}`);
-              }}
+              onClick={() => onComplete?.()}
             >
               View Dashboard →
             </button>
@@ -213,7 +224,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
         <div className="flex items-center justify-between mb-4">
           <button
             className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-            onClick={() => navigate(`/dashboard/${studentId}`)}
+            onClick={() => onComplete?.()}
           >
             ← Dashboard
           </button>

@@ -89,7 +89,6 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
 
   const handleAccept = () => {
     const log = { action: 'accepted', recommendation_id: `${rec.topic}_${index}`, timestamp: new Date().toISOString() };
-    console.log('Override log:', log);
     onAction?.('accepted', log);
     setDone('accepted');
     showToast('Override logged — your input helps improve future recommendations.');
@@ -104,7 +103,6 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
       teacher_note: modNote,
       timestamp: new Date().toISOString(),
     };
-    console.log('Override log:', log);
     onAction?.('modified', log);
     setMode(null);
     setDone('modified');
@@ -121,7 +119,6 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
       teacher_note: rejectNote,
       timestamp: new Date().toISOString(),
     };
-    console.log('Override log:', log);
     onAction?.('rejected', log);
     setMode(null);
     setDone('rejected');

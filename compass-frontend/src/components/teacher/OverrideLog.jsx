@@ -55,10 +55,10 @@ export default function OverrideLog({ entries = [], studentName }) {
         </div>
       ) : (
         <div className="space-y-2">
-          {[...filtered].reverse().map((entry, i) => {
+          {[...filtered].reverse().map((entry) => {
             const meta = ACTION_META[entry.action] || ACTION_META.accepted;
             return (
-              <div key={i} className={`rounded-lg border px-3 py-2 ${meta.color}`}>
+              <div key={`${entry.recommendation_id}_${entry.timestamp}`} className={`rounded-lg border px-3 py-2 ${meta.color}`}>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-start gap-2">
                     <span className="text-base leading-tight">{meta.icon}</span>
