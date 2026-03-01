@@ -144,5 +144,6 @@ export const getAIResponseDirect = async (message, knowledgeMap, apiKey) => {
     }),
   });
   const data = await res.json();
+  if (!data.choices?.length) throw new Error(data.error?.message ?? 'OpenAI error');
   return data.choices[0].message.content;
 };

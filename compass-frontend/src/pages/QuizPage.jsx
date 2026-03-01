@@ -77,10 +77,11 @@ export default function QuizPage() {
           </div>
 
           <button
-            className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors"
+            className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => setQuizStarted(true)}
+            disabled={questions.length === 0}
           >
-            Start Quiz →
+            {questions.length === 0 ? 'No questions for this topic' : 'Start Quiz →'}
           </button>
         </div>
       </div>

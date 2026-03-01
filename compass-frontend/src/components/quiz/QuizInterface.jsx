@@ -105,6 +105,22 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
   const timerRef = useRef(null);
   const startTimeRef = useRef(Date.now());
 
+  // All hooks must come before any conditional returns (Rules of Hooks)
+  const startTimer = useCallback(() => {
+    clearInterval(timerRef.current);
+    setTimer(0);
+    startTimeRef.current = Date.now();
+    timerRef.current = setInterval(() => {
+      setTimer(Math.floor((Date.now() - startTimeRef.current) / 1000));
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    if (!questions || questions.length === 0) return;
+    startTimer();
+    return () => clearInterval(timerRef.current);
+  }, [currentIndex, startTimer, questions]);
+
   if (!questions || questions.length === 0) {
     return (
       <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
@@ -123,20 +139,6 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
   const current = questions[currentIndex];
   const isFreeText = current?.type === 'free_text';
-
-  const startTimer = useCallback(() => {
-    clearInterval(timerRef.current);
-    setTimer(0);
-    startTimeRef.current = Date.now();
-    timerRef.current = setInterval(() => {
-      setTimer(Math.floor((Date.now() - startTimeRef.current) / 1000));
-    }, 1000);
-  }, []);
-
-  useEffect(() => {
-    startTimer();
-    return () => clearInterval(timerRef.current);
-  }, [currentIndex, startTimer]);
 
   const submitAnswer = (studentAnswer) => {
     if (answered) return;
@@ -252,7 +254,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
               </h2>
               <div className="space-y-2">
                 {wrongResults.map((r) => {
-                  const q = questions.find((q) => q.id === r.question_id);
+                  const q = questions.find((qs) => qs.id === r.question_id);
                   return q ? <SummaryReviewCard key={r.question_id} question={q} result={r} /> : null;
                 })}
               </div>

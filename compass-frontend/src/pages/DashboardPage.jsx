@@ -54,7 +54,7 @@ export default function DashboardPage() {
 
   if (loading) return <SkeletonDashboard />;
 
-  if (error && !knowledgeMap) {
+  if (error) {
     return (
       <div className="h-full bg-gray-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center max-w-sm">
