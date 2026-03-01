@@ -118,7 +118,10 @@ function transformVelocity(apiResponse) {
 function transformAgentOutput(apiResponse) {
   if (!apiResponse) return null;
   const planObj = apiResponse.plan || {};
-  if (Array.isArray(planObj)) return apiResponse;
+  if (Array.isArray(planObj)) {
+    // Plan is already a flat array — ensure every item has an id
+    return { ...apiResponse, plan: planObj.map((rec, i) => ({ id: rec.id ?? `rec_${i}`, ...rec })) };
+  }
   const overallConfidence = apiResponse.overall_confidence || 'medium';
   const recommendations = (planObj.recommendations || []).map((rec, idx) => ({
     id: `rec_${idx}`,
@@ -134,6 +137,7 @@ function transformAgentOutput(apiResponse) {
 
 // Build dynamic agent recommendations based on actual knowledge map + real quiz mistakes
 function buildAgentOutput(knowledgeMap, studentId) {
+  if (!knowledgeMap || Object.keys(knowledgeMap).length === 0) return null;
   const entries = Object.entries(knowledgeMap)
     .map(([topic, data]) => ({ topic, ...data }))
     .sort((a, b) => a.mastery_score - b.mastery_score);

@@ -36,11 +36,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
   };
 
   const scrollToLastAiMsg = () => {
-    const container = messagesContainerRef.current;
-    const msg = lastAiMsgRef.current;
-    if (container && msg) {
-      container.scrollTop = msg.offsetTop - container.offsetTop;
-    }
+    lastAiMsgRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
   };
 
   const sendMessage = async (text) => {
@@ -55,7 +51,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
       let reply;
       try {
         const res = await api.sendChatMessage(text, knowledgeMap);
-        reply = res?.message || res?.content || res?.reply;
+        reply = res?.message || res?.content || res?.reply || '*(No response received — please try again.)*';
       } catch {
         if (OPENAI_KEY) {
           reply = await getAIResponseDirect(text, knowledgeMap, OPENAI_KEY);

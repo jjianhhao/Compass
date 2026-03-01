@@ -19,7 +19,7 @@ export default function StudentDashboard({
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
 
-  const overallMastery = knowledgeMap
+  const overallMastery = knowledgeMap && Object.keys(knowledgeMap).length > 0
     ? Math.round(
         (Object.values(knowledgeMap).reduce((sum, d) => sum + d.mastery_score, 0) /
           Object.keys(knowledgeMap).length) *
