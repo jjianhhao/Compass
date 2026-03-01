@@ -1,0 +1,274 @@
+{
+  "syllabus": "GCE O-Level Additional Mathematics (Singapore, 4049)",
+  "topics": [
+    {
+      "name": "Quadratic Equations",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation"],
+      "subtopics": [
+        "Solving quadratic equations by factorisation",
+        "Completing the square",
+        "Quadratic formula",
+        "Discriminant and nature of roots",
+        "Quadratic inequalities"
+      ],
+      "objectives": "Solve quadratic equations using multiple methods; analyse the nature of roots using the discriminant; solve quadratic inequalities and represent solutions on a number line.",
+      "common_mistakes": "Sign errors when completing the square; forgetting to reverse the inequality sign when multiplying/dividing by a negative; confusing 'no real roots' (discriminant < 0) with 'no roots'.",
+      "remediation": "Start with factorisation drills, then move to completing the square with guided steps. Use graphical approach to connect discriminant to the parabola's position relative to the x-axis."
+    },
+    {
+      "name": "Algebraic Manipulation",
+      "level": "O-Level",
+      "prerequisites": [],
+      "subtopics": [
+        "Expansion and factorisation",
+        "Algebraic fractions",
+        "Partial fractions",
+        "Surds and indices",
+        "Simultaneous equations"
+      ],
+      "objectives": "Manipulate algebraic expressions fluently; simplify and operate with algebraic fractions; decompose expressions into partial fractions; work with surds and index laws.",
+      "common_mistakes": "Incorrectly cancelling terms (instead of factors) in fractions; distributing exponents over sums; rationalising the denominator with wrong conjugate.",
+      "remediation": "Drill factor vs. term distinction with visual examples. Practice index laws systematically before combining with surds."
+    },
+    {
+      "name": "Indices and Surds",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation"],
+      "subtopics": [
+        "Laws of indices",
+        "Negative and fractional indices",
+        "Simplifying surds",
+        "Rationalising denominators",
+        "Equations involving indices and surds"
+      ],
+      "objectives": "Apply index laws to simplify expressions; convert between surd and index form; rationalise denominators; solve equations involving indices and surds.",
+      "common_mistakes": "Confusing multiplication and addition rules for indices (a^m * a^n vs a^m + a^n); forgetting to square both sides carefully when solving surd equations (introducing extraneous roots).",
+      "remediation": "Build index law fluency with pattern recognition exercises. For surds, emphasise checking for extraneous solutions after squaring."
+    },
+    {
+      "name": "Polynomials",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation", "Quadratic Equations"],
+      "subtopics": [
+        "Remainder theorem",
+        "Factor theorem",
+        "Cubic expressions and equations",
+        "Long division of polynomials",
+        "Sketching polynomial curves"
+      ],
+      "objectives": "Use the remainder and factor theorems to factorise polynomials; solve cubic equations; sketch polynomial graphs showing key features.",
+      "common_mistakes": "Sign errors in synthetic division; forgetting that Factor Theorem gives (x - a) when f(a) = 0 (not (x + a)); incomplete factorisation of cubics.",
+      "remediation": "Practice synthetic division step-by-step. Use systematic trial of integer factors combined with Factor Theorem before attempting full factorisation."
+    },
+    {
+      "name": "Simultaneous Equations",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation", "Quadratic Equations"],
+      "subtopics": [
+        "Linear-linear systems",
+        "Linear-nonlinear systems",
+        "Substitution and elimination",
+        "Graphical interpretation"
+      ],
+      "objectives": "Solve simultaneous equations involving one linear and one non-linear equation; interpret solutions graphically as intersection points.",
+      "common_mistakes": "Substitution errors when expression is complex; forgetting to find both variables after solving for one; not checking solutions in both original equations.",
+      "remediation": "Always substitute back to verify. Start with simpler linear-linear systems before progressing to linear-quadratic pairs."
+    },
+    {
+      "name": "Logarithms and Exponentials",
+      "level": "O-Level",
+      "prerequisites": ["Indices and Surds"],
+      "subtopics": [
+        "Definition of logarithm",
+        "Laws of logarithms",
+        "Change of base formula",
+        "Solving exponential equations",
+        "Solving logarithmic equations",
+        "Graphs of exponential and log functions"
+      ],
+      "objectives": "Convert between exponential and logarithmic forms; apply log laws to simplify expressions; solve exponential and logarithmic equations; sketch and interpret graphs.",
+      "common_mistakes": "Applying log laws incorrectly: log(a+b) ≠ log(a) + log(b); forgetting domain restrictions (argument of log must be positive); errors with change of base.",
+      "remediation": "Emphasise that log laws mirror index laws. Use numerical examples to build intuition before algebraic manipulation. Always check domain validity of solutions."
+    },
+    {
+      "name": "Coordinate Geometry",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation"],
+      "subtopics": [
+        "Distance and midpoint formulas",
+        "Gradient and collinearity",
+        "Equation of a straight line",
+        "Parallel and perpendicular lines",
+        "Area of rectilinear figures"
+      ],
+      "objectives": "Find distances, midpoints, and gradients; determine equations of lines given various conditions; apply parallel/perpendicular gradient relationships; calculate areas using the Shoelace formula.",
+      "common_mistakes": "Sign errors in gradient calculation (y2-y1)/(x2-x1); confusing perpendicular gradient (negative reciprocal) with parallel (same gradient); errors in Shoelace formula ordering.",
+      "remediation": "Drill gradient calculations with varied point orderings. Visualise on graph paper before calculating. Practice Shoelace with consistent anticlockwise vertex ordering."
+    },
+    {
+      "name": "Linear Law",
+      "level": "O-Level",
+      "prerequisites": ["Coordinate Geometry", "Logarithms and Exponentials"],
+      "subtopics": [
+        "Reducing non-linear relations to linear form",
+        "Plotting transformed data",
+        "Interpreting gradient and intercept"
+      ],
+      "objectives": "Transform non-linear equations into Y = mX + c form; plot data in transformed coordinates; extract original equation parameters from gradient and intercept.",
+      "common_mistakes": "Choosing the wrong transformation (e.g. plotting ln(y) vs x when the relationship is y = ax^n, which needs ln(y) vs ln(x)); reading gradient from incorrectly scaled axes.",
+      "remediation": "Create a reference table of common non-linear forms and their transformations. Practice identifying which transformation to use before plotting."
+    },
+    {
+      "name": "Trigonometric Functions",
+      "level": "O-Level",
+      "prerequisites": ["Coordinate Geometry"],
+      "subtopics": [
+        "Six trigonometric ratios",
+        "Exact values for special angles",
+        "Graphs of trig functions",
+        "Amplitude, period and phase shift",
+        "Inverse trigonometric functions"
+      ],
+      "objectives": "Evaluate trigonometric ratios for any angle; sketch and transform trig graphs; determine amplitude, period, and phase shift; solve basic trig equations in given intervals.",
+      "common_mistakes": "Calculator in wrong mode (degrees vs radians); not finding all solutions in a given interval; errors with ASTC rule for signs in different quadrants.",
+      "remediation": "Always verify calculator mode first. Use the unit circle and ASTC diagram systematically. Practice finding general solutions before restricting to intervals."
+    },
+    {
+      "name": "Trigonometric Identities",
+      "level": "O-Level",
+      "prerequisites": ["Trigonometric Functions", "Algebraic Manipulation"],
+      "subtopics": [
+        "Fundamental identities (Pythagorean, reciprocal, quotient)",
+        "Addition formulas: sin(A±B), cos(A±B), tan(A±B)",
+        "Double angle formulas",
+        "R-formula (a sin θ + b cos θ)",
+        "Proving trigonometric identities"
+      ],
+      "objectives": "Prove and apply trigonometric identities; use addition and double angle formulas; express a sin θ + b cos θ in the form R sin(θ ± α); solve trigonometric equations using identities.",
+      "common_mistakes": "Misremembering double-angle formulas; errors in R-formula (wrong quadrant for α); attempting to prove identities by manipulating both sides simultaneously instead of one side only.",
+      "remediation": "Derive double-angle formulas from addition formulas each time to build understanding rather than memorising. Practice R-formula with a clear step-by-step template."
+    },
+    {
+      "name": "Differentiation",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation", "Indices and Surds"],
+      "subtopics": [
+        "First principles (concept only)",
+        "Power rule",
+        "Chain rule",
+        "Product rule",
+        "Quotient rule",
+        "Derivatives of trig, exponential, and log functions"
+      ],
+      "objectives": "Differentiate standard functions using power, chain, product, and quotient rules; find derivatives of composite, trigonometric, exponential, and logarithmic functions.",
+      "common_mistakes": "Forgetting the chain rule on composite functions; sign error in quotient rule (denominator order); not simplifying before differentiating (missing easier approaches).",
+      "remediation": "Practice identifying which rule to apply before computing. Use colour-coding to identify inner and outer functions for chain rule. Simplify expressions algebraically first when possible."
+    },
+    {
+      "name": "Applications of Differentiation",
+      "level": "O-Level",
+      "prerequisites": ["Differentiation", "Coordinate Geometry"],
+      "subtopics": [
+        "Tangents and normals",
+        "Increasing and decreasing functions",
+        "Stationary points and nature",
+        "Practical maxima and minima problems",
+        "Rates of change",
+        "Connected rates of change"
+      ],
+      "objectives": "Find equations of tangents and normals; determine stationary points and their nature; solve optimisation problems; apply connected rates of change using the chain rule.",
+      "common_mistakes": "Using gradient of tangent for normal (forgetting negative reciprocal); not verifying nature of stationary point (second derivative or sign test); setting up wrong equation in optimisation word problems.",
+      "remediation": "For optimisation: practice translating word problems into equations with a single variable before differentiating. Always verify the nature of critical points."
+    },
+    {
+      "name": "Integration",
+      "level": "O-Level",
+      "prerequisites": ["Differentiation"],
+      "subtopics": [
+        "Indefinite integration (reverse of differentiation)",
+        "Integration of standard functions",
+        "Integration of (ax+b)^n and related forms",
+        "Definite integration",
+        "Area under curves",
+        "Area between curves"
+      ],
+      "objectives": "Integrate standard functions; evaluate definite integrals; find areas bounded by curves, lines, and axes; apply integration to kinematic problems.",
+      "common_mistakes": "Forgetting +C in indefinite integrals; sign errors when area is below x-axis (must take absolute value); incorrect limits of integration; forgetting to divide by the coefficient of x in (ax+b)^n.",
+      "remediation": "Always check by differentiating the result. For area problems, sketch the curve first and identify regions above and below the axis separately."
+    },
+    {
+      "name": "Binomial Theorem",
+      "level": "O-Level",
+      "prerequisites": ["Algebraic Manipulation", "Indices and Surds"],
+      "subtopics": [
+        "Binomial expansion for positive integer index",
+        "General term",
+        "Specific term finding",
+        "Applications with substitution"
+      ],
+      "objectives": "Expand (a + b)^n using the Binomial Theorem; find specific terms including the general term T(r+1); use substitution to find approximations.",
+      "common_mistakes": "Off-by-one errors with the general term index (T_{r+1} not T_r); forgetting to apply the power to both parts of the term; sign errors when b is negative.",
+      "remediation": "Write out the general term formula explicitly each time. Practice with negative and fractional terms inside the binomial to build confidence with signs."
+    },
+    {
+      "name": "Sets and Venn Diagrams",
+      "level": "O-Level",
+      "prerequisites": [],
+      "subtopics": [
+        "Set notation and operations",
+        "Union, intersection, complement",
+        "Venn diagrams with two and three sets",
+        "Problem solving with sets"
+      ],
+      "objectives": "Use set notation correctly; represent set relationships with Venn diagrams; solve problems involving union, intersection, and complement of sets.",
+      "common_mistakes": "Double-counting elements in overlapping regions; confusing A' (complement) with A; forgetting the universal set when computing complements.",
+      "remediation": "Always label all regions of the Venn diagram including the region outside all sets (but inside the universal set). Work from the innermost overlap outward."
+    },
+    {
+      "name": "Permutations and Combinations",
+      "level": "O-Level",
+      "prerequisites": ["Sets and Venn Diagrams"],
+      "subtopics": [
+        "Multiplication and addition principles",
+        "Permutations (nPr)",
+        "Combinations (nCr)",
+        "Arrangements with restrictions",
+        "Identical objects"
+      ],
+      "objectives": "Apply counting principles to solve arrangement and selection problems; distinguish between permutations and combinations; handle restrictions and repeated elements.",
+      "common_mistakes": "Using permutations when order doesn't matter (and vice versa); forgetting to subtract restricted cases; not accounting for identical items in arrangements.",
+      "remediation": "Ask 'Does order matter?' as the first step every time. Use complementary counting (total minus restricted) for problems with exclusions. Draw slot diagrams for arrangements."
+    },
+    {
+      "name": "Probability",
+      "level": "O-Level",
+      "prerequisites": ["Permutations and Combinations", "Sets and Venn Diagrams"],
+      "subtopics": [
+        "Basic probability",
+        "Addition and multiplication rules",
+        "Mutually exclusive and independent events",
+        "Conditional probability",
+        "Tree diagrams and tables"
+      ],
+      "objectives": "Calculate probabilities using addition and multiplication rules; distinguish between mutually exclusive and independent events; solve conditional probability problems; use tree diagrams systematically.",
+      "common_mistakes": "Adding probabilities when events are not mutually exclusive (forgetting to subtract the intersection); confusing independent and mutually exclusive; errors in conditional probability (wrong denominator).",
+      "remediation": "Always draw a tree diagram or two-way table for multi-stage problems. Clearly identify whether events are independent or dependent before choosing a formula."
+    },
+    {
+      "name": "Proofs in Plane Geometry",
+      "level": "O-Level",
+      "prerequisites": ["Coordinate Geometry"],
+      "subtopics": [
+        "Midpoint theorem",
+        "Tangent-chord angle",
+        "Angle in alternate segment",
+        "Properties of cyclic quadrilaterals",
+        "Symmetric and angle properties of circles"
+      ],
+      "objectives": "Apply circle theorems to find unknown angles; prove geometric properties using logical chains of reasoning; construct clear geometric proofs.",
+      "common_mistakes": "Citing wrong theorems; incomplete proof chains (jumping steps); confusing 'angle at centre' with 'angle in same segment' theorems.",
+      "remediation": "Create a theorem reference card with diagrams. Practice identifying which theorem applies by the geometric configuration before attempting the proof."
+    }
+  ]
+}
