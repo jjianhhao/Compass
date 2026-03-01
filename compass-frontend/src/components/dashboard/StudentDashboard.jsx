@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, BookOpen, Map } from 'lucide-react';
+import { MessageSquare, BookOpen, Map, LogOut } from 'lucide-react';
 import MasteryOverview from './MasteryOverview';
 import RecommendationPanel from './RecommendationPanel';
 import VelocityChart from './VelocityChart';
@@ -32,17 +32,14 @@ export default function StudentDashboard({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
       {/* Top bar */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-20">
+      <header className="bg-white border-b border-gray-100 px-6 py-4 flex-shrink-0 z-20">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button
-              className="text-indigo-600 font-bold text-lg tracking-tight"
-              onClick={() => navigate('/')}
-            >
+            <span className="text-indigo-600 font-bold text-lg tracking-tight">
               🧭 COMPASS
-            </button>
+            </span>
             <span className="text-gray-300">|</span>
             <div>
               <span className="font-semibold text-gray-800">{studentName}</span>
@@ -73,65 +70,68 @@ export default function StudentDashboard({
               <BookOpen size={14} />
               Take a Quiz
             </button>
+            <button
+              className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-colors"
+              onClick={() => navigate('/')}
+            >
+              <LogOut size={14} />
+              Log Out
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Tab bar */}
-        <div className="flex gap-1 mb-6 bg-white border border-gray-100 rounded-xl p-1 w-fit shadow-sm">
-          {tabs.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === id
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-              onClick={() => setActiveTab(id)}
-            >
-              <Icon size={14} />
-              {label}
-            </button>
-          ))}
+      {/* Content area — fills remaining height, never grows the page */}
+      <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+        <div className="max-w-7xl w-full mx-auto px-6 pt-6 flex-shrink-0">
+          {/* Tab bar */}
+          <div className="flex gap-1 mb-4 bg-white border border-gray-100 rounded-xl p-1 w-fit shadow-sm">
+            {tabs.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeTab === id
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
+                onClick={() => setActiveTab(id)}
+              >
+                <Icon size={14} />
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Overview tab — always mounted, hidden when not active */}
-        <div className={activeTab === 'overview' ? '' : 'hidden'}>
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Left: Knowledge map + Mastery + Velocity */}
-            <div className="lg:col-span-3 flex flex-col gap-6">
-              {/* Knowledge map placeholder */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-                <h2 className="text-sm font-semibold text-gray-700 mb-1">Knowledge Map</h2>
-                <p className="text-xs text-gray-400 mb-4">Topic dependency graph — Person B integration</p>
-                <div className="h-48 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border-2 border-dashed border-indigo-200 flex flex-col items-center justify-center gap-2">
-                  <Map size={28} className="text-indigo-300" />
-                  <p className="text-sm text-indigo-400 font-medium">Knowledge graph coming soon</p>
-                  <p className="text-xs text-indigo-300">Connect Person B's graph component here</p>
+        {/* Overview tab — scrollable */}
+        <div className={`flex-1 overflow-y-auto min-h-0 px-6 pb-6 ${activeTab === 'overview' ? '' : 'hidden'}`}>
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              <div className="lg:col-span-3 flex flex-col gap-6">
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                  <h2 className="text-sm font-semibold text-gray-700 mb-1">Knowledge Map</h2>
+                  <p className="text-xs text-gray-400 mb-4">Topic dependency graph — Person B integration</p>
+                  <div className="h-48 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border-2 border-dashed border-indigo-200 flex flex-col items-center justify-center gap-2">
+                    <Map size={28} className="text-indigo-300" />
+                    <p className="text-sm text-indigo-400 font-medium">Knowledge graph coming soon</p>
+                    <p className="text-xs text-indigo-300">Connect Person B's graph component here</p>
+                  </div>
                 </div>
+                <MasteryOverview knowledgeMap={knowledgeMap} />
+                <VelocityChart velocity={velocity} />
               </div>
-
-              {/* Mastery overview */}
-              <MasteryOverview knowledgeMap={knowledgeMap} />
-
-              {/* Velocity chart */}
-              <VelocityChart velocity={velocity} />
-            </div>
-
-            {/* Right: Recommendations */}
-            <div className="lg:col-span-2">
-              <RecommendationPanel
-                agentOutput={agentOutput}
-                onOverride={() => {}}
-              />
+              <div className="lg:col-span-2">
+                <RecommendationPanel agentOutput={agentOutput} onOverride={() => {}} />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Chat tab — always mounted, hidden when not active */}
-        <div className={activeTab === 'chat' ? '' : 'hidden'}>
-          <StudentChat knowledgeMap={knowledgeMap} studentName={studentName} />
+        {/* Chat tab — fixed height, no page growth */}
+        <div className={`flex-1 min-h-0 px-6 pb-6 ${activeTab === 'chat' ? '' : 'hidden'}`}>
+          <div className="max-w-7xl mx-auto h-full">
+            <StudentChat knowledgeMap={knowledgeMap} studentName={studentName} />
+          </div>
         </div>
       </div>
     </div>

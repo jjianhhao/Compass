@@ -11,7 +11,7 @@ const STUDENT_NAMES = {
 
 function SkeletonDashboard() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-full overflow-y-auto bg-gray-50">
       <div className="bg-white border-b border-gray-100 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -56,7 +56,7 @@ export default function DashboardPage() {
 
   if (error && !knowledgeMap) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <div className="h-full bg-gray-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center max-w-sm">
           <AlertCircle className="mx-auto text-red-400 mb-3" size={36} />
           <h2 className="text-lg font-semibold text-gray-800 mb-2">Couldn't load data</h2>

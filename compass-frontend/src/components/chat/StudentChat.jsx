@@ -1,6 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Send, Bot, User, RotateCcw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import ConfidenceBadge from '../shared/ConfidenceBadge';
 import { api, getAIResponseDirect } from '../../api/client';
 
@@ -24,17 +27,28 @@ export default function StudentChat({ knowledgeMap, studentName }) {
   const [messages, setMessages] = useState([initialMessage]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
-  const bottomRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const lastAiMsgRef = useRef(null);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, typing]);
+  const scrollChatToBottom = () => {
+    const el = messagesContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  };
+
+  const scrollToLastAiMsg = () => {
+    const container = messagesContainerRef.current;
+    const msg = lastAiMsgRef.current;
+    if (container && msg) {
+      container.scrollTop = msg.offsetTop - container.offsetTop;
+    }
+  };
 
   const sendMessage = async (text) => {
     if (!text.trim()) return;
     const userMsg = { id: Date.now(), role: 'user', text };
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
+    setTimeout(scrollChatToBottom, 50);
     setTyping(true);
 
     try {
@@ -54,6 +68,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
         ...prev,
         { id: `ai_${Date.now()}_${prev.length}`, role: 'ai', text: reply, confidence: 'medium' },
       ]);
+      setTimeout(scrollToLastAiMsg, 50);
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -64,13 +79,14 @@ export default function StudentChat({ knowledgeMap, studentName }) {
           confidence: 'low',
         },
       ]);
+      setTimeout(scrollToLastAiMsg, 50);
     } finally {
       setTyping(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col" style={{ height: 'calc(100vh - 160px)' }}>
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col h-full">
       <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center">
@@ -92,10 +108,14 @@ export default function StudentChat({ knowledgeMap, studentName }) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-        {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-xs lg:max-w-sm ${msg.role === 'user' ? 'order-2' : 'order-1'}`}>
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+        {messages.map((msg, idx) => (
+          <div
+            key={msg.id}
+            ref={msg.role === 'ai' && idx === messages.length - 1 ? lastAiMsgRef : null}
+            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            <div className={`${msg.role === 'user' ? 'max-w-xs lg:max-w-sm order-2' : 'max-w-full order-1'}`}>
               {msg.role === 'ai' && (
                 <div className="flex items-center gap-1.5 mb-1 ml-1">
                   <Bot size={11} className="text-indigo-400" />
@@ -104,7 +124,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
                 </div>
               )}
               <div
-                className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                className={`px-4 py-3 rounded-2xl text-sm leading-relaxed overflow-x-auto ${
                   msg.role === 'user'
                     ? 'bg-indigo-600 text-white rounded-tr-sm'
                     : 'bg-gray-100 text-gray-800 rounded-tl-sm'
@@ -112,6 +132,8 @@ export default function StudentChat({ knowledgeMap, studentName }) {
               >
                 {msg.role === 'ai' ? (
                   <ReactMarkdown
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
                     components={{
                       p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
                       strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
@@ -153,7 +175,6 @@ export default function StudentChat({ knowledgeMap, studentName }) {
             </div>
           </div>
         )}
-        <div ref={bottomRef} />
       </div>
 
       {/* Suggestion chips */}
@@ -186,7 +207,6 @@ export default function StudentChat({ knowledgeMap, studentName }) {
             placeholder="Ask anything about your learning…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            disabled={typing}
           />
           <button
             type="submit"

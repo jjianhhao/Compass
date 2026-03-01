@@ -113,7 +113,7 @@ export const api = {
   },
 
   sendChatMessage: async (message, knowledgeMap) => {
-    if (USE_MOCK) { await delay(600); return { reply: 'Mock response — backend not connected yet.' }; }
+    if (USE_MOCK) { throw new Error('backend not connected'); }
     const res = await fetch(`${AGENT_URL}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -136,7 +136,7 @@ export const getAIResponseDirect = async (message, knowledgeMap, apiKey) => {
       messages: [
         {
           role: 'system',
-          content: `You are a supportive AI learning companion for a student studying O-Level Additional Mathematics. You have access to their learning data. Be encouraging, specific, and honest about what they need to work on. Always explain your reasoning. Show confidence levels in your responses.\n\nStudent's knowledge map: ${JSON.stringify(knowledgeMap)}`,
+          content: `You are a supportive AI learning companion for a student studying O-Level Additional Mathematics. You have access to their learning data. Be encouraging, specific, and honest about what they need to work on. Always explain your reasoning.\n\nIMPORTANT: When writing any mathematical expressions, always use LaTeX notation with proper delimiters: use $...$ for inline math (e.g. $x^2 + 1$) and $$...$$ for display/block math (e.g. $$\\int 2x\\,dx = x^2 + C$$). Never write raw LaTeX commands without delimiters.\n\nStudent's knowledge map: ${JSON.stringify(knowledgeMap)}`,
         },
         { role: 'user', content: message },
       ],

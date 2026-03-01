@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import QuizInterface from '../components/quiz/QuizInterface';
 import allQuestions from '../data/questions.json';
 import { api } from '../api/client';
@@ -46,8 +47,14 @@ export default function QuizPage() {
 
   if (!quizStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+      <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+          <button
+            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-5"
+            onClick={() => navigate(`/dashboard/${studentId}`)}
+          >
+            <ArrowLeft size={15} /> Back to Dashboard
+          </button>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Start a Quiz</h1>
           <p className="text-gray-500 text-sm mb-6">Select a topic or practice all topics</p>
 
