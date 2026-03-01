@@ -4,10 +4,14 @@ export default function ClassSummary({ students }) {
     ? Math.round((students.reduce((s, st) => s + st.overall_mastery, 0) / total) * 100)
     : 0;
   const needsAttention = students.filter(s => s.overall_mastery < 0.5).length;
-  const allTopics = students.flatMap(s => s.weakest_topic ? [s.weakest_topic] : []);
-  const mostCommon = allTopics.length
+  const allWeakTopics = students.flatMap(s => {
+    if (!s.topic_masteries?.length) return [];
+    const weakest = [...s.topic_masteries].sort((a, b) => a.mastery_score - b.mastery_score)[0];
+    return weakest ? [weakest.topic] : [];
+  });
+  const mostCommon = allWeakTopics.length
     ? Object.entries(
-        allTopics.reduce((acc, t) => ({ ...acc, [t]: (acc[t] || 0) + 1 }), {})
+        allWeakTopics.reduce((acc, t) => ({ ...acc, [t]: (acc[t] || 0) + 1 }), {})
       ).sort((a, b) => b[1] - a[1])[0]?.[0]
     : '—';
 

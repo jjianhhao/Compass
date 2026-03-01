@@ -34,24 +34,46 @@ export const api = {
     const list = await fetch(`${ENGINE_URL}/api/students`).then(handleResponse);
     return Promise.all(
       list.map(async s => {
-        const km = await fetch(`${ENGINE_URL}/api/student/${s.student_id}/knowledge-map`).then(r => r.json()).catch(() => null);
-        return { ...s, student_name: km?.student_name ?? s.student_id, topic_masteries: km?.topic_masteries ?? [] };
+        const km = await fetch(`${ENGINE_URL}/api/student/${s.student_id}/knowledge-map`)
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null);
+        // km.student_name may be null if Person B's engine didn't store it;
+        // fall back to formatting the ID: "sarah_001" → "Sarah"
+        const fallbackName = s.student_id
+          .split('_')[0]
+          .replace(/^\w/, c => c.toUpperCase());
+        return {
+          ...s,
+          student_name: km?.student_name ?? fallbackName,
+          topic_masteries: km?.topic_masteries ?? [],
+        };
       })
     );
   },
 
   getKnowledgeMap: async (studentId) => {
-    if (USE_MOCK) { await delay(); return MOCK_KNOWLEDGE_MAPS[studentId] ?? null; }
+    if (USE_MOCK) {
+      await delay();
+      // Support both 'sarah' and 'sarah_001' style IDs
+      const ID_ALIAS = { sarah: 'sarah_001', james: 'james_001', aisha: 'aisha_001' };
+      const resolved = ID_ALIAS[studentId] ?? studentId;
+      return MOCK_KNOWLEDGE_MAPS[resolved] ?? null;
+    }
     const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/knowledge-map`);
     if (!res.ok) return null;
     return res.json();
   },
 
   getVelocity: async (studentId) => {
-    if (USE_MOCK) { await delay(); return {}; }
+    if (USE_MOCK) { await delay(); return null; }
     const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/velocity`);
-    if (!res.ok) return {};
-    return res.json();
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Person B returns a dict keyed by topic name; convert to the array that VelocityChart expects
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      return Object.entries(data).map(([topic, info]) => ({ topic, ...info }));
+    }
+    return Array.isArray(data) && data.length > 0 ? data : null;
   },
 
   getTopicGraph: async () => {
@@ -61,7 +83,12 @@ export const api = {
 
   // Person B to add: GET /api/student/:id/activity?limit=10
   getActivity: async (studentId, limit = 10) => {
-    if (USE_MOCK) { await delay(); return (MOCK_ACTIVITY[studentId] ?? []).slice(0, limit); }
+    if (USE_MOCK) {
+      await delay();
+      const ID_ALIAS = { sarah: 'sarah_001', james: 'james_001', aisha: 'aisha_001' };
+      const resolved = ID_ALIAS[studentId] ?? studentId;
+      return (MOCK_ACTIVITY[resolved] ?? []).slice(0, limit);
+    }
     const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/activity?limit=${limit}`);
     if (!res.ok) return [];
     return res.json();
@@ -70,7 +97,13 @@ export const api = {
   // === Person A — Agent Pipeline (port 8001) ===
 
   getDiagnosis: async (knowledgeMap) => {
-    if (USE_MOCK) { await delay(800); return MOCK_DIAGNOSES[knowledgeMap.student_id] ?? null; }
+    if (USE_MOCK) {
+      await delay(800);
+      const ID_ALIAS = { sarah: 'sarah_001', james: 'james_001', aisha: 'aisha_001' };
+      const sid = knowledgeMap?.student_id;
+      const resolved = ID_ALIAS[sid] ?? sid;
+      return MOCK_DIAGNOSES[resolved] ?? MOCK_DIAGNOSES['sarah_001'];
+    }
     const res = await fetch(`${AGENT_URL}/api/diagnose`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

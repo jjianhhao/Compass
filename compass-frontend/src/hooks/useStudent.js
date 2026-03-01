@@ -138,7 +138,11 @@ export function useStudent(studentId) {
         api.getVelocity(studentId),
       ]);
       resolvedKM = km || MOCK_KNOWLEDGE_MAP;
-      resolvedVel = vel?.topics || vel || MOCK_VELOCITY;
+      resolvedVel = Array.isArray(vel) && vel.length > 0
+        ? vel
+        : Array.isArray(vel?.topics) && vel.topics.length > 0
+          ? vel.topics
+          : MOCK_VELOCITY;
     } catch {
       resolvedKM = MOCK_KNOWLEDGE_MAP;
       resolvedVel = MOCK_VELOCITY;

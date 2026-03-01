@@ -30,27 +30,48 @@ export const MOCK_ACTIVITY = {
 };
 
 // Mirrors GET /api/students (Person B, port 8000)
+// Enriched with topic_masteries so the teacher dashboard table has full data in mock mode
 export const MOCK_STUDENTS = [
   {
     student_id: 'sarah_001',
     student_name: 'Sarah Lim',
     overall_mastery: 0.74,
     topics_tracked: 5,
-    last_active: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2h ago
+    last_active: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+    topic_masteries: [
+      { topic: 'Quadratic Equations', mastery_score: 0.85, velocity: 'improving', attempt_count: 15 },
+      { topic: 'Coordinate Geometry', mastery_score: 0.80, velocity: 'plateauing', attempt_count: 12 },
+      { topic: 'Differentiation', mastery_score: 0.75, velocity: 'improving', attempt_count: 18 },
+      { topic: 'Integration', mastery_score: 0.60, velocity: 'plateauing', attempt_count: 14 },
+      { topic: 'Applications of Differentiation', mastery_score: 0.57, velocity: 'plateauing', attempt_count: 10 },
+    ],
   },
   {
     student_id: 'james_001',
     student_name: 'James Tan',
     overall_mastery: 0.38,
     topics_tracked: 5,
-    last_active: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2d ago
+    last_active: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+    topic_masteries: [
+      { topic: 'Algebraic Manipulation', mastery_score: 0.45, velocity: 'plateauing', attempt_count: 20 },
+      { topic: 'Trigonometric Functions', mastery_score: 0.40, velocity: 'regressing', attempt_count: 12 },
+      { topic: 'Trigonometric Identities', mastery_score: 0.30, velocity: 'regressing', attempt_count: 10 },
+      { topic: 'Indices and Logarithms', mastery_score: 0.50, velocity: 'plateauing', attempt_count: 8 },
+      { topic: 'Differentiation', mastery_score: 0.35, velocity: 'plateauing', attempt_count: 6 },
+    ],
   },
   {
     student_id: 'aisha_001',
     student_name: 'Aisha Binte Rahman',
     overall_mastery: 0.47,
     topics_tracked: 4,
-    last_active: new Date(Date.now() - 1000 * 60 * 60 * 24 * 22).toISOString(), // 22d ago
+    last_active: new Date(Date.now() - 1000 * 60 * 60 * 24 * 22).toISOString(),
+    topic_masteries: [
+      { topic: 'Algebraic Manipulation', mastery_score: 0.55, velocity: 'regressing', attempt_count: 15 },
+      { topic: 'Quadratic Equations', mastery_score: 0.50, velocity: 'regressing', attempt_count: 12 },
+      { topic: 'Surds', mastery_score: 0.42, velocity: 'regressing', attempt_count: 8 },
+      { topic: 'Polynomials', mastery_score: 0.40, velocity: 'regressing', attempt_count: 6 },
+    ],
   },
 ];
 

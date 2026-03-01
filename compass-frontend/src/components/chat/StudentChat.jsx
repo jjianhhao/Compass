@@ -10,7 +10,7 @@ const SUGGESTIONS = [
   'Which topic has my best progress?',
 ];
 
-const OPENAI_KEY = process.env.REACT_APP_OPENAI_KEY || '';
+const OPENAI_KEY = import.meta.env.VITE_OPENAI_KEY || '';
 
 export default function StudentChat({ knowledgeMap, studentName }) {
   const [messages, setMessages] = useState([

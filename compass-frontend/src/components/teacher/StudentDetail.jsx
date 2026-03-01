@@ -65,25 +65,31 @@ export default function StudentDetail({ studentId }) {
   const [activity, setActivity] = useState([]);
   const [loadingKm, setLoadingKm] = useState(true);
   const [loadingAgent, setLoadingAgent] = useState(false);
+  const [kmError, setKmError] = useState(null);
   const [overrideLog, setOverrideLog] = useState([]);
 
   useEffect(() => {
     setLoadingKm(true);
+    setKmError(null);
     Promise.all([
       api.getKnowledgeMap(studentId),
       api.getActivity(studentId, 10),
-    ]).then(([km, acts]) => {
-      setKnowledgeMap(km);
-      setActivity(acts);
-      setLoadingKm(false);
-      if (km) {
-        setLoadingAgent(true);
-        api.getDiagnosis(km).then(diag => {
-          setAgentOutput(diag);
-          setLoadingAgent(false);
-        });
-      }
-    });
+    ])
+      .then(([km, acts]) => {
+        setKnowledgeMap(km);
+        setActivity(acts);
+        setLoadingKm(false);
+        if (km) {
+          setLoadingAgent(true);
+          api.getDiagnosis(km)
+            .then(diag => { setAgentOutput(diag); setLoadingAgent(false); })
+            .catch(() => setLoadingAgent(false));
+        }
+      })
+      .catch(err => {
+        setKmError(err.message || 'Failed to load student data.');
+        setLoadingKm(false);
+      });
   }, [studentId]);
 
   const handleAction = (action, log) => {
@@ -97,6 +103,15 @@ export default function StudentDetail({ studentId }) {
       </div>
     );
   }
+
+  if (kmError) return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <button onClick={() => navigate('/teacher')} className="text-sm text-blue-600 hover:underline mb-4">← Back</button>
+      <div className="bg-red-50 border border-red-300 rounded-lg p-4 text-red-700 text-sm">
+        Failed to load student data: {kmError}
+      </div>
+    </div>
+  );
 
   if (!knowledgeMap) {
     return <div className="text-center py-16 text-gray-400">No data found for this student.</div>;

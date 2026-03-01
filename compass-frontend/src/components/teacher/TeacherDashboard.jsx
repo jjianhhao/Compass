@@ -13,20 +13,23 @@ const SORT_OPTIONS = [
 export default function TeacherDashboard() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sortBy, setSortBy] = useState('mastery_asc');
-  // recStatuses tracks teacher actions from the detail page; keyed by student_id
   const [recStatuses, setRecStatuses] = useState({});
 
   useEffect(() => {
-    // listStudents() already enriches with student_name + topic_masteries (see api/client.js)
-    api.listStudents().then(list => {
-      setStudents(list);
-      // Default all to 'pending' — updated when teacher acts on detail page
-      const defaultStatuses = {};
-      list.forEach(s => { defaultStatuses[s.student_id] = 'pending'; });
-      setRecStatuses(prev => ({ ...defaultStatuses, ...prev }));
-      setLoading(false);
-    });
+    api.listStudents()
+      .then(list => {
+        setStudents(list);
+        const defaultStatuses = {};
+        list.forEach(s => { defaultStatuses[s.student_id] = 'pending'; });
+        setRecStatuses(prev => ({ ...defaultStatuses, ...prev }));
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message || 'Failed to load students.');
+        setLoading(false);
+      });
   }, []);
 
   const alertStudents = students.filter(s =>
@@ -44,13 +47,19 @@ export default function TeacherDashboard() {
     });
   }, [students, sortBy]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+  if (loading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+    </div>
+  );
+
+  if (error) return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="bg-red-50 border border-red-300 rounded-lg p-4 text-red-700 text-sm">
+        Failed to load class data: {error}
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

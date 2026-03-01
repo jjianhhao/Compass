@@ -19,6 +19,7 @@ const CONFIDENCE_COLORS = {
   medium: 'bg-yellow-100 text-yellow-800',
   low: 'bg-red-100 text-red-700',
 };
+const confidenceClass = (level) => CONFIDENCE_COLORS[level] || 'bg-gray-100 text-gray-600';
 
 function Toast({ message, onDone }) {
   return (
@@ -31,7 +32,7 @@ function Toast({ message, onDone }) {
   );
 }
 
-function ReasoningTrail({ trail, evaluatorVerdict }) {
+function ReasoningTrail({ recReasoning, fullTrail, evaluatorVerdict }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="mt-3 border-t border-gray-100 pt-3">
@@ -39,16 +40,23 @@ function ReasoningTrail({ trail, evaluatorVerdict }) {
         onClick={() => setOpen(o => !o)}
         className="text-xs text-blue-600 hover:underline"
       >
-        {open ? 'Hide' : 'Show'} AI reasoning trail
+        {open ? 'Hide' : 'Show'} full AI reasoning trail
       </button>
       {open && (
         <div className="mt-2 text-xs text-gray-600 bg-gray-50 rounded p-3 space-y-2">
-          <p className="whitespace-pre-wrap">{trail}</p>
+          <p className="font-semibold text-gray-700">This recommendation:</p>
+          <p className="whitespace-pre-wrap">{recReasoning}</p>
+          {fullTrail && (
+            <>
+              <p className="font-semibold text-gray-700 mt-2">Full diagnostic chain:</p>
+              <p className="whitespace-pre-wrap">{fullTrail}</p>
+            </>
+          )}
           {evaluatorVerdict && (
             <div className={`mt-2 flex items-start gap-2 p-2 rounded ${evaluatorVerdict.approved ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-800'}`}>
               <span>{evaluatorVerdict.approved ? '✅' : '⚠️'}</span>
               <span className="text-xs">
-                Evaluator: {evaluatorVerdict.approved ? 'Approved' : `Flagged — ${evaluatorVerdict.concerns.join(', ')}`}
+                Evaluator: {evaluatorVerdict.approved ? 'Approved' : `Flagged — ${evaluatorVerdict.concerns?.join(', ')}`}
               </span>
             </div>
           )}
@@ -58,7 +66,7 @@ function ReasoningTrail({ trail, evaluatorVerdict }) {
   );
 }
 
-function RecommendationCard({ rec, index, confidence, evaluatorVerdict, onAction }) {
+function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReasoningTrail, onAction }) {
   const [mode, setMode] = useState(null); // null | 'modify' | 'reject'
   const [toast, setToast] = useState(null);
   const [done, setDone] = useState(null); // 'accepted' | 'modified' | 'rejected'
@@ -157,7 +165,7 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, onAction
               {rec.subtopic && <p className="text-xs text-gray-500">{rec.subtopic}</p>}
             </div>
           </div>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${CONFIDENCE_COLORS[confidence] || CONFIDENCE_COLORS.medium}`}>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${confidenceClass(confidence)}`}>
             {confidence} confidence
           </span>
         </div>
@@ -289,7 +297,7 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, onAction
           </div>
         )}
 
-        <ReasoningTrail trail={rec.reasoning} evaluatorVerdict={evaluatorVerdict} />
+        <ReasoningTrail recReasoning={rec.reasoning} fullTrail={fullReasoningTrail} evaluatorVerdict={evaluatorVerdict} />
       </div>
 
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
@@ -299,7 +307,10 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, onAction
 
 export default function RecommendationReview({ agentOutput, onAction }) {
   if (!agentOutput) return null;
-  const { plan, evaluator_verdict, overall_confidence } = agentOutput;
+  const { plan, evaluator_verdict, overall_confidence, reasoning_trail } = agentOutput;
+  if (!plan) return null;
+
+  const recommendations = plan.recommendations ?? [];
 
   return (
     <div className="space-y-3">
@@ -307,12 +318,14 @@ export default function RecommendationReview({ agentOutput, onAction }) {
       <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
         <div className="flex items-center justify-between mb-1">
           <p className="text-sm font-semibold text-indigo-900">AI Study Plan Summary</p>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${CONFIDENCE_COLORS[overall_confidence]}`}>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${confidenceClass(overall_confidence)}`}>
             {overall_confidence} confidence
           </span>
         </div>
         <p className="text-sm text-indigo-800">{plan.study_plan_summary}</p>
-        <p className="text-xs text-indigo-600 mt-1">Est. {plan.estimated_sessions} session{plan.estimated_sessions !== 1 ? 's' : ''}</p>
+        {plan.estimated_sessions != null && (
+          <p className="text-xs text-indigo-600 mt-1">Est. {plan.estimated_sessions} session{plan.estimated_sessions !== 1 ? 's' : ''}</p>
+        )}
       </div>
 
       {/* Evaluator warning */}
@@ -321,7 +334,7 @@ export default function RecommendationReview({ agentOutput, onAction }) {
           <span className="text-yellow-600">⚠️</span>
           <div>
             <p className="text-xs font-semibold text-yellow-800">AI flagged concerns with this analysis</p>
-            {evaluator_verdict.concerns.map((c, i) => (
+            {evaluator_verdict.concerns?.map((c, i) => (
               <p key={i} className="text-xs text-yellow-700">• {c}</p>
             ))}
           </div>
@@ -329,13 +342,14 @@ export default function RecommendationReview({ agentOutput, onAction }) {
       )}
 
       {/* Recommendation cards */}
-      {plan.recommendations.map((rec, i) => (
+      {recommendations.map((rec, i) => (
         <RecommendationCard
           key={i}
           index={i}
           rec={rec}
           confidence={overall_confidence}
           evaluatorVerdict={evaluator_verdict}
+          fullReasoningTrail={reasoning_trail}
           onAction={onAction}
         />
       ))}
