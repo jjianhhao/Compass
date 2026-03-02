@@ -1,4 +1,6 @@
+import asyncio
 from contextlib import asynccontextmanager
+from functools import partial
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Query
@@ -35,8 +37,12 @@ app.add_middleware(
 @app.post("/api/diagnose", response_model=AgentPipelineOutput)
 async def diagnose_student(knowledge_map: KnowledgeMap):
     """Run full agent pipeline: Diagnosis -> Planner -> Evaluator"""
-    result = run_pipeline(knowledge_map)
-    return result
+    try:
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(None, run_pipeline, knowledge_map)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Agent pipeline error: {str(e)}")
 
 
 # === Question endpoints ===
@@ -67,8 +73,14 @@ async def get_single_question(question_id: str):
 @app.post("/api/grade", response_model=GradeResponse)
 async def grade_answer(req: GradeRequest):
     """Grade a student's handwritten/uploaded work using GPT-4o Vision."""
-    result = grade_student_work(req.question_id, req.image_base64)
-    return result
+    try:
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None, grade_student_work, req.question_id, req.image_base64
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Grading error: {str(e)}")
 
 
 # === Chat endpoint ===
@@ -88,28 +100,32 @@ async def chat(req: ChatRequest):
         import json
         km_context = f"\n\nStudent's knowledge map:\n{json.dumps(req.knowledge_map, default=str)}"
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a supportive AI learning companion for a student studying "
-                    "IB Mathematics Analysis and Approaches HL. You have access to their learning data. "
-                    "Be encouraging, specific, and honest about what they need to work on. "
-                    "Always explain your reasoning.\n\n"
-                    "When writing mathematical expressions, use LaTeX notation: "
-                    "use $...$ for inline math and $$...$$ for display math.\n"
-                    "Keep responses concise (2-4 paragraphs max)."
-                    f"{km_context}"
-                ),
-            },
-            {"role": "user", "content": req.message},
-        ],
-        temperature=0.5,
-    )
-    reply = response.choices[0].message.content
-    return ChatResponse(message=reply)
+    try:
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a supportive AI learning companion for a student studying "
+                        "IB Mathematics Analysis and Approaches HL. You have access to their learning data. "
+                        "Be encouraging, specific, and honest about what they need to work on. "
+                        "Always explain your reasoning.\n\n"
+                        "When writing mathematical expressions, use LaTeX notation: "
+                        "use $...$ for inline math and $$...$$ for display math.\n"
+                        "Keep responses concise (2-4 paragraphs max)."
+                        f"{km_context}"
+                    ),
+                },
+                {"role": "user", "content": req.message},
+            ],
+            temperature=0.5,
+            timeout=30,
+        )
+        reply = response.choices[0].message.content
+        return ChatResponse(message=reply)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
 
 
 @app.get("/health")

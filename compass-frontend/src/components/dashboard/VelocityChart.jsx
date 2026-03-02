@@ -72,7 +72,25 @@ const CustomLabel = ({ x, y, width, value }) => {
 };
 
 export default function VelocityChart({ velocity }) {
-  if (!velocity || velocity.length === 0) return null;
+  if (!velocity || velocity.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 animate-pulse">
+        <div className="h-3 w-36 bg-gray-200 rounded mb-1" />
+        <div className="h-2 w-56 bg-gray-100 rounded mb-4" />
+        <div className="flex gap-4 mb-4">
+          {[0, 1, 2].map(i => <div key={i} className="h-3 w-20 bg-gray-100 rounded" />)}
+        </div>
+        <div className="space-y-3">
+          {[0, 1, 2, 3, 4].map(i => (
+            <div key={i} className="flex items-center gap-3">
+              <div className="h-3 w-36 bg-gray-100 rounded" />
+              <div className="flex-1 h-3 bg-gray-100 rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   const data = velocity.map((v) => ({
     ...v,

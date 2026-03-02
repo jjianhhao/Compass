@@ -16,6 +16,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
   const [results, setResults] = useState([]);
   const [showSummary, setShowSummary] = useState(false);
   const [showQuitWarning, setShowQuitWarning] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const timerRef = useRef(null);
   const startTimeRef = useRef(Date.now());
   const canvasRef = useRef(null);
@@ -62,8 +63,15 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
     const activeRef = inputTab === 'draw' ? canvasRef : uploadRef;
     const image = activeRef.current?.getImage();
 
-    if (!image) return;
-
+    if (!image) {
+      setSubmitError(
+        inputTab === 'draw'
+          ? 'Please draw your answer on the canvas before submitting.'
+          : 'Please upload or capture a photo before submitting.'
+      );
+      return;
+    }
+    setSubmitError(null);
     setGrading(true);
     clearInterval(timerRef.current);
     const timeTaken = Math.floor((Date.now() - startTimeRef.current) / 1000);
@@ -295,7 +303,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
                       ? 'bg-indigo-50 text-indigo-700 border-r border-gray-200'
                       : 'text-gray-500 hover:bg-gray-50 border-r border-gray-200'
                   }`}
-                  onClick={() => setInputTab('draw')}
+                  onClick={() => { setInputTab('draw'); setSubmitError(null); }}
                 >
                   <Pencil size={14} /> Draw
                 </button>
@@ -306,7 +314,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
                       ? 'bg-indigo-50 text-indigo-700'
                       : 'text-gray-500 hover:bg-gray-50'
                   }`}
-                  onClick={() => setInputTab('upload')}
+                  onClick={() => { setInputTab('upload'); setSubmitError(null); }}
                 >
                   <ImageUp size={14} /> Upload Photo
                 </button>
@@ -327,6 +335,9 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
               >
                 Submit Answer
               </button>
+              {submitError && (
+                <p className="mt-2 text-sm text-red-500 text-center">{submitError}</p>
+              )}
             </div>
           )}
 

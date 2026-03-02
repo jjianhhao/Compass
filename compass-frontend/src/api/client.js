@@ -75,6 +75,7 @@ const MOCK_TOPIC_GRAPH = {
 };
 
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms));
+const timeout = (ms) => ({ signal: AbortSignal.timeout(ms) });
 
 const handleResponse = async (res) => {
   if (!res.ok) {
@@ -97,6 +98,7 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...event, student_id: resolveId(event.student_id) }),
+      ...timeout(10000),
     });
     return handleResponse(res);
   },
@@ -112,10 +114,10 @@ export const api = {
     }
     // Person B's /api/students only returns { student_id, overall_mastery, topics_tracked, last_active }
     // Enrich with student_name + topic_masteries from knowledge-map per student
-    const list = await fetch(`${ENGINE_URL}/api/students`).then(handleResponse);
+    const list = await fetch(`${ENGINE_URL}/api/students`, timeout(10000)).then(handleResponse);
     return Promise.all(
       list.map(async s => {
-        const km = await fetch(`${ENGINE_URL}/api/student/${s.student_id}/knowledge-map`)
+        const km = await fetch(`${ENGINE_URL}/api/student/${s.student_id}/knowledge-map`, timeout(10000))
           .then(r => r.ok ? r.json() : null)
           .catch(() => null);
         // km.student_name may be null if Person B's engine didn't store it;
@@ -134,14 +136,14 @@ export const api = {
 
   getKnowledgeMap: async (studentId) => {
     if (USE_MOCK) { await delay(); return MOCK_KNOWLEDGE_MAPS[resolveId(studentId)] ?? null; }
-    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/knowledge-map`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/knowledge-map`, timeout(10000));
     if (!res.ok) return null;
     return res.json();
   },
 
   getVelocity: async (studentId) => {
     if (USE_MOCK) { await delay(); return null; }
-    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/velocity`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/velocity`, timeout(10000));
     if (!res.ok) return null;
     const data = await res.json();
     // Person B returns a dict keyed by topic name; convert to the array that VelocityChart expects
@@ -154,7 +156,7 @@ export const api = {
   getTopicGraph: async () => {
     // Always try the real API first, fall back to inline graph data
     try {
-      const res = await fetch(`${ENGINE_URL}/api/topics/graph`);
+      const res = await fetch(`${ENGINE_URL}/api/topics/graph`, timeout(8000));
       if (res.ok) return res.json();
     } catch { /* backend unavailable */ }
     return MOCK_TOPIC_GRAPH;
@@ -166,7 +168,7 @@ export const api = {
       await delay();
       return (MOCK_ACTIVITY[resolveId(studentId)] ?? []).slice(0, limit);
     }
-    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/activity?limit=${limit}`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/activity?limit=${limit}`, timeout(10000));
     if (!res.ok) return [];
     return res.json();
   },
@@ -182,6 +184,7 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(knowledgeMap),
+      ...timeout(60000),
     });
     return handleResponse(res);
   },
@@ -194,7 +197,7 @@ export const api = {
       try {
         const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
         if (difficulty) params.set('difficulty', difficulty);
-        const res = await fetch(`${AGENT_URL}/api/questions?${params}`);
+        const res = await fetch(`${AGENT_URL}/api/questions?${params}`, timeout(10000));
         if (res.ok) return handleResponse(res);
       } catch { /* agent service unavailable — use CSV fallback */ }
     }
@@ -220,6 +223,7 @@ export const api = {
             question_id: questionId,
             image_base64: imageBase64,
           }),
+          ...timeout(45000),
         });
         if (res.ok) return handleResponse(res);
       } catch { /* agent service unavailable — use mock grading */ }
@@ -247,6 +251,7 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message, knowledge_map: knowledgeMap }),
+      ...timeout(30000),
     });
     return handleResponse(res);
   },

@@ -31,6 +31,10 @@ def load_questions() -> int:
     _questions = []
     _questions_by_id = {}
 
+    if not CSV_PATH.exists():
+        print(f"Warning: Question CSV not found at {CSV_PATH}. Starting with 0 questions.")
+        return 0
+
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:

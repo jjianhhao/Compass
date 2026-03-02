@@ -63,6 +63,7 @@ function layoutGraph(graphData) {
   const laid = {};
   for (const node of graphData.nodes) {
     const pos = g.node(node.id);
+    if (!pos) continue; // dagre failed to place this node — skip it
     laid[node.id] = { ...node, x: pos.x, y: pos.y, label: splitLabel(node.name) };
   }
 
@@ -177,10 +178,19 @@ export default function KnowledgeMapGraph({ knowledgeMap = {} }) {
   }, [graphData]);
 
   if (fetchError) {
-    return <div className="text-sm text-red-500 p-4">Failed to load topic graph. Is the knowledge engine running?</div>;
+    return (
+      <div className="flex items-center gap-2 p-4 text-sm text-red-500">
+        <span>⚠</span> Could not load topic graph — using offline data.
+      </div>
+    );
   }
   if (!layout) {
-    return <div className="text-sm text-gray-400 p-4">Loading topic graph...</div>;
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-400" />
+        <span className="ml-2 text-sm text-gray-400">Loading knowledge map…</span>
+      </div>
+    );
   }
 
   const { nodes: topicMap, width: svgW, height: svgH } = layout;
