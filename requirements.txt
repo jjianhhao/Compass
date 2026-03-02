@@ -1,0 +1,18 @@
+# Shared Python dependencies for Compass
+# Install: pip install -r requirements.txt
+
+# Web framework
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.5.0
+
+# AI / LLM
+openai>=1.12.0
+chromadb>=0.4.22
+
+# Knowledge engine
+networkx>=3.2
+
+# Utilities
+python-dotenv>=1.0.0
+httpx>=0.27.0

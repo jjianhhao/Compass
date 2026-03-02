@@ -4,10 +4,12 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
+from pydantic import BaseModel
 from schemas.models import KnowledgeMap, AgentPipelineOutput, GradeRequest, GradeResponse
 from agents.pipeline import run_pipeline
 from data.questions import load_questions, get_questions, get_question_by_id, get_total_count
 from agents.grader import grade_student_work
+from config import client, MODEL
 
 
 @asynccontextmanager
@@ -69,6 +71,47 @@ async def grade_answer(req: GradeRequest):
     return result
 
 
+# === Chat endpoint ===
+
+class ChatRequest(BaseModel):
+    message: str
+    knowledge_map: Optional[dict] = None
+
+class ChatResponse(BaseModel):
+    message: str
+
+@app.post("/api/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest):
+    """AI learning companion chat grounded in the student's knowledge map."""
+    km_context = ""
+    if req.knowledge_map:
+        import json
+        km_context = f"\n\nStudent's knowledge map:\n{json.dumps(req.knowledge_map, default=str)}"
+
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a supportive AI learning companion for a student studying "
+                    "O-Level Additional Mathematics. You have access to their learning data. "
+                    "Be encouraging, specific, and honest about what they need to work on. "
+                    "Always explain your reasoning.\n\n"
+                    "When writing mathematical expressions, use LaTeX notation: "
+                    "use $...$ for inline math and $$...$$ for display math.\n"
+                    "Keep responses concise (2-4 paragraphs max)."
+                    f"{km_context}"
+                ),
+            },
+            {"role": "user", "content": req.message},
+        ],
+        temperature=0.5,
+    )
+    reply = response.choices[0].message.content
+    return ChatResponse(message=reply)
+
+
 @app.get("/health")
 async def health():
-    return {"status": "ok", "agents": ["diagnosis", "planner", "evaluator", "grader"]}
+    return {"status": "ok", "agents": ["diagnosis", "planner", "evaluator", "grader", "chat"]}

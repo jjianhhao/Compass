@@ -1,4 +1,5 @@
 import { MOCK_STUDENTS, MOCK_KNOWLEDGE_MAPS, MOCK_DIAGNOSES, MOCK_ACTIVITY } from '../data/mockTeacherData';
+import CSV_QUESTIONS from '../data/csvQuestions.json';
 
 const USE_MOCK = true; // flip to false when Person A/B backends are live
 const ENGINE_URL = 'http://localhost:8000';
@@ -115,6 +116,17 @@ export const api = {
   // === Question Bank + AI Grading (port 8001) ===
 
   fetchQuestions: async (difficulty = null, limit = 10, offset = 0) => {
+    if (USE_MOCK) {
+      await delay();
+      let pool = CSV_QUESTIONS;
+      if (difficulty) pool = pool.filter(q => q.difficulty === difficulty);
+      // Shuffle and pick `limit` questions
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(offset, offset + limit);
+      // Strip markscheme from student-facing view
+      const questions = selected.map(({ markscheme_body, ...q }) => q);
+      return { questions, total: pool.length };
+    }
     const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
     if (difficulty) params.set('difficulty', difficulty);
     const res = await fetch(`${AGENT_URL}/api/questions?${params}`);
@@ -122,6 +134,22 @@ export const api = {
   },
 
   gradeAnswer: async (studentId, questionId, imageBase64) => {
+    if (USE_MOCK) {
+      await delay(1200);
+      const q = CSV_QUESTIONS.find(q => q.id === questionId);
+      const marks = q?.marks ?? 6;
+      const awarded = Math.floor(Math.random() * (marks + 1));
+      const pct = Math.round((awarded / marks) * 100);
+      return {
+        marks_awarded: awarded,
+        marks_available: marks,
+        mark_percentage: pct,
+        feedback: 'Mock grading — connect the agent backend (port 8001) for real AI grading with GPT-4o Vision.',
+        strengths: awarded > marks / 2 ? ['Good attempt shown'] : [],
+        errors: awarded <= marks / 2 ? ['Review your working — some steps may be missing'] : [],
+        is_correct: pct >= 50,
+      };
+    }
     const res = await fetch(`${AGENT_URL}/api/grade`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
