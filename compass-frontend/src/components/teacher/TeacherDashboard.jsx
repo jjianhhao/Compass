@@ -1,8 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import { getRecStatus } from '../../api/localStore';
 import ClassSummary from './ClassSummary';
 import StudentRow from './StudentRow';
+import { LogOut, RefreshCw } from 'lucide-react';
 
 const SORT_OPTIONS = [
   { value: 'mastery_asc', label: 'Mastery (Low → High)' },
@@ -12,6 +14,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function TeacherDashboard() {
+  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -66,11 +69,40 @@ export default function TeacherDashboard() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Top bar */}
+      <header className="bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <span className="text-indigo-600 font-bold text-lg tracking-tight">🧭 COMPASS</span>
+            <span className="text-gray-300">|</span>
+            <div>
+              <span className="font-semibold text-gray-800">Teacher Dashboard</span>
+              <span className="ml-2 text-sm text-gray-400">IB Mathematics AA HL</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setLoading(true); api.listStudents().then(list => { setStudents(list); const s = {}; list.forEach(st => { s[st.student_id] = getRecStatus(st.student_id); }); setRecStatuses(s); setLoading(false); }).catch(() => setLoading(false)); }}
+              className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              <RefreshCw size={14} /> Refresh
+            </button>
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-colors"
+            >
+              <LogOut size={14} /> Log Out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Page heading */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Class Overview</h1>
-        <p className="text-sm text-gray-500 mt-1">IB Mathematics AA HL</p>
+        <p className="text-sm text-gray-500 mt-1">Monitor student progress and manage AI recommendations</p>
       </div>
 
       {/* Alert Banner */}
@@ -130,6 +162,7 @@ export default function TeacherDashboard() {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

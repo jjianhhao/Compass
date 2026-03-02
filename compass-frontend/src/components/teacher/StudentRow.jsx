@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { formatTopicName } from '../../utils/topicNames';
 
 function MasteryBar({ score }) {
   const pct = Math.round(score * 100);
@@ -78,7 +79,7 @@ export default function StudentRow({ student, recStatus = 'pending' }) {
       <td className="px-4 py-3 text-sm text-gray-700">
         {weakest ? (
           <span>
-            {weakest.topic.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}{' '}
+            {formatTopicName(weakest.topic)}{' '}
             <span className="text-gray-400">({Math.round(weakest.mastery_score * 100)}%)</span>
           </span>
         ) : '—'}

@@ -1,4 +1,12 @@
 import { useState } from 'react';
+import { formatTopicName } from '../../utils/topicNames';
+
+const PRIORITY_LABELS = {
+  critical: 'Critical',
+  high: 'High',
+  medium: 'Medium',
+  low: 'Low',
+};
 
 const REJECT_REASONS = [
   'Student already revised this',
@@ -138,8 +146,8 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
           <div className="flex items-center gap-2">
             <span className="text-lg">{doneIcon}</span>
             <div>
-              <p className="font-medium text-gray-700">{rec.topic}</p>
-              <p className="text-xs text-gray-500 capitalize">{done} by teacher</p>
+              <p className="font-medium text-gray-700">{formatTopicName(rec.topic)}</p>
+              <p className="text-xs text-gray-500">{done.charAt(0).toUpperCase() + done.slice(1)} by teacher</p>
             </div>
           </div>
         </div>
@@ -154,16 +162,16 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2 flex-1">
-            <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold uppercase ${PRIORITY_COLORS[rec.priority] || PRIORITY_COLORS.low}`}>
-              {rec.priority}
+            <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${PRIORITY_COLORS[rec.priority] || PRIORITY_COLORS.low}`}>
+              {PRIORITY_LABELS[rec.priority] ?? rec.priority}
             </span>
             <div>
-              <p className="font-semibold text-gray-900">{rec.topic}</p>
+              <p className="font-semibold text-gray-900">{formatTopicName(rec.topic)}</p>
               {rec.subtopic && <p className="text-xs text-gray-500">{rec.subtopic}</p>}
             </div>
           </div>
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${confidenceClass(confidence)}`}>
-            {confidence} confidence
+            {confidence ? confidence.charAt(0).toUpperCase() + confidence.slice(1) : ''} Confidence
           </span>
         </div>
 
@@ -316,7 +324,7 @@ export default function RecommendationReview({ agentOutput, onAction }) {
         <div className="flex items-center justify-between mb-1">
           <p className="text-sm font-semibold text-indigo-900">AI Study Plan Summary</p>
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${confidenceClass(overall_confidence)}`}>
-            {overall_confidence} confidence
+            {overall_confidence ? overall_confidence.charAt(0).toUpperCase() + overall_confidence.slice(1) : ''} Confidence
           </span>
         </div>
         <p className="text-sm text-indigo-800">{plan.study_plan_summary}</p>

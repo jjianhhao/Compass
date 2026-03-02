@@ -3,5 +3,9 @@ import StudentDetail from '../components/teacher/StudentDetail';
 
 export default function TeacherStudentPage() {
   const { studentId } = useParams();
-  return <StudentDetail studentId={studentId} />;
+  return (
+    <div className="h-screen overflow-y-auto bg-gray-50">
+      <StudentDetail studentId={studentId} />
+    </div>
+  );
 }

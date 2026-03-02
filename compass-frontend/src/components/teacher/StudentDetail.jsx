@@ -6,6 +6,7 @@ import { formatTopicName } from '../../utils/topicNames';
 import RecommendationReview from './RecommendationReview';
 import OverrideLog from './OverrideLog';
 import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
+import { ArrowLeft, LogOut } from 'lucide-react';
 
 function MasteryBar({ score, showPct = true }) {
   const pct = Math.round(score * 100);
@@ -53,12 +54,18 @@ function PrerequisiteFlag({ flag }) {
     <div className="flex items-center gap-2 text-xs bg-red-50 border border-red-200 rounded px-3 py-1.5">
       <span className="text-red-500">⚠</span>
       <span className="text-red-700">
-        <span className="font-semibold">{flag.topic.replace(/_/g, ' ')}</span> requires{' '}
-        <span className="font-semibold">{flag.prerequisite_topic.replace(/_/g, ' ')}</span>{' '}
+        <span className="font-semibold">{formatTopicName(flag.topic)}</span> requires{' '}
+        <span className="font-semibold">{formatTopicName(flag.prerequisite_topic)}</span>{' '}
         (currently {Math.round(flag.prerequisite_mastery * 100)}%)
       </span>
     </div>
   );
+}
+
+function formatDiagnosisText(text) {
+  if (!text || typeof text !== 'string') return text;
+  // Replace snake_case topic IDs (in single quotes or standalone) with properly formatted names
+  return text.replace(/'([a-z][a-z0-9_]+)'/g, (_, id) => formatTopicName(id));
 }
 
 export default function StudentDetail({ studentId }) {
@@ -143,14 +150,30 @@ export default function StudentDetail({ studentId }) {
   const sortedTopics = [...topic_masteries].sort((a, b) => a.mastery_score - b.mastery_score);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Back button */}
-      <button
-        onClick={() => navigate('/teacher')}
-        className="text-sm text-blue-600 hover:underline mb-4 flex items-center gap-1"
-      >
-        ← Back to Class Overview
-      </button>
+    <div>
+      {/* Top bar */}
+      <header className="bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/teacher')}
+              className="flex items-center gap-1.5 border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              <ArrowLeft size={14} /> Class Overview
+            </button>
+            <span className="text-gray-300">|</span>
+            <span className="font-semibold text-gray-800">{student_name}</span>
+          </div>
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-colors"
+          >
+            <LogOut size={14} /> Log Out
+          </button>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
 
       {/* Student Header */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
@@ -237,44 +260,44 @@ export default function StudentDetail({ studentId }) {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-semibold text-gray-800 text-sm">AI Diagnosis</h2>
-              {loadingAgent && (
-                <div className="animate-spin h-4 w-4 border-b-2 border-blue-500 rounded-full" />
-              )}
+              <div className="flex items-center gap-2">
+                {loadingAgent && (
+                  <div className="animate-spin h-4 w-4 border-b-2 border-blue-500 rounded-full" />
+                )}
+                {agentOutput && !loadingAgent && (
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    agentOutput.overall_confidence === 'high' ? 'bg-green-100 text-green-700' :
+                    agentOutput.overall_confidence === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                    'bg-red-100 text-red-700'
+                  }`}>
+                    {agentOutput.overall_confidence ? agentOutput.overall_confidence.charAt(0).toUpperCase() + agentOutput.overall_confidence.slice(1) : ''} Confidence
+                  </span>
+                )}
+              </div>
             </div>
             {agentOutput ? (
               <div className="space-y-3">
-                <p className="text-sm text-gray-700">
-                  {agentOutput.diagnosis?.root_cause_analysis ?? agentOutput.diagnosis ?? 'Diagnosis complete.'}
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {formatDiagnosisText(agentOutput.diagnosis?.root_cause_analysis ?? agentOutput.diagnosis ?? 'Diagnosis complete.')}
                 </p>
 
                 {(agentOutput.diagnosis.error_classifications ?? []).length > 0 && (
                   <div>
-                    <p className="text-xs font-semibold text-gray-600 mb-1">Error Types</p>
+                    <p className="text-xs font-semibold text-gray-600 mb-1">Error Classifications</p>
                     {(agentOutput.diagnosis.error_classifications ?? []).map((ec, i) => (
                       <div key={i} className="text-xs flex items-start gap-2 mb-1">
-                        <span className={`px-1.5 py-0.5 rounded font-medium ${
+                        <span className={`shrink-0 px-1.5 py-0.5 rounded font-medium ${
                           ec.error_type === 'conceptual_gap' ? 'bg-red-100 text-red-700' :
                           ec.error_type === 'time_pressure' ? 'bg-orange-100 text-orange-700' :
                           'bg-yellow-100 text-yellow-700'
                         }`}>
-                          {ec.error_type.replace(/_/g, ' ')}
+                          {ec.error_type.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
                         </span>
                         <span className="text-gray-600">{ec.evidence}</span>
                       </div>
                     ))}
                   </div>
                 )}
-
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>{agentOutput.diagnosis.data_points_used} data points</span>
-                  <span className={`px-2 py-0.5 rounded-full font-medium ${
-                    agentOutput.overall_confidence === 'high' ? 'bg-green-100 text-green-700' :
-                    agentOutput.overall_confidence === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-red-100 text-red-700'
-                  }`}>
-                    {agentOutput.overall_confidence} confidence
-                  </span>
-                </div>
               </div>
             ) : (
               <p className="text-sm text-gray-400">
@@ -318,7 +341,7 @@ export default function StudentDetail({ studentId }) {
               {activity.map((a, i) => (
                 <tr key={i} className={a.is_correct ? '' : 'bg-red-50'}>
                   <td className="px-4 py-2 text-gray-500 whitespace-nowrap">{timeAgo(a.timestamp)}</td>
-                  <td className="px-4 py-2 text-gray-800">{a.topic_name || a.topic}</td>
+                  <td className="px-4 py-2 text-gray-800">{formatTopicName(a.topic_name || a.topic)}</td>
                   <td className="px-4 py-2 text-gray-600">{a.mastery_after != null ? `${Math.round(a.mastery_after * 100)}%` : '—'}</td>
                   <td className="px-4 py-2">
                     {a.is_correct
@@ -331,6 +354,7 @@ export default function StudentDetail({ studentId }) {
             </tbody>
           </table>
         )}
+      </div>
       </div>
     </div>
   );

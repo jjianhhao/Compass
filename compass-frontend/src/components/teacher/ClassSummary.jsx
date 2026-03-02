@@ -1,3 +1,5 @@
+import { formatTopicName } from '../../utils/topicNames';
+
 export default function ClassSummary({ students }) {
   const total = students.length;
   const avgMastery = total
@@ -19,7 +21,7 @@ export default function ClassSummary({ students }) {
     { label: 'Total Students', value: total, color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-200' },
     { label: 'Average Mastery', value: `${avgMastery}%`, color: 'text-indigo-700', bg: 'bg-indigo-50', border: 'border-indigo-200' },
     { label: 'Needs Attention', value: needsAttention, color: 'text-amber-700', bg: 'bg-amber-50', border: 'border-amber-200' },
-    { label: 'Most Common Weak Topic', value: mostCommon, color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200', small: true },
+    { label: 'Most Common Weak Topic', value: mostCommon !== '—' ? formatTopicName(mostCommon) : '—', color: 'text-red-700', bg: 'bg-red-50', border: 'border-red-200', small: true },
   ];
 
   return (
