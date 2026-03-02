@@ -3,8 +3,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Load .env from compass-agents directory
+# Load .env — prefer local compass-agents/.env, fall back to repo root .env
 load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 api_key = os.environ.get("OPENAI_API_KEY")
 if not api_key:

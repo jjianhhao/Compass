@@ -106,6 +106,9 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ disabled = false }, re
     getImage: () => {
       const pad = padRef.current;
       if (!pad || pad.isEmpty()) return null;
+      // Require at least 8 total data points to filter out accidental single taps
+      const totalPoints = pad.toData().reduce((sum, stroke) => sum + (stroke.points?.length ?? 0), 0);
+      if (totalPoints < 8) return null;
       // toDataURL returns "data:image/png;base64,..." — strip prefix
       const dataUrl = pad.toDataURL('image/png');
       return dataUrl.replace(/^data:image\/png;base64,/, '');
