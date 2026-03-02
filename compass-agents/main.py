@@ -234,8 +234,17 @@ PAST EXAM RESULTS:
 
 Generate a day-by-day study plan from today ({today.isoformat()}) to the deadline.
 Prioritise topics with low mastery and those that appeared weak in past exams.
-Group related topics in the same session where possible.
 Do not schedule study on the deadline day itself.
+
+CRITICAL INSTRUCTIONS FOR THE "focus" FIELD:
+Each session's "focus" must be a single, specific, actionable task — not a vague topic name.
+Choose exactly ONE of these task types per session and phrase it concisely:
+- "Revise [specific concept, e.g. chain rule, integration by substitution, logarithm laws]"
+- "Attempt [N] practice questions on [specific concept]"
+- "Complete a timed mock paper on [topic]"
+- "Review and correct past exam mistakes in [topic]"
+- "Work through [specific technique, e.g. implicit differentiation, Bayes' theorem]"
+Keep each focus to one clear sentence, max 12 words. Do NOT write generic labels like "Introduction to Limits" or "Review session".
 
 Return a JSON object matching this EXACT schema:
 {{
@@ -246,7 +255,7 @@ Return a JSON object matching this EXACT schema:
       "day": <integer starting at 1>,
       "date": "<YYYY-MM-DD>",
       "topics": ["<topic_id>"],
-      "focus": "<specific focus for this session, e.g. 'Differentiation — chain rule and product rule'>",
+      "focus": "<one specific actionable task, max 12 words>",
       "duration_hours": <float>,
       "priority": "<critical|high|medium|low>"
     }}
@@ -258,24 +267,30 @@ Only include sessions on days with study time (skip days if study_days_per_week 
 Cap total sessions at {min(days_until - 1, 30)} sessions maximum.
 """
 
-    try:
-        response = client.chat.completions.create(
+    def _call_openai():
+        return client.chat.completions.create(
             model=MODEL,
             messages=[
                 {
                     "role": "system",
                     "content": (
-                        "You are an expert study planner for IB Mathematics students. "
-                        "You create realistic, prioritised study schedules based on mastery data and past performance. "
-                        "Always return valid JSON only."
+                        "You are an expert IB Mathematics study planner. "
+                        "You create realistic, actionable daily study schedules. "
+                        "Every session task must be specific and tell the student exactly what to do — "
+                        "revise a named concept, attempt a set of questions, or complete a mock paper. "
+                        "Never use vague labels. Always return valid JSON only."
                     ),
                 },
                 {"role": "user", "content": user_prompt},
             ],
             response_format={"type": "json_object"},
             temperature=0.3,
-            timeout=30,
+            timeout=80,
         )
+
+    try:
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, _call_openai)
         result = json.loads(response.choices[0].message.content)
 
         # Normalise priority values

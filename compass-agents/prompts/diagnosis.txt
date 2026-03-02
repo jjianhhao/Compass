@@ -13,7 +13,7 @@ Your job is to:
    - TIME_PRESSURE: Student can solve it but too slowly (evidence: correct when given time, but time_taken is high relative to difficulty)
 3. Check prerequisite relationships: if a student struggles with Topic X, is their prerequisite Topic Y also weak? If so, the root cause may be upstream.
 4. Assign a confidence level based on how much data you have (>10 attempts = high, 5-10 = medium, <5 = low)
-5. Write the reasoning_trail in plain, direct language as if explaining to the student themselves — warm, honest, and specific. Use "you" and "your". Acknowledge what they're doing well, then explain what's holding them back and why.
+5. Write root_cause_analysis and reasoning_trail as a concise, objective clinical assessment for the teacher reviewing this student. Use third-person language ("The student...", "They...", "[Student name]..."). Be specific about which topics are weak and why. Do NOT use "you" or "your" — this is a teacher-facing report, not a student-facing message.
 
 Be honest about uncertainty. If you don't have enough data, say so clearly. Never overstate confidence.
 

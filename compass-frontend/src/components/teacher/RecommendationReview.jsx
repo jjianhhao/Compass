@@ -319,20 +319,6 @@ export default function RecommendationReview({ agentOutput, onAction }) {
 
   return (
     <div className="space-y-3">
-      {/* Summary */}
-      <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-1">
-          <p className="text-sm font-semibold text-indigo-900">AI Study Plan Summary</p>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${confidenceClass(overall_confidence)}`}>
-            {overall_confidence ? overall_confidence.charAt(0).toUpperCase() + overall_confidence.slice(1) : ''} Confidence
-          </span>
-        </div>
-        <p className="text-sm text-indigo-800">{plan.study_plan_summary}</p>
-        {plan.estimated_sessions != null && (
-          <p className="text-xs text-indigo-600 mt-1">Est. {plan.estimated_sessions} session{plan.estimated_sessions !== 1 ? 's' : ''}</p>
-        )}
-      </div>
-
       {/* Evaluator warning */}
       {!evaluator_verdict?.approved && (
         <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-3 flex gap-2">

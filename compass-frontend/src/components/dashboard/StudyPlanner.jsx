@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Plus, Trash2, CalendarDays, Clock, BookOpen, ChevronDown, ChevronUp, Loader2, CheckCircle } from 'lucide-react';
-import { saveExamResult, loadExamResults, deleteExamResult } from '../../api/localStore';
+import { saveExamResult, loadExamResults, deleteExamResult, saveStudyPlan, loadStudyPlan, clearStudyPlan } from '../../api/localStore';
 import { api } from '../../api/client';
 import { formatTopicName } from '../../utils/topicNames';
 
@@ -24,6 +24,14 @@ function ExamLogger({ studentId, allTopics }) {
   });
   const [topicSearch, setTopicSearch] = useState('');
   const [showTopicDropdown, setShowTopicDropdown] = useState(false);
+  const examTopicRef = useRef(null);
+
+  useEffect(() => {
+    if (!showTopicDropdown) return;
+    const handler = (e) => { if (examTopicRef.current && !examTopicRef.current.contains(e.target)) setShowTopicDropdown(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showTopicDropdown]);
   const [error, setError] = useState('');
 
   const filteredTopics = allTopics.filter(
@@ -68,12 +76,7 @@ function ExamLogger({ studentId, allTopics }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-4">
-      <div>
-        <h2 className="text-sm font-semibold text-gray-700">Past Exam Results</h2>
-        <p className="text-xs text-gray-400 mt-0.5">Log your exam scores to improve AI recommendations</p>
-      </div>
-
+    <div className="flex flex-col gap-4">
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
@@ -111,7 +114,7 @@ function ExamLogger({ studentId, allTopics }) {
         </div>
 
         {/* Topic multi-select */}
-        <div className="relative">
+        <div className="relative" ref={examTopicRef}>
           <label className="text-xs font-medium text-gray-600 block mb-1">Topics Tested</label>
           <div
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm cursor-pointer focus-within:ring-2 focus-within:ring-indigo-300 min-h-[38px]"
@@ -122,9 +125,12 @@ function ExamLogger({ studentId, allTopics }) {
             ) : (
               <div className="flex flex-wrap gap-1">
                 {form.topics_tested.map(t => (
-                  <span key={t} className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-                    {formatTopicName(t)}
-                    <button type="button" onClick={e => { e.stopPropagation(); toggleTopic(t); }} className="hover:text-indigo-900">×</button>
+                  <span
+                    key={t}
+                    onClick={e => { e.stopPropagation(); toggleTopic(t); }}
+                    className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 transition-colors"
+                  >
+                    {formatTopicName(t)} ×
                   </span>
                 ))}
               </div>
@@ -234,8 +240,17 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
   });
   const [topicSearch, setTopicSearch] = useState('');
   const [showTopicDropdown, setShowTopicDropdown] = useState(false);
+  const planTopicRef = useRef(null);
+
+  useEffect(() => {
+    if (!showTopicDropdown) return;
+    const handler = (e) => { if (planTopicRef.current && !planTopicRef.current.contains(e.target)) setShowTopicDropdown(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showTopicDropdown]);
+
   const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState(null);
+  const [plan, setPlan] = useState(() => loadStudyPlan(studentId));
   const [error, setError] = useState('');
   const [reasoningExpanded, setReasoningExpanded] = useState(false);
 
@@ -280,7 +295,9 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
         study_days_per_week: form.mode === 'weekly' ? Number(form.study_days_per_week) : null,
         topics_to_cover: form.topics_to_cover,
       });
-      setPlan(result);
+      const planWithMeta = { ...result, _deadline_name: form.deadline_name.trim(), _generated_at: new Date().toISOString() };
+      saveStudyPlan(studentId, planWithMeta);
+      setPlan(planWithMeta);
     } catch (err) {
       setError(`Failed to generate plan: ${err.message}`);
     } finally {
@@ -366,7 +383,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
         </div>
 
         {/* Topics multi-select */}
-        <div className="relative">
+        <div className="relative" ref={planTopicRef}>
           <label className="text-xs font-medium text-gray-600 block mb-1">
             Topics to Cover
             <span className="text-gray-400 font-normal ml-1">(pre-filled with your weakest topics)</span>
@@ -382,9 +399,12 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
                 {form.topics_to_cover.map(t => {
                   const mastery = knowledgeMap?.[t]?.mastery_score;
                   return (
-                    <span key={t} className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-                      {formatTopicName(t)}{mastery != null ? ` ${Math.round(mastery * 100)}%` : ''}
-                      <button type="button" onClick={e => { e.stopPropagation(); toggleTopic(t); }} className="hover:text-indigo-900">×</button>
+                    <span
+                      key={t}
+                      onClick={e => { e.stopPropagation(); toggleTopic(t); }}
+                      className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 transition-colors"
+                    >
+                      {formatTopicName(t)}{mastery != null ? ` ${Math.round(mastery * 100)}%` : ''} ×
                     </span>
                   );
                 })}
@@ -450,8 +470,16 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
           <div className="bg-indigo-50 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle size={14} className="text-indigo-600" />
-              <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wide">Your Study Plan</span>
+              <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wide">
+                {plan._deadline_name ? `Plan — ${plan._deadline_name}` : 'Your Study Plan'}
+              </span>
               <span className="text-xs text-indigo-500 ml-auto">{plan.total_days} sessions</span>
+              <button
+                onClick={() => { clearStudyPlan(studentId); setPlan(null); }}
+                className="text-xs text-indigo-400 hover:text-red-500 transition-colors ml-1 underline"
+              >
+                Clear
+              </button>
             </div>
             <p className="text-sm text-indigo-800 leading-relaxed">{plan.plan_summary}</p>
           </div>
@@ -516,10 +544,34 @@ export default function StudyPlanner({ studentId, knowledgeMap }) {
     () => Object.keys(knowledgeMap || {}),
     [knowledgeMap]
   );
+  const [examOpen, setExamOpen] = useState(false);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-      <ExamLogger studentId={studentId} allTopics={allTopics} />
+    <div className="flex flex-col gap-4 pt-2 max-w-3xl mx-auto">
+      {/* Collapsible exam results section */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <button
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
+          onClick={() => setExamOpen(o => !o)}
+        >
+          <div>
+            <span className="text-sm font-semibold text-gray-700">Past Exam Results</span>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Log your scores — these are used to personalise your AI study plan
+            </p>
+          </div>
+          {examOpen
+            ? <ChevronUp size={16} className="text-gray-400 shrink-0" />
+            : <ChevronDown size={16} className="text-gray-400 shrink-0" />}
+        </button>
+        {examOpen && (
+          <div className="border-t border-gray-100 p-5">
+            <ExamLogger studentId={studentId} allTopics={allTopics} />
+          </div>
+        )}
+      </div>
+
+      {/* Study plan generator — full width */}
       <StudyPlanGenerator studentId={studentId} knowledgeMap={knowledgeMap} allTopics={allTopics} />
     </div>
   );

@@ -26,7 +26,7 @@ PREREQUISITE FLAGS:
 Produce your diagnosis as JSON matching this EXACT schema:
 - findings: list of {{"topic": str, "issue": str, "severity": "critical"|"high"|"medium"|"low", "evidence": str}}
 - error_classifications: list of {{"error_type": "conceptual_gap"|"careless_mistake"|"time_pressure", "evidence": str, "confidence": "high"|"medium"|"low"}}
-- root_cause_analysis: string explaining prerequisite-aware root causes
+- root_cause_analysis: string — a concise third-person teacher-facing summary (e.g. "The student struggles with X because Y is weak at the prerequisite level.")
 - confidence: "high"|"medium"|"low" based on data available
 - data_points_used: total attempts across all topics
 - reasoning_trail: human-readable paragraph explaining your full analysis

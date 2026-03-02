@@ -1,14 +1,108 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, BookOpen, LogOut, Map, CalendarDays } from 'lucide-react';
+import { MessageSquare, BookOpen, LogOut, Map, CalendarDays, ChevronDown, ChevronUp, CheckCircle2, Circle, Clock, BookOpen as BookIcon } from 'lucide-react';
 import MasteryOverview from './MasteryOverview';
 import RecommendationPanel from './RecommendationPanel';
 import VelocityChart from './VelocityChart';
 import StudentChat from '../chat/StudentChat';
 import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
 import StudyPlanner from './StudyPlanner';
-import { saveOverride } from '../../api/localStore';
+import { saveOverride, loadStudyPlan, loadCompletedSessions, toggleSessionComplete } from '../../api/localStore';
 import { api } from '../../api/client';
+import { formatTopicName } from '../../utils/topicNames';
+
+const PRIORITY_STYLES = {
+  critical: 'bg-red-100 text-red-700 border-red-200',
+  high:     'bg-orange-100 text-orange-700 border-orange-200',
+  medium:   'bg-blue-100 text-blue-700 border-blue-200',
+  low:      'bg-gray-100 text-gray-600 border-gray-200',
+};
+const PRIORITY_LABEL = { critical: 'Critical', high: 'High', medium: 'Medium', low: 'Low' };
+
+function TodayStudyCard({ studentId }) {
+  const plan = loadStudyPlan(studentId);
+  const [open, setOpen] = useState(true);
+  const [completed, setCompleted] = useState(() => loadCompletedSessions(studentId));
+
+  if (!plan || !plan.sessions?.length) return null;
+
+  const today = new Date().toISOString().split('T')[0];
+  const todaySession = plan.sessions.find(s => s.date === today);
+  const nextSession = !todaySession
+    ? plan.sessions.find(s => s.date > today)
+    : null;
+  const session = todaySession || nextSession;
+  if (!session) return null;
+
+  const isToday = !!todaySession;
+  const isDone = completed.has(session.day);
+
+  const handleToggle = () => {
+    const updated = toggleSessionComplete(studentId, session.day);
+    setCompleted(new Set(updated));
+  };
+
+  return (
+    <div className={`rounded-2xl border shadow-sm mb-4 transition-all ${isDone ? 'border-green-200 bg-green-50' : 'border-indigo-200 bg-indigo-50'}`}>
+      {/* Header row — always visible */}
+      <button
+        className="w-full flex items-center justify-between px-5 py-3 text-left"
+        onClick={() => setOpen(o => !o)}
+      >
+        <div className="flex items-center gap-3">
+          <CalendarDays size={15} className={isDone ? 'text-green-600' : 'text-indigo-600'} />
+          <div>
+            <span className={`text-xs font-semibold uppercase tracking-wide ${isDone ? 'text-green-700' : 'text-indigo-700'}`}>
+              {isToday ? "Today's Study Session" : `Next Session — ${session.date}`}
+            </span>
+            <p className={`text-sm font-medium mt-0.5 ${isDone ? 'text-green-800 line-through opacity-60' : 'text-indigo-900'}`}>
+              {session.focus}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 ml-4 shrink-0">
+          <button
+            onClick={e => { e.stopPropagation(); handleToggle(); }}
+            className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
+              isDone
+                ? 'bg-green-100 border-green-300 text-green-700 hover:bg-green-200'
+                : 'bg-white border-indigo-200 text-indigo-600 hover:bg-indigo-100'
+            }`}
+          >
+            {isDone
+              ? <><CheckCircle2 size={13} /> Completed</>
+              : <><Circle size={13} /> Mark Complete</>}
+          </button>
+          {open ? <ChevronUp size={15} className="text-gray-400" /> : <ChevronDown size={15} className="text-gray-400" />}
+        </div>
+      </button>
+
+      {/* Expanded details */}
+      {open && (
+        <div className="px-5 pb-4 flex items-center gap-4 flex-wrap border-t border-indigo-100">
+          <span className="flex items-center gap-1 text-xs text-indigo-600 mt-2">
+            <Clock size={11} /> {session.duration_hours}h
+          </span>
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border mt-2 ${PRIORITY_STYLES[session.priority] || PRIORITY_STYLES.medium}`}>
+            {PRIORITY_LABEL[session.priority] || session.priority}
+          </span>
+          <div className="flex flex-wrap gap-1 mt-2">
+            {session.topics.map(t => (
+              <span key={t} className="flex items-center gap-1 text-xs bg-white border border-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full">
+                <BookIcon size={9} /> {formatTopicName(t)}
+              </span>
+            ))}
+          </div>
+          {plan._deadline_name && (
+            <span className="text-xs text-indigo-400 ml-auto mt-2">
+              Day {session.day} of {plan.total_days} — {plan._deadline_name}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 
 export default function StudentDashboard({
@@ -134,6 +228,7 @@ export default function StudentDashboard({
         {/* Overview tab — scrollable */}
         <div className={`flex-1 overflow-y-auto min-h-0 px-6 pb-6 ${activeTab === 'overview' ? '' : 'hidden'}`}>
           <div className="max-w-7xl mx-auto">
+            <TodayStudyCard studentId={studentId} />
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               <div className="lg:col-span-3 flex flex-col gap-6">
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">

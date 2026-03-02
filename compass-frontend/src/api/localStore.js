@@ -76,6 +76,36 @@ export function computeKnowledgeMap(studentId, baseMockMap) {
   return result;
 }
 
+// ─── Study plan persistence ───────────────────────────────────────────────────
+
+const PLAN_KEY      = (id) => `compass_study_plan_${id}`;
+const COMPLETE_KEY  = (id) => `compass_completed_sessions_${id}`;
+
+export function saveStudyPlan(studentId, plan) {
+  try { localStorage.setItem(PLAN_KEY(studentId), JSON.stringify(plan)); } catch { /* ignore */ }
+}
+
+export function loadStudyPlan(studentId) {
+  try { return JSON.parse(localStorage.getItem(PLAN_KEY(studentId)) || 'null'); } catch { return null; }
+}
+
+export function clearStudyPlan(studentId) {
+  try { localStorage.removeItem(PLAN_KEY(studentId)); localStorage.removeItem(COMPLETE_KEY(studentId)); } catch { /* ignore */ }
+}
+
+export function loadCompletedSessions(studentId) {
+  try { return new Set(JSON.parse(localStorage.getItem(COMPLETE_KEY(studentId)) || '[]')); } catch { return new Set(); }
+}
+
+export function toggleSessionComplete(studentId, day) {
+  try {
+    const set = loadCompletedSessions(studentId);
+    if (set.has(day)) set.delete(day); else set.add(day);
+    localStorage.setItem(COMPLETE_KEY(studentId), JSON.stringify([...set]));
+    return set;
+  } catch { return new Set(); }
+}
+
 // ─── Exam results ────────────────────────────────────────────────────────────
 
 const EXAM_KEY = (studentId) => `compass_exam_results_${studentId}`;
