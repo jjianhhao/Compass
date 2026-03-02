@@ -122,6 +122,14 @@ async def list_students():
     return students
 
 
+@app.get("/api/subject")
+async def get_subject():
+    """Get the current subject configuration."""
+    import json as _json
+    with open("data/subject.json") as f:
+        return _json.load(f)
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "students": len(engine.student_trackers)}

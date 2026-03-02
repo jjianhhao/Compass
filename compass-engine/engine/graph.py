@@ -65,6 +65,7 @@ class TopicGraph:
                 "id": node_id,
                 "name": data.get("name", node_id),
                 "subtopics": data.get("subtopics", []),
+                "category": data.get("category", ""),
             })
         for source, target in self.graph.edges():
             edges.append({"from": source, "to": target})

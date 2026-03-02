@@ -1,274 +1,406 @@
 {
-  "syllabus": "GCE O-Level Additional Mathematics (Singapore, 4049)",
+  "syllabus": "IB Mathematics Analysis and Approaches HL",
   "topics": [
     {
-      "name": "Quadratic Equations",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation"],
-      "subtopics": [
-        "Solving quadratic equations by factorisation",
-        "Completing the square",
-        "Quadratic formula",
-        "Discriminant and nature of roots",
-        "Quadratic inequalities"
-      ],
-      "objectives": "Solve quadratic equations using multiple methods; analyse the nature of roots using the discriminant; solve quadratic inequalities and represent solutions on a number line.",
-      "common_mistakes": "Sign errors when completing the square; forgetting to reverse the inequality sign when multiplying/dividing by a negative; confusing 'no real roots' (discriminant < 0) with 'no roots'.",
-      "remediation": "Start with factorisation drills, then move to completing the square with guided steps. Use graphical approach to connect discriminant to the parabola's position relative to the x-axis."
-    },
-    {
-      "name": "Algebraic Manipulation",
-      "level": "O-Level",
+      "name": "Sequences & Series",
+      "level": "IB HL",
       "prerequisites": [],
       "subtopics": [
-        "Expansion and factorisation",
-        "Algebraic fractions",
-        "Partial fractions",
-        "Surds and indices",
-        "Simultaneous equations"
+        "Arithmetic sequences and series",
+        "Geometric sequences and series",
+        "Sigma notation",
+        "Convergent infinite geometric series",
+        "Maclaurin series"
       ],
-      "objectives": "Manipulate algebraic expressions fluently; simplify and operate with algebraic fractions; decompose expressions into partial fractions; work with surds and index laws.",
-      "common_mistakes": "Incorrectly cancelling terms (instead of factors) in fractions; distributing exponents over sums; rationalising the denominator with wrong conjugate.",
-      "remediation": "Drill factor vs. term distinction with visual examples. Practice index laws systematically before combining with surds."
+      "objectives": "Understand arithmetic and geometric sequences and series; use sigma notation; determine convergence of infinite geometric series; find Maclaurin expansions.",
+      "common_mistakes": "Confusing common difference and common ratio; forgetting the condition |r| < 1 for convergence; off-by-one errors in sigma notation limits.",
+      "remediation": "Start with pattern recognition in sequences before introducing formal notation. Practise identifying whether a series converges before calculating the sum."
     },
     {
-      "name": "Indices and Surds",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation"],
+      "name": "Exponents & Logarithms",
+      "level": "IB HL",
+      "prerequisites": [],
       "subtopics": [
-        "Laws of indices",
-        "Negative and fractional indices",
-        "Simplifying surds",
-        "Rationalising denominators",
-        "Equations involving indices and surds"
-      ],
-      "objectives": "Apply index laws to simplify expressions; convert between surd and index form; rationalise denominators; solve equations involving indices and surds.",
-      "common_mistakes": "Confusing multiplication and addition rules for indices (a^m * a^n vs a^m + a^n); forgetting to square both sides carefully when solving surd equations (introducing extraneous roots).",
-      "remediation": "Build index law fluency with pattern recognition exercises. For surds, emphasise checking for extraneous solutions after squaring."
-    },
-    {
-      "name": "Polynomials",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation", "Quadratic Equations"],
-      "subtopics": [
-        "Remainder theorem",
-        "Factor theorem",
-        "Cubic expressions and equations",
-        "Long division of polynomials",
-        "Sketching polynomial curves"
-      ],
-      "objectives": "Use the remainder and factor theorems to factorise polynomials; solve cubic equations; sketch polynomial graphs showing key features.",
-      "common_mistakes": "Sign errors in synthetic division; forgetting that Factor Theorem gives (x - a) when f(a) = 0 (not (x + a)); incomplete factorisation of cubics.",
-      "remediation": "Practice synthetic division step-by-step. Use systematic trial of integer factors combined with Factor Theorem before attempting full factorisation."
-    },
-    {
-      "name": "Simultaneous Equations",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation", "Quadratic Equations"],
-      "subtopics": [
-        "Linear-linear systems",
-        "Linear-nonlinear systems",
-        "Substitution and elimination",
-        "Graphical interpretation"
-      ],
-      "objectives": "Solve simultaneous equations involving one linear and one non-linear equation; interpret solutions graphically as intersection points.",
-      "common_mistakes": "Substitution errors when expression is complex; forgetting to find both variables after solving for one; not checking solutions in both original equations.",
-      "remediation": "Always substitute back to verify. Start with simpler linear-linear systems before progressing to linear-quadratic pairs."
-    },
-    {
-      "name": "Logarithms and Exponentials",
-      "level": "O-Level",
-      "prerequisites": ["Indices and Surds"],
-      "subtopics": [
-        "Definition of logarithm",
+        "Laws of exponents",
         "Laws of logarithms",
         "Change of base formula",
         "Solving exponential equations",
-        "Solving logarithmic equations",
-        "Graphs of exponential and log functions"
+        "Solving logarithmic equations"
       ],
-      "objectives": "Convert between exponential and logarithmic forms; apply log laws to simplify expressions; solve exponential and logarithmic equations; sketch and interpret graphs.",
-      "common_mistakes": "Applying log laws incorrectly: log(a+b) ≠ log(a) + log(b); forgetting domain restrictions (argument of log must be positive); errors with change of base.",
-      "remediation": "Emphasise that log laws mirror index laws. Use numerical examples to build intuition before algebraic manipulation. Always check domain validity of solutions."
-    },
-    {
-      "name": "Coordinate Geometry",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation"],
-      "subtopics": [
-        "Distance and midpoint formulas",
-        "Gradient and collinearity",
-        "Equation of a straight line",
-        "Parallel and perpendicular lines",
-        "Area of rectilinear figures"
-      ],
-      "objectives": "Find distances, midpoints, and gradients; determine equations of lines given various conditions; apply parallel/perpendicular gradient relationships; calculate areas using the Shoelace formula.",
-      "common_mistakes": "Sign errors in gradient calculation (y2-y1)/(x2-x1); confusing perpendicular gradient (negative reciprocal) with parallel (same gradient); errors in Shoelace formula ordering.",
-      "remediation": "Drill gradient calculations with varied point orderings. Visualise on graph paper before calculating. Practice Shoelace with consistent anticlockwise vertex ordering."
-    },
-    {
-      "name": "Linear Law",
-      "level": "O-Level",
-      "prerequisites": ["Coordinate Geometry", "Logarithms and Exponentials"],
-      "subtopics": [
-        "Reducing non-linear relations to linear form",
-        "Plotting transformed data",
-        "Interpreting gradient and intercept"
-      ],
-      "objectives": "Transform non-linear equations into Y = mX + c form; plot data in transformed coordinates; extract original equation parameters from gradient and intercept.",
-      "common_mistakes": "Choosing the wrong transformation (e.g. plotting ln(y) vs x when the relationship is y = ax^n, which needs ln(y) vs ln(x)); reading gradient from incorrectly scaled axes.",
-      "remediation": "Create a reference table of common non-linear forms and their transformations. Practice identifying which transformation to use before plotting."
-    },
-    {
-      "name": "Trigonometric Functions",
-      "level": "O-Level",
-      "prerequisites": ["Coordinate Geometry"],
-      "subtopics": [
-        "Six trigonometric ratios",
-        "Exact values for special angles",
-        "Graphs of trig functions",
-        "Amplitude, period and phase shift",
-        "Inverse trigonometric functions"
-      ],
-      "objectives": "Evaluate trigonometric ratios for any angle; sketch and transform trig graphs; determine amplitude, period, and phase shift; solve basic trig equations in given intervals.",
-      "common_mistakes": "Calculator in wrong mode (degrees vs radians); not finding all solutions in a given interval; errors with ASTC rule for signs in different quadrants.",
-      "remediation": "Always verify calculator mode first. Use the unit circle and ASTC diagram systematically. Practice finding general solutions before restricting to intervals."
-    },
-    {
-      "name": "Trigonometric Identities",
-      "level": "O-Level",
-      "prerequisites": ["Trigonometric Functions", "Algebraic Manipulation"],
-      "subtopics": [
-        "Fundamental identities (Pythagorean, reciprocal, quotient)",
-        "Addition formulas: sin(A±B), cos(A±B), tan(A±B)",
-        "Double angle formulas",
-        "R-formula (a sin θ + b cos θ)",
-        "Proving trigonometric identities"
-      ],
-      "objectives": "Prove and apply trigonometric identities; use addition and double angle formulas; express a sin θ + b cos θ in the form R sin(θ ± α); solve trigonometric equations using identities.",
-      "common_mistakes": "Misremembering double-angle formulas; errors in R-formula (wrong quadrant for α); attempting to prove identities by manipulating both sides simultaneously instead of one side only.",
-      "remediation": "Derive double-angle formulas from addition formulas each time to build understanding rather than memorising. Practice R-formula with a clear step-by-step template."
-    },
-    {
-      "name": "Differentiation",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation", "Indices and Surds"],
-      "subtopics": [
-        "First principles (concept only)",
-        "Power rule",
-        "Chain rule",
-        "Product rule",
-        "Quotient rule",
-        "Derivatives of trig, exponential, and log functions"
-      ],
-      "objectives": "Differentiate standard functions using power, chain, product, and quotient rules; find derivatives of composite, trigonometric, exponential, and logarithmic functions.",
-      "common_mistakes": "Forgetting the chain rule on composite functions; sign error in quotient rule (denominator order); not simplifying before differentiating (missing easier approaches).",
-      "remediation": "Practice identifying which rule to apply before computing. Use colour-coding to identify inner and outer functions for chain rule. Simplify expressions algebraically first when possible."
-    },
-    {
-      "name": "Applications of Differentiation",
-      "level": "O-Level",
-      "prerequisites": ["Differentiation", "Coordinate Geometry"],
-      "subtopics": [
-        "Tangents and normals",
-        "Increasing and decreasing functions",
-        "Stationary points and nature",
-        "Practical maxima and minima problems",
-        "Rates of change",
-        "Connected rates of change"
-      ],
-      "objectives": "Find equations of tangents and normals; determine stationary points and their nature; solve optimisation problems; apply connected rates of change using the chain rule.",
-      "common_mistakes": "Using gradient of tangent for normal (forgetting negative reciprocal); not verifying nature of stationary point (second derivative or sign test); setting up wrong equation in optimisation word problems.",
-      "remediation": "For optimisation: practice translating word problems into equations with a single variable before differentiating. Always verify the nature of critical points."
-    },
-    {
-      "name": "Integration",
-      "level": "O-Level",
-      "prerequisites": ["Differentiation"],
-      "subtopics": [
-        "Indefinite integration (reverse of differentiation)",
-        "Integration of standard functions",
-        "Integration of (ax+b)^n and related forms",
-        "Definite integration",
-        "Area under curves",
-        "Area between curves"
-      ],
-      "objectives": "Integrate standard functions; evaluate definite integrals; find areas bounded by curves, lines, and axes; apply integration to kinematic problems.",
-      "common_mistakes": "Forgetting +C in indefinite integrals; sign errors when area is below x-axis (must take absolute value); incorrect limits of integration; forgetting to divide by the coefficient of x in (ax+b)^n.",
-      "remediation": "Always check by differentiating the result. For area problems, sketch the curve first and identify regions above and below the axis separately."
+      "objectives": "Apply laws of exponents and logarithms fluently; convert between forms; solve exponential and logarithmic equations.",
+      "common_mistakes": "Applying log(a+b) = log(a) + log(b) incorrectly; forgetting domain restrictions (argument must be positive); errors with change of base.",
+      "remediation": "Emphasise that log laws mirror exponent laws. Use numerical examples to build intuition. Always check domain validity of solutions."
     },
     {
       "name": "Binomial Theorem",
-      "level": "O-Level",
-      "prerequisites": ["Algebraic Manipulation", "Indices and Surds"],
+      "level": "IB HL",
+      "prerequisites": ["Sequences & Series", "Exponents & Logarithms"],
       "subtopics": [
-        "Binomial expansion for positive integer index",
-        "General term",
-        "Specific term finding",
-        "Applications with substitution"
+        "Expansion of (a+b)^n for positive integer n",
+        "General term and specific term finding",
+        "Binomial coefficients (nCr)",
+        "Extension to fractional and negative indices (AHL)"
       ],
-      "objectives": "Expand (a + b)^n using the Binomial Theorem; find specific terms including the general term T(r+1); use substitution to find approximations.",
-      "common_mistakes": "Off-by-one errors with the general term index (T_{r+1} not T_r); forgetting to apply the power to both parts of the term; sign errors when b is negative.",
-      "remediation": "Write out the general term formula explicitly each time. Practice with negative and fractional terms inside the binomial to build confidence with signs."
+      "objectives": "Expand binomial expressions using the Binomial Theorem; find specific terms; extend to fractional/negative indices at HL.",
+      "common_mistakes": "Off-by-one errors in the general term index; forgetting to apply the power to both parts of each term; sign errors when b is negative.",
+      "remediation": "Write out the general term formula explicitly each time. Start with Pascal's triangle for small n before transitioning to the formula."
     },
     {
-      "name": "Sets and Venn Diagrams",
-      "level": "O-Level",
+      "name": "Proofs",
+      "level": "IB HL",
+      "prerequisites": ["Sequences & Series"],
+      "subtopics": [
+        "Mathematical induction",
+        "Proof by contradiction",
+        "Proof by counterexample",
+        "Direct proof"
+      ],
+      "objectives": "Construct formal proofs using induction, contradiction, and counterexample; write clear logical arguments.",
+      "common_mistakes": "Incomplete induction step (not using the inductive hypothesis); failing to state the base case; assuming what you want to prove in contradiction.",
+      "remediation": "Use a structured template: base case → inductive hypothesis → inductive step → conclusion. Practise each proof type separately."
+    },
+    {
+      "name": "Complex Numbers",
+      "level": "IB HL",
+      "prerequisites": ["Exponents & Logarithms", "Binomial Theorem"],
+      "subtopics": [
+        "Cartesian form a + bi",
+        "Modulus-argument (polar) form",
+        "Argand diagram",
+        "De Moivre's theorem",
+        "Roots of polynomials with complex coefficients"
+      ],
+      "objectives": "Perform arithmetic with complex numbers; convert between forms; apply De Moivre's theorem; find nth roots of complex numbers.",
+      "common_mistakes": "Sign errors when multiplying complex numbers; confusing argument conventions; forgetting all n roots in nth root problems.",
+      "remediation": "Visualise on the Argand diagram. Practise converting between Cartesian and polar forms before tackling De Moivre."
+    },
+    {
+      "name": "Systems of Equations",
+      "level": "IB HL",
+      "prerequisites": ["Exponents & Logarithms"],
+      "subtopics": [
+        "Systems of up to 3 linear equations",
+        "Row reduction (Gaussian elimination)",
+        "Unique, infinite, and no solutions",
+        "Geometric interpretation"
+      ],
+      "objectives": "Solve systems of linear equations using row reduction; classify solution types; interpret geometrically.",
+      "common_mistakes": "Arithmetic errors in row operations; misinterpreting dependent systems as inconsistent; not parameterising infinite solutions.",
+      "remediation": "Use systematic row reduction and always verify by substituting back. Draw 3D sketches for geometric interpretation."
+    },
+    {
+      "name": "Functions Basics",
+      "level": "IB HL",
       "prerequisites": [],
       "subtopics": [
-        "Set notation and operations",
-        "Union, intersection, complement",
-        "Venn diagrams with two and three sets",
-        "Problem solving with sets"
+        "Function notation and terminology",
+        "Domain and range",
+        "Composite functions",
+        "Inverse functions",
+        "Graphing with technology"
       ],
-      "objectives": "Use set notation correctly; represent set relationships with Venn diagrams; solve problems involving union, intersection, and complement of sets.",
-      "common_mistakes": "Double-counting elements in overlapping regions; confusing A' (complement) with A; forgetting the universal set when computing complements.",
-      "remediation": "Always label all regions of the Venn diagram including the region outside all sets (but inside the universal set). Work from the innermost overlap outward."
+      "objectives": "Understand function notation; determine domain and range; form composites and inverses; use technology to explore graphs.",
+      "common_mistakes": "Confusing f(g(x)) with g(f(x)); forgetting to restrict domain for inverse to exist; not stating domain/range explicitly.",
+      "remediation": "Use mapping diagrams and graphical approaches to build conceptual understanding before algebraic methods."
     },
     {
-      "name": "Permutations and Combinations",
-      "level": "O-Level",
-      "prerequisites": ["Sets and Venn Diagrams"],
+      "name": "Quadratics",
+      "level": "IB HL",
+      "prerequisites": ["Functions Basics"],
       "subtopics": [
-        "Multiplication and addition principles",
-        "Permutations (nPr)",
-        "Combinations (nCr)",
-        "Arrangements with restrictions",
-        "Identical objects"
+        "Completing the square",
+        "Quadratic formula",
+        "Discriminant and nature of roots",
+        "Quadratic inequalities",
+        "Axis of symmetry and vertex form"
       ],
-      "objectives": "Apply counting principles to solve arrangement and selection problems; distinguish between permutations and combinations; handle restrictions and repeated elements.",
-      "common_mistakes": "Using permutations when order doesn't matter (and vice versa); forgetting to subtract restricted cases; not accounting for identical items in arrangements.",
-      "remediation": "Ask 'Does order matter?' as the first step every time. Use complementary counting (total minus restricted) for problems with exclusions. Draw slot diagrams for arrangements."
+      "objectives": "Solve quadratic equations using multiple methods; interpret the discriminant; solve quadratic inequalities.",
+      "common_mistakes": "Sign errors when completing the square; forgetting ± in the quadratic formula; reversing inequality direction.",
+      "remediation": "Practise all methods on the same equation. Use graphical approach to connect the discriminant to the parabola's position."
+    },
+    {
+      "name": "Rational, Exponential & Log Functions",
+      "level": "IB HL",
+      "prerequisites": ["Functions Basics", "Exponents & Logarithms"],
+      "subtopics": [
+        "Exponential growth and decay models",
+        "Logarithmic functions and graphs",
+        "Rational functions and asymptotes",
+        "Solving equations graphically and analytically"
+      ],
+      "objectives": "Model with exponential, logarithmic, and rational functions; identify asymptotes; solve equations graphically and algebraically.",
+      "common_mistakes": "Confusing horizontal and vertical asymptotes; misidentifying growth vs decay; forgetting asymptotes of rational functions.",
+      "remediation": "Sketch by hand identifying key features (intercepts, asymptotes) first, then verify with technology."
+    },
+    {
+      "name": "Transformations",
+      "level": "IB HL",
+      "prerequisites": ["Functions Basics", "Quadratics"],
+      "subtopics": [
+        "Translations",
+        "Reflections",
+        "Vertical and horizontal stretches",
+        "Composite transformations"
+      ],
+      "objectives": "Apply and describe transformations of functions; combine multiple transformations; relate to function notation.",
+      "common_mistakes": "Getting the direction of horizontal shifts wrong (f(x-a) shifts right); mixing up stretch factors.",
+      "remediation": "Start with a simple function and apply one transformation at a time. Compare the equation to the graph each time."
+    },
+    {
+      "name": "Functions (AHL)",
+      "level": "IB HL",
+      "prerequisites": ["Transformations", "Rational, Exponential & Log Functions"],
+      "subtopics": [
+        "Odd and even functions",
+        "Self-inverse functions",
+        "Factor and remainder theorems",
+        "Partial fractions",
+        "Polynomial inequalities"
+      ],
+      "objectives": "Classify functions as odd/even; apply factor and remainder theorems; decompose into partial fractions; solve polynomial inequalities.",
+      "common_mistakes": "Forgetting to check both conditions for even/odd; wrong partial fraction form for repeated factors; sign errors in polynomial division.",
+      "remediation": "Practise the factor theorem to find roots systematically. Use the cover-up method for partial fractions where applicable."
+    },
+    {
+      "name": "Measurement & Trigonometry",
+      "level": "IB HL",
+      "prerequisites": [],
+      "subtopics": [
+        "3D geometry — distance and angles",
+        "Sine rule and cosine rule",
+        "Area of a triangle (½ ab sin C)",
+        "Radian measure",
+        "Arc length and sector area"
+      ],
+      "objectives": "Apply sine and cosine rules; work with radians; calculate arc lengths and sector areas; solve 3D geometry problems.",
+      "common_mistakes": "Using degrees instead of radians; applying sine rule for the ambiguous case incorrectly; 3D angle identification errors.",
+      "remediation": "Always verify calculator mode. Draw clear diagrams for 3D problems to identify the right triangle."
+    },
+    {
+      "name": "Unit Circle & Identities",
+      "level": "IB HL",
+      "prerequisites": ["Measurement & Trigonometry"],
+      "subtopics": [
+        "Unit circle and exact values",
+        "Pythagorean identity sin²θ + cos²θ = 1",
+        "Double angle formulae",
+        "Solving trigonometric equations"
+      ],
+      "objectives": "Use the unit circle; recall exact values; apply Pythagorean and double angle identities; solve trig equations.",
+      "common_mistakes": "Not finding all solutions in a given interval; misapplying double angle formulae; forgetting related identities (1 + tan²θ = sec²θ).",
+      "remediation": "Use the unit circle systematically. Always check how many solutions exist in the given domain."
+    },
+    {
+      "name": "Circular Functions",
+      "level": "IB HL",
+      "prerequisites": ["Unit Circle & Identities"],
+      "subtopics": [
+        "Graphs of sin, cos, and tan",
+        "Amplitude, period, and phase shift",
+        "Modelling with trigonometric functions"
+      ],
+      "objectives": "Sketch and transform trig graphs; determine amplitude, period, and phase shift; model periodic phenomena.",
+      "common_mistakes": "Errors reading period from transformed equations; confusing phase shift direction; wrong vertical shift.",
+      "remediation": "Start from the parent function and apply transformations step by step. Verify with technology."
+    },
+    {
+      "name": "Vectors",
+      "level": "IB HL",
+      "prerequisites": ["Measurement & Trigonometry"],
+      "subtopics": [
+        "Vector algebra in 2D and 3D",
+        "Scalar (dot) product",
+        "Angle between vectors",
+        "Vector equations of lines",
+        "Intersection and skew lines"
+      ],
+      "objectives": "Perform vector operations; find scalar products and angles; write vector equations of lines; determine intersections.",
+      "common_mistakes": "Sign errors in vector subtraction; confusing position vectors with direction vectors; not checking for skew lines.",
+      "remediation": "Draw vector diagrams before computing. Practise scalar product calculations methodically."
+    },
+    {
+      "name": "Trig Identities (AHL)",
+      "level": "IB HL",
+      "prerequisites": ["Unit Circle & Identities", "Circular Functions"],
+      "subtopics": [
+        "Compound angle formulae sin(A±B), cos(A±B), tan(A±B)",
+        "Double angle identities (derivation)",
+        "Symmetry properties of trig functions",
+        "Inverse trigonometric functions and domains"
+      ],
+      "objectives": "Derive and apply compound angle formulae; use inverse trig functions with correct domains; prove identities.",
+      "common_mistakes": "Misapplying compound angle vs double angle formulae; wrong domain for inverse trig; confusing sin(A+B) with sinA + sinB.",
+      "remediation": "Derive double angle from compound angle each time. Practise working with restricted domains for inverse functions."
+    },
+    {
+      "name": "Vector Applications",
+      "level": "IB HL",
+      "prerequisites": ["Vectors"],
+      "subtopics": [
+        "Cross product",
+        "Areas and volumes using vectors",
+        "Vector equation of a plane",
+        "Intersections of lines and planes",
+        "Angles between lines and planes"
+      ],
+      "objectives": "Compute cross products; find equations of planes; determine intersections of lines and planes; find angles.",
+      "common_mistakes": "Sign errors in cross product (cyclic order); confusing normal vector with direction vector of plane; parametric vs Cartesian form.",
+      "remediation": "Use the determinant method for cross products. Practise converting between forms of plane equations."
+    },
+    {
+      "name": "Descriptive Statistics",
+      "level": "IB HL",
+      "prerequisites": [],
+      "subtopics": [
+        "Population vs sample",
+        "Measures of central tendency (mean, median, mode)",
+        "Measures of dispersion (range, IQR, standard deviation, variance)",
+        "Correlation coefficient and regression line"
+      ],
+      "objectives": "Collect, organise, and analyse data using statistical measures; calculate and interpret correlation and linear regression.",
+      "common_mistakes": "Confusing population and sample standard deviation; extrapolating regression beyond data range; misinterpreting r.",
+      "remediation": "Use technology for calculations but focus on interpreting results in context. Always state conclusions in words."
     },
     {
       "name": "Probability",
-      "level": "O-Level",
-      "prerequisites": ["Permutations and Combinations", "Sets and Venn Diagrams"],
+      "level": "IB HL",
+      "prerequisites": ["Descriptive Statistics"],
       "subtopics": [
-        "Basic probability",
-        "Addition and multiplication rules",
-        "Mutually exclusive and independent events",
-        "Conditional probability",
-        "Tree diagrams and tables"
+        "Venn diagrams and sample spaces",
+        "Combined events (union, intersection)",
+        "Conditional probability P(A|B)",
+        "Independent events",
+        "Discrete random variables and expected value"
       ],
-      "objectives": "Calculate probabilities using addition and multiplication rules; distinguish between mutually exclusive and independent events; solve conditional probability problems; use tree diagrams systematically.",
-      "common_mistakes": "Adding probabilities when events are not mutually exclusive (forgetting to subtract the intersection); confusing independent and mutually exclusive; errors in conditional probability (wrong denominator).",
-      "remediation": "Always draw a tree diagram or two-way table for multi-stage problems. Clearly identify whether events are independent or dependent before choosing a formula."
+      "objectives": "Calculate probabilities of combined events; use conditional probability; understand discrete probability distributions.",
+      "common_mistakes": "Confusing independent with mutually exclusive; errors in conditional probability (wrong denominator); forgetting P(A∪B) formula.",
+      "remediation": "Always draw a diagram (Venn/tree) first. Clearly identify whether events are independent before choosing a formula."
     },
     {
-      "name": "Proofs in Plane Geometry",
-      "level": "O-Level",
-      "prerequisites": ["Coordinate Geometry"],
+      "name": "Distributions",
+      "level": "IB HL",
+      "prerequisites": ["Probability"],
       "subtopics": [
-        "Midpoint theorem",
-        "Tangent-chord angle",
-        "Angle in alternate segment",
-        "Properties of cyclic quadrilaterals",
-        "Symmetric and angle properties of circles"
+        "Binomial distribution B(n,p)",
+        "Normal distribution N(μ,σ²)",
+        "Standardisation and z-scores",
+        "Inverse normal calculations"
       ],
-      "objectives": "Apply circle theorems to find unknown angles; prove geometric properties using logical chains of reasoning; construct clear geometric proofs.",
-      "common_mistakes": "Citing wrong theorems; incomplete proof chains (jumping steps); confusing 'angle at centre' with 'angle in same segment' theorems.",
-      "remediation": "Create a theorem reference card with diagrams. Practice identifying which theorem applies by the geometric configuration before attempting the proof."
+      "objectives": "Apply binomial and normal distributions; standardise values; find probabilities and quantiles using technology.",
+      "common_mistakes": "Using normal approximation when n is too small; confusing σ and σ²; not sketching the distribution before calculating.",
+      "remediation": "Always state parameters (n, p or μ, σ) before calculating. Sketch the distribution and shade the required area."
+    },
+    {
+      "name": "Statistics (AHL)",
+      "level": "IB HL",
+      "prerequisites": ["Distributions"],
+      "subtopics": [
+        "Bayes' theorem",
+        "Continuous probability distributions and PDFs",
+        "Hypothesis testing (z-test, t-test)",
+        "Chi-squared goodness of fit and independence tests"
+      ],
+      "objectives": "Apply Bayes' theorem; work with continuous distributions; perform hypothesis tests; use chi-squared tests.",
+      "common_mistakes": "Confusing null and alternative hypotheses; wrong degrees of freedom; misinterpreting p-values.",
+      "remediation": "Follow a structured hypothesis testing procedure every time. Practise Bayes' theorem with tree diagrams."
+    },
+    {
+      "name": "Limits & Derivatives",
+      "level": "IB HL",
+      "prerequisites": ["Functions Basics", "Exponents & Logarithms"],
+      "subtopics": [
+        "Concept of a limit",
+        "Derivative from first principles",
+        "Power rule, chain rule, product rule, quotient rule",
+        "Tangent and normal lines"
+      ],
+      "objectives": "Understand limits informally; differentiate using standard rules; find equations of tangent and normal lines.",
+      "common_mistakes": "Forgetting chain rule on composite functions; sign error in quotient rule; not simplifying before differentiating.",
+      "remediation": "Practise identifying which rule applies before computing. Show substitution steps clearly for chain rule."
+    },
+    {
+      "name": "Differentiation Applications",
+      "level": "IB HL",
+      "prerequisites": ["Limits & Derivatives"],
+      "subtopics": [
+        "Increasing and decreasing functions",
+        "Stationary points (local max/min, inflection)",
+        "Optimisation problems",
+        "Related rates of change",
+        "Second derivative test"
+      ],
+      "objectives": "Apply differentiation to find stationary points, solve optimisation and related rates problems.",
+      "common_mistakes": "Not verifying nature of stationary points; setting up the wrong expression to optimise; sign errors in related rates.",
+      "remediation": "Practise translating word problems into a function of one variable before differentiating. Always verify nature of critical points."
+    },
+    {
+      "name": "Integration Basics",
+      "level": "IB HL",
+      "prerequisites": ["Limits & Derivatives"],
+      "subtopics": [
+        "Anti-differentiation",
+        "Definite integrals",
+        "Area under curves",
+        "Area between curves",
+        "Kinematics applications"
+      ],
+      "objectives": "Integrate standard functions; evaluate definite integrals; find areas bounded by curves; apply to kinematics.",
+      "common_mistakes": "Forgetting +C for indefinite integrals; wrong limits or sign when area is below x-axis; not sketching first.",
+      "remediation": "Always check by differentiating the result. Sketch curves and identify regions above/below axis separately."
+    },
+    {
+      "name": "Calculus Applications",
+      "level": "IB HL",
+      "prerequisites": ["Differentiation Applications", "Integration Basics"],
+      "subtopics": [
+        "Modelling with calculus",
+        "Motion problems (displacement, velocity, acceleration)",
+        "Growth and decay models"
+      ],
+      "objectives": "Apply calculus to model real-world situations involving rates of change, motion, and accumulation.",
+      "common_mistakes": "Confusing when to differentiate vs integrate; not checking units; forgetting initial conditions.",
+      "remediation": "Start from the physical context — identify what is changing and whether you need rate (derivative) or total (integral)."
+    },
+    {
+      "name": "Calculus AHL: Differentiation",
+      "level": "IB HL",
+      "prerequisites": ["Differentiation Applications", "Trig Identities (AHL)"],
+      "subtopics": [
+        "Derivatives of trig, exponential, and log functions",
+        "Related rates of change (AHL)",
+        "Implicit differentiation",
+        "L'Hôpital's rule"
+      ],
+      "objectives": "Differentiate transcendental functions; use implicit differentiation; apply L'Hôpital's rule for indeterminate forms.",
+      "common_mistakes": "Forgetting to differentiate both sides in implicit differentiation; applying L'Hôpital to non-indeterminate forms; chain rule with transcendentals.",
+      "remediation": "Practise chain rule systematically with each transcendental function. Verify L'Hôpital conditions (0/0 or ∞/∞) before applying."
+    },
+    {
+      "name": "Calculus AHL: Integration",
+      "level": "IB HL",
+      "prerequisites": ["Integration Basics", "Calculus AHL: Differentiation"],
+      "subtopics": [
+        "Integration by substitution",
+        "Integration by parts",
+        "Volumes of revolution"
+      ],
+      "objectives": "Apply advanced integration techniques (substitution, by parts); calculate volumes of revolution about x and y axes.",
+      "common_mistakes": "Wrong substitution choice; forgetting to change limits when substituting; sign errors in integration by parts.",
+      "remediation": "Use the LIATE rule for choosing u in by-parts. Practise recognising common substitution patterns."
+    },
+    {
+      "name": "Differential Equations",
+      "level": "IB HL",
+      "prerequisites": ["Calculus AHL: Integration"],
+      "subtopics": [
+        "Separable differential equations",
+        "Slope fields (direction fields)",
+        "Euler's method for numerical solutions",
+        "Modelling with differential equations"
+      ],
+      "objectives": "Solve separable differential equations; interpret slope fields; apply Euler's method; model real-world phenomena with DEs.",
+      "common_mistakes": "Forgetting the constant of integration when separating variables; errors in Euler's method step calculations; wrong initial conditions.",
+      "remediation": "Practise separation and integration steps systematically. Draw slope fields to build geometric intuition for solution curves."
     }
   ]
 }

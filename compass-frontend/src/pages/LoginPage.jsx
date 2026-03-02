@@ -52,7 +52,7 @@ export default function LoginPage() {
             🧭 COMPASS
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h1>
-          <p className="text-sm text-gray-500">Sign in to your personalised A-Math dashboard</p>
+          <p className="text-sm text-gray-500">Sign in to your personalised learning dashboard</p>
         </div>
 
         {/* Card */}

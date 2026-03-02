@@ -20,7 +20,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
   const initialMessage = {
     id: 1,
     role: 'ai',
-    text: `Hi ${studentName || 'there'}! I'm your AI learning companion. I can see your progress across all your A-Math topics. What would you like to know?`,
+    text: `Hi ${studentName || 'there'}! I'm your AI learning companion. I can see your progress across all your topics. What would you like to know?`,
     confidence: 'high',
   };
 

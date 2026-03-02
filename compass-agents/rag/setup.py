@@ -39,7 +39,7 @@ def setup_rag(syllabus_path: str | None = None):
 
     for topic in syllabus["topics"]:
         doc = f"""Topic: {topic['name']}
-Level: {topic.get('level', 'O-Level')}
+Level: {topic.get('level', 'IB HL')}
 Prerequisites: {', '.join(topic.get('prerequisites', ['None']))}
 Subtopics: {', '.join(topic.get('subtopics', []))}
 Learning Objectives: {topic.get('objectives', 'N/A')}
