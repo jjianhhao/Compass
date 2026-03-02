@@ -13,7 +13,34 @@ const VelocityIcon = ({ v }) => {
 };
 
 export default function MasteryOverview({ knowledgeMap }) {
-  if (!knowledgeMap) return null;
+  if (!knowledgeMap) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 animate-pulse">
+        <div className="flex items-center gap-4 mb-5 pb-5 border-b border-gray-100">
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0" />
+          <div className="flex-1 space-y-2">
+            <div className="h-3 w-32 bg-gray-200 rounded" />
+            <div className="h-2 w-24 bg-gray-100 rounded" />
+            <div className="h-2 w-48 bg-gray-100 rounded-full mt-2" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          {[0, 1].map(col => (
+            <div key={col} className="space-y-3">
+              <div className="h-3 w-20 bg-gray-200 rounded" />
+              {[0, 1, 2].map(i => (
+                <div key={i} className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-gray-200 rounded" />
+                  <div className="flex-1 h-2 bg-gray-100 rounded-full" />
+                  <div className="w-8 h-3 bg-gray-200 rounded" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   const entries = Object.entries(knowledgeMap).map(([topic, data]) => ({
     topic,

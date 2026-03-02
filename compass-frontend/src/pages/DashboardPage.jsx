@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStudent } from '../hooks/useStudent';
 import StudentDashboard from '../components/dashboard/StudentDashboard';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, X } from 'lucide-react';
 
 const STUDENT_NAMES = {
   sarah: 'Sarah Tan',
@@ -48,40 +49,43 @@ function SkeletonDashboard() {
 export default function DashboardPage() {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const { knowledgeMap, velocity, agentOutput, loading, error, refresh } = useStudent(studentId);
+  const { knowledgeMap, velocity, agentOutput, agentLoading, loading, error, refresh } = useStudent(studentId);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const studentName = STUDENT_NAMES[studentId] || studentId;
 
   if (loading) return <SkeletonDashboard />;
 
-  if (error) {
-    return (
-      <div className="h-full bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center max-w-sm">
-          <AlertCircle className="mx-auto text-red-400 mb-3" size={36} />
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Couldn't load data</h2>
-          <p className="text-sm text-gray-500 mb-5">
-            There was a problem connecting to the learning engine. Using demo data for now.
-          </p>
-          <button
-            className="flex items-center gap-2 mx-auto bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors"
-            onClick={refresh}
-          >
-            <RefreshCw size={14} /> Try Again
+  return (
+    <div className="h-screen flex flex-col overflow-hidden">
+      {error && !bannerDismissed && (
+        <div className="flex-shrink-0 flex items-center justify-between gap-3 bg-amber-50 border-b border-amber-200 px-4 py-2 text-sm text-amber-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={14} className="text-amber-500 shrink-0" />
+            <span>Backend unavailable — showing demo data.</span>
+            <button
+              className="underline underline-offset-2 hover:text-amber-900 transition-colors"
+              onClick={refresh}
+            >
+              <RefreshCw size={12} className="inline mr-0.5" />Retry
+            </button>
+          </div>
+          <button onClick={() => setBannerDismissed(true)} className="text-amber-400 hover:text-amber-700 transition-colors">
+            <X size={14} />
           </button>
         </div>
+      )}
+      <div className="flex-1 overflow-hidden">
+        <StudentDashboard
+          studentName={studentName}
+          studentId={studentId}
+          knowledgeMap={knowledgeMap}
+          velocity={velocity}
+          agentOutput={agentOutput}
+          agentLoading={agentLoading}
+          onStartQuiz={() => navigate(`/quiz/${studentId}`)}
+        />
       </div>
-    );
-  }
-
-  return (
-    <StudentDashboard
-      studentName={studentName}
-      studentId={studentId}
-      knowledgeMap={knowledgeMap}
-      velocity={velocity}
-      agentOutput={agentOutput}
-      onStartQuiz={() => navigate(`/quiz/${studentId}`)}
-    />
+    </div>
   );
 }

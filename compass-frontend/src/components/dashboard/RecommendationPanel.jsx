@@ -52,8 +52,39 @@ function RecommendationCard({ rec, onOverride }) {
   );
 }
 
-export default function RecommendationPanel({ agentOutput, onOverride }) {
+export default function RecommendationPanel({ agentOutput, agentLoading, onOverride }) {
   const [trailExpanded, setTrailExpanded] = useState(false);
+
+  if (agentLoading && !agentOutput) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 animate-pulse">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <div className="h-3 w-36 bg-gray-200 rounded mb-1.5" />
+            <div className="h-2 w-44 bg-gray-100 rounded" />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-400" />
+            <span className="text-xs text-indigo-400">AI analysing…</span>
+          </div>
+        </div>
+        <div className="bg-indigo-50 rounded-xl p-4 mb-4">
+          <div className="h-3 w-24 bg-indigo-200 rounded mb-2" />
+          <div className="h-3 w-full bg-indigo-100 rounded mb-1" />
+          <div className="h-3 w-3/4 bg-indigo-100 rounded" />
+        </div>
+        <div className="space-y-3">
+          {[0, 1, 2].map(i => (
+            <div key={i} className="border border-gray-100 rounded-xl p-4">
+              <div className="h-3 w-20 bg-gray-200 rounded mb-2" />
+              <div className="h-3 w-full bg-gray-100 rounded mb-1" />
+              <div className="h-3 w-2/3 bg-gray-100 rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (!agentOutput) {
     return (

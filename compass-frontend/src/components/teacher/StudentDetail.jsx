@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
+import { setRecStatus } from '../../api/localStore';
 import RecommendationReview from './RecommendationReview';
 import OverrideLog from './OverrideLog';
 import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
@@ -95,6 +96,8 @@ export default function StudentDetail({ studentId }) {
 
   const handleAction = (action, log) => {
     setOverrideLog(prev => [...prev, log]);
+    // Persist so TeacherDashboard shows the updated status on next visit
+    setRecStatus(studentId, action);
   };
 
   if (loadingKm) {
@@ -239,7 +242,9 @@ export default function StudentDetail({ studentId }) {
             </div>
             {agentOutput ? (
               <div className="space-y-3">
-                <p className="text-sm text-gray-700">{agentOutput.diagnosis.root_cause_analysis}</p>
+                <p className="text-sm text-gray-700">
+                  {agentOutput.diagnosis?.root_cause_analysis ?? agentOutput.diagnosis ?? 'Diagnosis complete.'}
+                </p>
 
                 {(agentOutput.diagnosis.error_classifications ?? []).length > 0 && (
                   <div>

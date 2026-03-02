@@ -76,6 +76,40 @@ export function computeKnowledgeMap(studentId, baseMockMap) {
   return result;
 }
 
+// ─── Student overrides ───────────────────────────────────────────────────────
+
+const OVERRIDE_KEY = (studentId) => `compass_overrides_${studentId}`;
+
+export function saveOverride(studentId, overridePayload) {
+  try {
+    const existing = loadOverrides(studentId);
+    existing.push(overridePayload);
+    localStorage.setItem(OVERRIDE_KEY(studentId), JSON.stringify(existing.slice(-200)));
+  } catch {
+    // localStorage unavailable — silently skip
+  }
+}
+
+export function loadOverrides(studentId) {
+  try {
+    return JSON.parse(localStorage.getItem(OVERRIDE_KEY(studentId)) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+// ─── Recommendation status (for TeacherDashboard ↔ StudentDetail sync) ──────
+
+export function getRecStatus(studentId) {
+  return localStorage.getItem(`compass_rec_status_${studentId}`) || 'pending';
+}
+
+export function setRecStatus(studentId, status) {
+  try {
+    localStorage.setItem(`compass_rec_status_${studentId}`, status);
+  } catch { /* ignore */ }
+}
+
 // Compute velocity array from a knowledge map (for VelocityChart)
 export function computeVelocity(studentId, knowledgeMap, baseMockVelocity) {
   const interactions = loadInteractions(studentId);

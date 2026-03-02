@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, BookOpen, LogOut, Map } from 'lucide-react';
 import MasteryOverview from './MasteryOverview';
@@ -6,6 +6,8 @@ import RecommendationPanel from './RecommendationPanel';
 import VelocityChart from './VelocityChart';
 import StudentChat from '../chat/StudentChat';
 import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
+import { saveOverride } from '../../api/localStore';
+import { api } from '../../api/client';
 
 
 export default function StudentDashboard({
@@ -14,10 +16,33 @@ export default function StudentDashboard({
   knowledgeMap,
   velocity,
   agentOutput,
+  agentLoading,
   onStartQuiz,
 }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+
+  const handleOverride = useCallback((payload) => {
+    saveOverride(studentId, { ...payload, student_id: studentId });
+    // Best-effort: log a high-mastery interaction so the engine registers the student's self-report
+    if (payload.override_reason === 'revised_offline') {
+      const topic = agentOutput?.plan?.find(r => r.id === payload.recommendation_id)?.topic;
+      if (topic) {
+        api.logInteraction({
+          student_id: studentId,
+          topic,
+          subtopic: 'self_reported',
+          is_correct: true,
+          time_taken_sec: 0,
+          difficulty: 'medium',
+          marks_available: 1,
+          marks_awarded: 1,
+          mark_percentage: 100,
+          timestamp: payload.timestamp,
+        }).catch(() => { /* best-effort */ });
+      }
+    }
+  }, [studentId, agentOutput]);
 
   const overallMastery = knowledgeMap && Object.keys(knowledgeMap).length > 0
     ? Math.round(
@@ -33,7 +58,7 @@ export default function StudentDashboard({
   ];
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gray-50">
+    <div className="h-full flex flex-col overflow-hidden bg-gray-50">
       {/* Top bar */}
       <header className="bg-white border-b border-gray-100 px-6 py-4 flex-shrink-0 z-20">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -117,7 +142,7 @@ export default function StudentDashboard({
                 <VelocityChart velocity={velocity} />
               </div>
               <div className="lg:col-span-2">
-                <RecommendationPanel agentOutput={agentOutput} onOverride={() => {}} />
+                <RecommendationPanel agentOutput={agentOutput} agentLoading={agentLoading} onOverride={handleOverride} />
               </div>
             </div>
           </div>

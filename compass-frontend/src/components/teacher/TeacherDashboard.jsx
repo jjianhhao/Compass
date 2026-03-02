@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { api } from '../../api/client';
+import { getRecStatus } from '../../api/localStore';
 import ClassSummary from './ClassSummary';
 import StudentRow from './StudentRow';
 
@@ -21,9 +22,9 @@ export default function TeacherDashboard() {
     api.listStudents()
       .then(list => {
         setStudents(list);
-        const defaultStatuses = {};
-        list.forEach(s => { defaultStatuses[s.student_id] = 'pending'; });
-        setRecStatuses(prev => ({ ...defaultStatuses, ...prev }));
+        const storedStatuses = {};
+        list.forEach(s => { storedStatuses[s.student_id] = getRecStatus(s.student_id); });
+        setRecStatuses(storedStatuses);
         setLoading(false);
       })
       .catch(err => {
@@ -32,10 +33,13 @@ export default function TeacherDashboard() {
       });
   }, []);
 
-  const alertStudents = useMemo(() => students.filter(s =>
-    s.overall_mastery < 0.3 ||
-    (s.last_active && Date.now() - new Date(s.last_active).getTime() > 14 * 86400000)
-  ), [students]);
+  const FOURTEEN_DAYS_MS = 14 * 86400000;
+  const alertStudents = useMemo(() => students.filter(s => {
+    if (s.overall_mastery < 0.3) return true;
+    if (!s.last_active) return true; // no recorded activity → always flag
+    const msSince = Date.now() - new Date(s.last_active).getTime();
+    return !isNaN(msSince) && msSince > FOURTEEN_DAYS_MS;
+  }), [students]);
 
   const sorted = useMemo(() => {
     return [...students].sort((a, b) => {
