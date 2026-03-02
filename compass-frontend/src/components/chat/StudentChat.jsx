@@ -8,6 +8,15 @@ import ConfidenceBadge from '../shared/ConfidenceBadge';
 import { api, getAIResponseDirect } from '../../api/client';
 import { formatTopicName } from '../../utils/topicNames';
 
+// Normalise AI math delimiters so remark-math can always render them.
+// Converts \(...\) → $...$ and \[...\] → $$...$$
+function normaliseMath(text) {
+  if (!text) return text;
+  return text
+    .replace(/\\\[([^]*?)\\\]/g, (_, inner) => `$$${inner}$$`)
+    .replace(/\\\(([^]*?)\\\)/g, (_, inner) => `$${inner}$`);
+}
+
 const SUGGESTIONS = [
   'Why am I struggling with integration?',
   'What should I study first?',
@@ -37,7 +46,11 @@ export default function StudentChat({ knowledgeMap, studentName }) {
   };
 
   const scrollToLastAiMsg = () => {
-    lastAiMsgRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    const container = messagesContainerRef.current;
+    const lastMsg = lastAiMsgRef.current;
+    if (container && lastMsg) {
+      container.scrollTo({ top: lastMsg.offsetTop - container.offsetTop, behavior: 'smooth' });
+    }
   };
 
   const sendMessage = async (text) => {
@@ -141,7 +154,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
                       code: ({ children }) => <code className="bg-gray-200 rounded px-1 font-mono text-xs">{children}</code>,
                     }}
                   >
-                    {msg.text}
+                    {normaliseMath(msg.text)}
                   </ReactMarkdown>
                 ) : (
                   msg.text

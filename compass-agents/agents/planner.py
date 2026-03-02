@@ -15,10 +15,12 @@ def run_planner(
 ) -> PlannerOutput:
     """Takes a diagnosis and produces an actionable study plan."""
 
-    user_prompt = f"""
-Create a study plan for this student based on the diagnosis.
+    student_name = (knowledge_map.student_name or diagnosis.student_id).split("_")[0].capitalize()
 
-STUDENT: {diagnosis.student_id}
+    user_prompt = f"""
+Create a personalised study plan written DIRECTLY to the student. Use "you" and "your" throughout — never use their name or third person.
+
+STUDENT FIRST NAME (for internal context only, do NOT use in output): {student_name}
 
 DIAGNOSIS:
 {diagnosis.model_dump_json(indent=2)}
@@ -31,11 +33,22 @@ SYLLABUS CONTEXT (from RAG):
 
 Generate a focused study plan (2-4 recommendations max) as JSON matching this EXACT schema:
 - recommendations: list of {{"action": str, "topic": str, "subtopic": str|null, "difficulty": "easy"|"medium"|"hard", "question_count": int, "reasoning": str, "priority": "critical"|"high"|"medium"|"low"}}
-- study_plan_summary: string (2-3 sentences)
+- study_plan_summary: string (2-3 sentences, written directly to the student, warm and specific)
 - estimated_sessions: integer
-- reasoning_trail: string (paragraph)
+- reasoning_trail: string (paragraph, written directly to the student)
 
-IMPORTANT: Do NOT include student_id in your response.
+CRITICAL — the "action" field must be a specific, concrete instruction written directly to the student. It must include ALL of the following:
+1. Exactly what to do (e.g. "Work through 5 medium questions on...")
+2. The specific subtopic(s) to focus on within that chapter (not just the chapter name)
+3. What to pay close attention to or a common mistake to avoid
+4. A suggested approach or method (e.g. "try solving without a calculator first", "write out each step before simplifying", "sketch the graph before answering")
+
+BAD example: "Practice foundational concepts"
+BAD example: "Review and practice exponents and logarithms"
+GOOD example: "Work through 5 medium questions on composite and inverse functions — focus on getting the order right when composing f(g(x)). Before substituting, write out each function separately and always check your domain."
+GOOD example: "Do 6 easy questions on laws of logarithms, specifically log(ab) and log(a/b) rules. A common trap here is forgetting to flip the sign when dividing — watch out for that."
+
+IMPORTANT: Do NOT include student_id in your response. Write entirely in second person ("you/your").
 """
 
     response = client.chat.completions.create(
