@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../api/client';
 import { computeKnowledgeMap, computeVelocity, loadInteractions } from '../api/localStore';
+import { formatTopicName } from '../utils/topicNames';
 
 const MOCK_KNOWLEDGE_MAP = {
   sequences_series: { mastery_score: 0.80, attempt_count: 20, velocity: 'improving' },
@@ -296,7 +297,7 @@ function buildAgentOutput(knowledgeMap, studentId) {
 }
 
 function fmt(t) {
-  return t.split('_').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  return formatTopicName(t);
 }
 
 export function useStudent(studentId) {

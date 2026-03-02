@@ -6,6 +6,7 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import ConfidenceBadge from '../shared/ConfidenceBadge';
 import { api, getAIResponseDirect } from '../../api/client';
+import { formatTopicName } from '../../utils/topicNames';
 
 const SUGGESTIONS = [
   'Why am I struggling with integration?',
@@ -308,5 +309,5 @@ function generateFallbackReply(message, knowledgeMap) {
 }
 
 function formatT(t) {
-  return t.split('_').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  return formatTopicName(t);
 }

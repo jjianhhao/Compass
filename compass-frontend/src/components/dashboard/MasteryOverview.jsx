@@ -1,10 +1,5 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-
-const formatTopic = (t) =>
-  t
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+import { formatTopicName } from '../../utils/topicNames';
 
 const VelocityIcon = ({ v }) => {
   if (v === 'improving') return <TrendingUp size={12} className="text-green-500" />;
@@ -105,7 +100,7 @@ export default function MasteryOverview({ knowledgeMap }) {
               <div key={e.topic} className="flex items-center gap-2">
                 <VelocityIcon v={e.velocity} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-700 truncate">{formatTopic(e.topic)}</p>
+                  <p className="text-xs text-gray-700 truncate">{formatTopicName(e.topic)}</p>
                   <div className="h-1.5 bg-gray-100 rounded-full mt-0.5 overflow-hidden">
                     <div
                       className="h-full bg-green-400 rounded-full"
@@ -131,7 +126,7 @@ export default function MasteryOverview({ knowledgeMap }) {
               <div key={e.topic} className="flex items-center gap-2">
                 <VelocityIcon v={e.velocity} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-700 truncate">{formatTopic(e.topic)}</p>
+                  <p className="text-xs text-gray-700 truncate">{formatTopicName(e.topic)}</p>
                   <div className="h-1.5 bg-gray-100 rounded-full mt-0.5 overflow-hidden">
                     <div
                       className="h-full bg-red-400 rounded-full"

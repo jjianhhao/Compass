@@ -10,11 +10,7 @@ import {
   LabelList,
 } from 'recharts';
 
-const formatTopic = (t) =>
-  t
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+import { formatTopicName } from '../../utils/topicNames';
 
 const COLORS = {
   improving: '#4ade80',
@@ -27,7 +23,7 @@ const CustomTooltip = ({ active, payload }) => {
     const d = payload[0].payload;
     return (
       <div className="bg-white border border-gray-200 rounded-xl shadow-md px-3 py-2 text-xs">
-        <p className="font-semibold text-gray-800 mb-0.5">{formatTopic(d.topic)}</p>
+        <p className="font-semibold text-gray-800 mb-0.5">{formatTopicName(d.topic)}</p>
         <p className="text-gray-500">
           Trend:{' '}
           <span
@@ -94,7 +90,7 @@ export default function VelocityChart({ velocity }) {
 
   const data = velocity.map((v) => ({
     ...v,
-    displayTopic: formatTopic(v.topic),
+    displayTopic: formatTopicName(v.topic),
     absChange: Math.abs(v.mastery_change * 100),
     changeLabel: `${v.mastery_change >= 0 ? '+' : ''}${Math.round(v.mastery_change * 100)}%`,
   }));

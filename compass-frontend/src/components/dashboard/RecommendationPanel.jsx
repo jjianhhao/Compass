@@ -2,19 +2,21 @@ import { useState } from 'react';
 import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import ConfidenceBadge from '../shared/ConfidenceBadge';
 import OverrideButton from '../shared/OverrideButton';
+import { formatTopicName } from '../../utils/topicNames';
 
 const PRIORITY_STYLES = {
   critical: 'bg-red-100 text-red-700 border-red-200',
-  high: 'bg-orange-100 text-orange-700 border-orange-200',
-  medium: 'bg-blue-100 text-blue-700 border-blue-200',
-  low: 'bg-gray-100 text-gray-600 border-gray-200',
+  high:     'bg-orange-100 text-orange-700 border-orange-200',
+  medium:   'bg-blue-100 text-blue-700 border-blue-200',
+  low:      'bg-gray-100 text-gray-600 border-gray-200',
 };
 
-const formatTopic = (t) =>
-  t
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+const PRIORITY_LABELS = {
+  critical: 'Critical',
+  high:     'High Priority',
+  medium:   'Medium Priority',
+  low:      'Low Priority',
+};
 
 function RecommendationCard({ rec, onOverride }) {
   const [expanded, setExpanded] = useState(false);
@@ -24,9 +26,9 @@ function RecommendationCard({ rec, onOverride }) {
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2 flex-wrap">
           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${PRIORITY_STYLES[rec.priority] || PRIORITY_STYLES.medium}`}>
-            {rec.priority}
+            {PRIORITY_LABELS[rec.priority] || rec.priority}
           </span>
-          <span className="text-sm font-semibold text-gray-800">{formatTopic(rec.topic)}</span>
+          <span className="text-sm font-semibold text-gray-800">{formatTopicName(rec.topic)}</span>
         </div>
         <ConfidenceBadge level={rec.confidence} />
       </div>
