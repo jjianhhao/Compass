@@ -7,7 +7,7 @@ from fastapi import FastAPI, HTTPException, Query, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
-from schemas.models import KnowledgeMap, AgentPipelineOutput, GradeRequest, GradeResponse
+from schemas.models import KnowledgeMap, AgentPipelineOutput, GradeRequest, GradeResponse, StudyPlanRequest, StudyPlanResponse, StudySession
 from agents.pipeline import run_pipeline
 from data.questions import load_questions, get_questions, get_question_by_id, get_total_count
 from agents.grader import grade_student_work
@@ -184,6 +184,123 @@ async def chat(req: ChatRequest):
         return ChatResponse(message=reply)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
+
+
+@app.post("/api/study-plan", response_model=StudyPlanResponse)
+async def generate_study_plan(req: StudyPlanRequest):
+    """Generate a personalised day-by-day study plan given a deadline and student context."""
+    import json
+    from datetime import date, timedelta
+
+    today = date.today()
+    try:
+        deadline = date.fromisoformat(req.deadline_date)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid deadline_date format. Use YYYY-MM-DD.")
+
+    days_until = (deadline - today).days
+    if days_until <= 0:
+        raise HTTPException(status_code=400, detail="Deadline must be in the future.")
+
+    # Build study schedule dates
+    hours_per_day = req.study_hours_per_day or (
+        (req.study_days_per_week or 5) * 2 / 7  # spread weekly hours across days
+    )
+
+    # Summarise knowledge map for prompt
+    km_summary = [
+        {"topic": t.get("topic"), "mastery": round(t.get("mastery_score", 0) * 100), "velocity": t.get("velocity")}
+        for t in req.knowledge_map
+        if t.get("topic") in req.topics_to_cover
+    ]
+
+    exam_summary = [
+        f"{e.exam_name} ({e.date}): {e.score_pct}% — topics: {', '.join(e.topics_tested)}"
+        + (f" — notes: {e.notes}" if e.notes else "")
+        for e in req.exam_results
+    ] if req.exam_results else ["No past exam results provided."]
+
+    user_prompt = f"""
+Create a personalised study plan for a student preparing for: {req.deadline_name}
+Deadline: {req.deadline_date} ({days_until} days away)
+Available study time: {hours_per_day:.1f} hours/day
+Topics to cover: {', '.join(req.topics_to_cover)}
+
+STUDENT MASTERY (topics to cover only):
+{json.dumps(km_summary, indent=2)}
+
+PAST EXAM RESULTS:
+{chr(10).join(exam_summary)}
+
+Generate a day-by-day study plan from today ({today.isoformat()}) to the deadline.
+Prioritise topics with low mastery and those that appeared weak in past exams.
+Group related topics in the same session where possible.
+Do not schedule study on the deadline day itself.
+
+Return a JSON object matching this EXACT schema:
+{{
+  "plan_summary": "<2-3 sentence overview of the study strategy>",
+  "total_days": <integer: number of study sessions>,
+  "sessions": [
+    {{
+      "day": <integer starting at 1>,
+      "date": "<YYYY-MM-DD>",
+      "topics": ["<topic_id>"],
+      "focus": "<specific focus for this session, e.g. 'Differentiation — chain rule and product rule'>",
+      "duration_hours": <float>,
+      "priority": "<critical|high|medium|low>"
+    }}
+  ],
+  "reasoning": "<paragraph explaining the prioritisation logic>"
+}}
+
+Only include sessions on days with study time (skip days if study_days_per_week is set and not all days are study days — distribute evenly).
+Cap total sessions at {min(days_until - 1, 30)} sessions maximum.
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an expert study planner for IB Mathematics students. "
+                        "You create realistic, prioritised study schedules based on mastery data and past performance. "
+                        "Always return valid JSON only."
+                    ),
+                },
+                {"role": "user", "content": user_prompt},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.3,
+            timeout=30,
+        )
+        result = json.loads(response.choices[0].message.content)
+
+        # Normalise priority values
+        sessions = []
+        for s in result.get("sessions", []):
+            priority = s.get("priority", "medium").lower()
+            if priority not in ("critical", "high", "medium", "low"):
+                priority = "medium"
+            sessions.append(StudySession(
+                day=s.get("day", 1),
+                date=s.get("date", today.isoformat()),
+                topics=s.get("topics", []),
+                focus=s.get("focus", ""),
+                duration_hours=float(s.get("duration_hours", hours_per_day)),
+                priority=priority,
+            ))
+
+        return StudyPlanResponse(
+            plan_summary=result.get("plan_summary", ""),
+            total_days=result.get("total_days", len(sessions)),
+            sessions=sessions,
+            reasoning=result.get("reasoning", ""),
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Study plan generation failed: {str(e)}")
 
 
 @app.get("/health")

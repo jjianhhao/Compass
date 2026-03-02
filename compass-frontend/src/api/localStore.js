@@ -76,6 +76,35 @@ export function computeKnowledgeMap(studentId, baseMockMap) {
   return result;
 }
 
+// ─── Exam results ────────────────────────────────────────────────────────────
+
+const EXAM_KEY = (studentId) => `compass_exam_results_${studentId}`;
+
+export function saveExamResult(studentId, result) {
+  try {
+    const existing = loadExamResults(studentId);
+    existing.push({ ...result, id: `${Date.now()}` });
+    localStorage.setItem(EXAM_KEY(studentId), JSON.stringify(existing.slice(-100)));
+  } catch {
+    // localStorage unavailable — silently skip
+  }
+}
+
+export function loadExamResults(studentId) {
+  try {
+    return JSON.parse(localStorage.getItem(EXAM_KEY(studentId)) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+export function deleteExamResult(studentId, resultId) {
+  try {
+    const existing = loadExamResults(studentId).filter(r => r.id !== resultId);
+    localStorage.setItem(EXAM_KEY(studentId), JSON.stringify(existing));
+  } catch { /* ignore */ }
+}
+
 // ─── Student overrides ───────────────────────────────────────────────────────
 
 const OVERRIDE_KEY = (studentId) => `compass_overrides_${studentId}`;

@@ -1,11 +1,12 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, BookOpen, LogOut, Map } from 'lucide-react';
+import { MessageSquare, BookOpen, LogOut, Map, CalendarDays } from 'lucide-react';
 import MasteryOverview from './MasteryOverview';
 import RecommendationPanel from './RecommendationPanel';
 import VelocityChart from './VelocityChart';
 import StudentChat from '../chat/StudentChat';
 import KnowledgeMapGraph from '../shared/KnowledgeMapGraph';
+import StudyPlanner from './StudyPlanner';
 import { saveOverride } from '../../api/localStore';
 import { api } from '../../api/client';
 
@@ -54,6 +55,7 @@ export default function StudentDashboard({
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Map },
+    { id: 'planner', label: 'Study Planner', icon: CalendarDays },
     { id: 'chat', label: 'Chat', icon: MessageSquare },
   ];
 
@@ -145,6 +147,13 @@ export default function StudentDashboard({
                 <RecommendationPanel agentOutput={agentOutput} agentLoading={agentLoading} onOverride={handleOverride} />
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Study Planner tab */}
+        <div className={`flex-1 overflow-y-auto min-h-0 px-6 pb-6 ${activeTab === 'planner' ? '' : 'hidden'}`}>
+          <div className="max-w-7xl mx-auto">
+            <StudyPlanner knowledgeMap={knowledgeMap} studentId={studentId} />
           </div>
         </div>
 

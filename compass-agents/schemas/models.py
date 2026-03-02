@@ -125,3 +125,39 @@ class AgentPipelineOutput(BaseModel):
     final_recommendations: List[Recommendation]
     overall_confidence: Literal["high", "medium", "low"]
     reasoning_trail: str
+
+
+# === Study Planner ===
+class ExamResult(BaseModel):
+    exam_name: str
+    date: str
+    score_pct: float
+    topics_tested: List[str]
+    notes: Optional[str] = None
+
+
+class StudyPlanRequest(BaseModel):
+    student_id: str
+    knowledge_map: List[dict]
+    exam_results: List[ExamResult] = []
+    deadline_name: str
+    deadline_date: str
+    study_hours_per_day: Optional[float] = None
+    study_days_per_week: Optional[int] = None
+    topics_to_cover: List[str]
+
+
+class StudySession(BaseModel):
+    day: int
+    date: str
+    topics: List[str]
+    focus: str
+    duration_hours: float
+    priority: Literal["critical", "high", "medium", "low"]
+
+
+class StudyPlanResponse(BaseModel):
+    plan_summary: str
+    total_days: int
+    sessions: List[StudySession]
+    reasoning: str

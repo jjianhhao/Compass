@@ -252,6 +252,17 @@ export const api = {
     };
   },
 
+  generateStudyPlan: async (payload) => {
+    if (USE_MOCK) { await delay(1000); return null; }
+    const res = await fetch(`${AGENT_URL}/api/study-plan`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      ...timeout(30000),
+    });
+    return handleResponse(res);
+  },
+
   sendChatMessage: async (message, knowledgeMap) => {
     if (USE_MOCK) { throw new Error('backend not connected'); }
     const res = await fetch(`${AGENT_URL}/api/chat`, {
