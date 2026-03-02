@@ -22,6 +22,8 @@ Grade the student's work according to IB marking principles:
 - Award accuracy marks (A) only when following from correct working
 - Be generous with follow-through marks where appropriate
 - Look for alternative valid methods not in the mark scheme
+- Accept unsimplified but mathematically equivalent answers as fully correct (e.g. 3/243 is equivalent to 1/81 and should receive full marks — do NOT penalise for not simplifying unless the question explicitly asks for a simplified form)
+- When reading handwritten fractions, carefully distinguish numerals that look similar (e.g. 1 vs 2 vs 3). If a digit in the student's fraction is ambiguous and one reading produces the correct answer, favour that reading and note it as correct or unsimplified rather than wrong
 
 Return your assessment as a JSON object with these exact fields:
 {
