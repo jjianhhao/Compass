@@ -50,6 +50,12 @@ export default function QuizPage() {
   };
 
   const handleComplete = () => {
+    // Trigger background re-computation so next dashboard load is instant
+    const resolvedId = studentId === 'sarah' ? 'sarah_001'
+      : studentId === 'james' ? 'james_001'
+      : studentId === 'aisha' ? 'aisha_001'
+      : studentId;
+    fetch(`http://localhost:8001/api/diagnosis/${resolvedId}/refresh`, { method: 'POST' }).catch(() => {});
     navigate(`/dashboard/${studentId}`);
   };
 

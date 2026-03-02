@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 from schemas.models import (
@@ -9,14 +10,28 @@ from agents.planner import run_planner
 from agents.evaluator import run_evaluator
 from rag.query import get_syllabus_context
 
-MAX_RETRIES = 2
+MAX_RETRIES = 1
+
+# Cache up to 32 students; keyed on a hash of the knowledge map JSON
+_pipeline_cache: dict[str, AgentPipelineOutput] = {}
+_CACHE_SIZE = 32
+_cache_keys: list[str] = []
+
+
+def _km_hash(knowledge_map: KnowledgeMap) -> str:
+    payload = knowledge_map.model_dump_json(exclude_none=True)
+    return hashlib.sha256(payload.encode()).hexdigest()
 
 
 def run_pipeline(knowledge_map: KnowledgeMap) -> AgentPipelineOutput:
     """
     Full agent pipeline: Diagnosis -> Planner -> Evaluator.
     If evaluator rejects, retry with adjustments (up to MAX_RETRIES times).
+    Results are cached by knowledge map hash to avoid redundant GPT calls.
     """
+    cache_key = _km_hash(knowledge_map)
+    if cache_key in _pipeline_cache:
+        return _pipeline_cache[cache_key]
 
     # Step 1: Get RAG context for the student's weak topics
     weak_topics = [t.topic for t in knowledge_map.topic_masteries if t.mastery_score < 0.5]
@@ -63,7 +78,7 @@ def run_pipeline(knowledge_map: KnowledgeMap) -> AgentPipelineOutput:
 
 **Overall Confidence: {overall_confidence}** | **Evaluator: {'Approved' if evaluator_verdict.approved else 'Flagged concerns'}**""".strip()
 
-    return AgentPipelineOutput(
+    result = AgentPipelineOutput(
         student_id=knowledge_map.student_id,
         diagnosis=diagnosis,
         plan=plan,
@@ -72,3 +87,12 @@ def run_pipeline(knowledge_map: KnowledgeMap) -> AgentPipelineOutput:
         overall_confidence=overall_confidence,
         reasoning_trail=combined_reasoning,
     )
+
+    # Store in cache, evicting oldest entry if at capacity
+    if len(_cache_keys) >= _CACHE_SIZE:
+        oldest = _cache_keys.pop(0)
+        _pipeline_cache.pop(oldest, None)
+    _pipeline_cache[cache_key] = result
+    _cache_keys.append(cache_key)
+
+    return result

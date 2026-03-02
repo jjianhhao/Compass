@@ -46,6 +46,7 @@ IMPORTANT: Do NOT include any extra fields beyond those listed above.
         ],
         response_format={"type": "json_object"},
         temperature=0.2,
+        timeout=15,
     )
 
     result = json.loads(response.choices[0].message.content)

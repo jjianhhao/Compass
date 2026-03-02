@@ -43,6 +43,7 @@ Do NOT include student_id in your response.
         ],
         response_format={"type": "json_object"},
         temperature=0.3,
+        timeout=15,
     )
 
     result = json.loads(response.choices[0].message.content)

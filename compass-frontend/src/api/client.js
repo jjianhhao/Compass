@@ -180,6 +180,13 @@ export const api = {
       await delay(800);
       return MOCK_DIAGNOSES[resolveId(knowledgeMap?.student_id)] ?? MOCK_DIAGNOSES['sarah_001'];
     }
+    const studentId = resolveId(knowledgeMap?.student_id);
+    // Try the fast pre-computed cache first
+    try {
+      const cached = await fetch(`${AGENT_URL}/api/diagnosis/${studentId}`, timeout(5000));
+      if (cached.ok) return handleResponse(cached);
+    } catch { /* cache miss or agent down — fall through */ }
+    // Fall back to full pipeline
     const res = await fetch(`${AGENT_URL}/api/diagnose`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

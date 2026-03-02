@@ -38,6 +38,8 @@ class GradeResponse(BaseModel):
     strengths: List[str]
     errors: List[str]
     is_correct: bool
+    model_answer: Optional[str] = None
+    worked_solution: Optional[List[dict]] = None
 
 
 # === SHARED: Topic Mastery (from Person B's engine) ===

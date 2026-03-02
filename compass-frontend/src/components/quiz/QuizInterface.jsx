@@ -1,5 +1,34 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Clock, ChevronRight, Trophy, RotateCcw, CheckCircle, XCircle, Pencil, ImageUp, AlertTriangle } from 'lucide-react';
+import { Clock, ChevronRight, Trophy, RotateCcw, CheckCircle, XCircle, Pencil, ImageUp, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+// Renders a string that may contain $...$ inline and $$...$$ display math
+function SafeMath({ children, className }) {
+  if (!children) return null;
+  try {
+    // Split on $$...$$ first (display), then $...$ (inline)
+    const parts = String(children).split(/((?:\$\$[\s\S]+?\$\$|\$[^$\n]+?\$))/g);
+    const rendered = parts.map((part, i) => {
+      if (part.startsWith('$$') && part.endsWith('$$')) {
+        const tex = part.slice(2, -2);
+        try {
+          return <span key={i} dangerouslySetInnerHTML={{ __html: katex.renderToString(tex, { displayMode: true, throwOnError: false }) }} />;
+        } catch { return <span key={i} className="text-xs text-gray-400 italic">{part}</span>; }
+      }
+      if (part.startsWith('$') && part.endsWith('$')) {
+        const tex = part.slice(1, -1);
+        try {
+          return <span key={i} dangerouslySetInnerHTML={{ __html: katex.renderToString(tex, { displayMode: false, throwOnError: false }) }} />;
+        } catch { return <span key={i} className="text-xs text-gray-400 italic">{part}</span>; }
+      }
+      return <span key={i}>{part}</span>;
+    });
+    return <span className={className}>{rendered}</span>;
+  } catch {
+    return <span className={className}>{children}</span>;
+  }
+}
 import QuestionBody from './QuestionBody';
 import DrawingCanvas from './DrawingCanvas';
 import PhotoUpload from './PhotoUpload';
@@ -17,6 +46,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
   const [showSummary, setShowSummary] = useState(false);
   const [showQuitWarning, setShowQuitWarning] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [modelAnswerExpanded, setModelAnswerExpanded] = useState(false);
   const timerRef = useRef(null);
   const startTimeRef = useRef(Date.now());
   const canvasRef = useRef(null);
@@ -123,6 +153,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
       setAnswered(false);
       setGradingResult(null);
       setInputTab('draw');
+      setModelAnswerExpanded(false);
     }
   };
 
@@ -392,6 +423,57 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+
+              {/* Model Answer — always shown after grading */}
+              {answered && (
+                <div className="border border-indigo-100 rounded-xl overflow-hidden">
+                  <button
+                    className="w-full flex items-center justify-between px-4 py-3 bg-indigo-50 hover:bg-indigo-100 transition-colors text-left"
+                    onClick={() => setModelAnswerExpanded(v => !v)}
+                  >
+                    <span className="text-xs font-semibold text-indigo-700">Model Answer & Worked Solution</span>
+                    {modelAnswerExpanded
+                      ? <ChevronUp size={15} className="text-indigo-400" />
+                      : <ChevronDown size={15} className="text-indigo-400" />
+                    }
+                  </button>
+                  {modelAnswerExpanded && (
+                    <div className="px-4 py-3 space-y-3 bg-white">
+                      {gradingResult.model_answer ? (
+                        <div className="bg-indigo-50 rounded-lg px-3 py-2">
+                          <span className="text-xs font-semibold text-indigo-600 block mb-1">Final Answer</span>
+                          <SafeMath className="text-sm text-indigo-900 font-medium">
+                            {gradingResult.model_answer}
+                          </SafeMath>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-gray-400 italic">Model answer not available for this question.</p>
+                      )}
+                      {gradingResult.worked_solution?.length > 0 && (
+                        <ol className="space-y-3">
+                          {gradingResult.worked_solution.map((s, i) => (
+                            <li key={i} className="flex gap-3">
+                              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold flex items-center justify-center mt-0.5">
+                                {s.step ?? i + 1}
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                {s.description && (
+                                  <p className="text-xs font-semibold text-gray-600 mb-1">{s.description}</p>
+                                )}
+                                {s.working && (
+                                  <SafeMath className="text-sm text-gray-800">
+                                    {s.working}
+                                  </SafeMath>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
