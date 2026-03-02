@@ -51,7 +51,7 @@ export default function StudentDashboard({
                     className={`font-semibold ${
                       overallMastery >= 70
                         ? 'text-green-600'
-                        : overallMastery >= 50
+                        : overallMastery >= 40
                         ? 'text-yellow-600'
                         : 'text-red-500'
                     }`}

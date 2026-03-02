@@ -49,7 +49,7 @@ def generate_interactions(student_id: str, profile: dict) -> list:
 
 
 # === PERSONA 1: Sarah — Plateauing high-achiever ===
-sarah = generate_interactions("sarah", {
+sarah = generate_interactions("sarah_001", {
     "quadratics": {"accuracy": 0.85, "attempts": 15, "start_days_ago": 30, "trend": "stable", "subtopic": "Quadratic formula"},
     "limits_and_derivatives": {"accuracy": 0.80, "attempts": 12, "start_days_ago": 25, "trend": "stable", "subtopic": "Power rule"},
     "differentiation_applications": {"accuracy": 0.75, "attempts": 18, "start_days_ago": 20, "trend": "improving", "subtopic": "Optimisation"},
@@ -58,7 +58,7 @@ sarah = generate_interactions("sarah", {
 })
 
 # === PERSONA 2: James — Foundational gaps ===
-james = generate_interactions("james", {
+james = generate_interactions("james_001", {
     "functions_basics": {"accuracy": 0.45, "attempts": 20, "start_days_ago": 28, "trend": "stable", "subtopic": "Composite functions"},
     "unit_circle_identities": {"accuracy": 0.40, "attempts": 12, "start_days_ago": 20, "trend": "regressing", "subtopic": "Solving trig equations"},
     "trig_identities_ahl": {"accuracy": 0.30, "attempts": 10, "start_days_ago": 14, "trend": "regressing", "subtopic": "Compound angle formulae"},
@@ -67,7 +67,7 @@ james = generate_interactions("james", {
 })
 
 # === PERSONA 3: Aisha — Returning after break ===
-aisha = generate_interactions("aisha", {
+aisha = generate_interactions("aisha_001", {
     "functions_basics": {"accuracy": 0.75, "attempts": 15, "start_days_ago": 45, "trend": "improving", "subtopic": "Inverse functions"},
     "quadratics": {"accuracy": 0.70, "attempts": 12, "start_days_ago": 42, "trend": "improving", "subtopic": "Completing the square"},
     "sequences_series": {"accuracy": 0.65, "attempts": 8, "start_days_ago": 40, "trend": "stable", "subtopic": "Geometric series"},

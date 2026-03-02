@@ -303,8 +303,7 @@ export default function StudentDetail({ studentId }) {
               <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
                 <th className="px-4 py-2 text-left">When</th>
                 <th className="px-4 py-2 text-left">Topic</th>
-                <th className="px-4 py-2 text-left">Question</th>
-                <th className="px-4 py-2 text-left">Difficulty</th>
+                <th className="px-4 py-2 text-left">Mastery After</th>
                 <th className="px-4 py-2 text-left">Result</th>
                 <th className="px-4 py-2 text-left">Time Taken</th>
               </tr>
@@ -313,9 +312,8 @@ export default function StudentDetail({ studentId }) {
               {activity.map((a, i) => (
                 <tr key={i} className={a.is_correct ? '' : 'bg-red-50'}>
                   <td className="px-4 py-2 text-gray-500 whitespace-nowrap">{timeAgo(a.timestamp)}</td>
-                  <td className="px-4 py-2 text-gray-800">{a.topic}</td>
-                  <td className="px-4 py-2 text-gray-500 font-mono text-xs">{a.question_id}</td>
-                  <td className="px-4 py-2 capitalize text-gray-600">{a.difficulty}</td>
+                  <td className="px-4 py-2 text-gray-800">{a.topic_name || a.topic}</td>
+                  <td className="px-4 py-2 text-gray-600">{a.mastery_after != null ? `${Math.round(a.mastery_after * 100)}%` : '—'}</td>
                   <td className="px-4 py-2">
                     {a.is_correct
                       ? <span className="text-green-700 font-medium">✓ Correct</span>

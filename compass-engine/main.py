@@ -1,4 +1,6 @@
 import json
+import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from engine.knowledge_map import KnowledgeMapBuilder
@@ -6,12 +8,34 @@ from engine.graph import TopicGraph
 from schemas import InteractionEvent, KnowledgeMap
 from typing import List
 
-app = FastAPI(title="Compass Knowledge Engine")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-
 # Global state (in production this would be a database)
 engine = KnowledgeMapBuilder()
 graph = TopicGraph()
+
+# Student name mapping for demo personas
+STUDENT_NAMES = {
+    "sarah_001": "Sarah Tan",
+    "james_001": "James Lim",
+    "aisha_001": "Aisha Rahman",
+}
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Auto-seed demo data on startup if no students exist
+    demo_path = "data/demo_interactions.json"
+    if os.path.exists(demo_path) and len(engine.student_trackers) == 0:
+        with open(demo_path) as f:
+            raw = json.load(f)
+        events = [InteractionEvent(**e) for e in raw]
+        for event in events:
+            engine.process_interaction(event)
+        print(f"Auto-seeded {len(events)} demo interactions for {len(engine.student_trackers)} students")
+    yield
+
+
+app = FastAPI(title="Compass Knowledge Engine", lifespan=lifespan)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
 @app.post("/api/interaction")
@@ -46,7 +70,7 @@ async def seed_demo_data():
 @app.get("/api/student/{student_id}/knowledge-map", response_model=KnowledgeMap)
 async def get_knowledge_map(student_id: str):
     """Get the full knowledge map for a student."""
-    km = engine.get_knowledge_map(student_id)
+    km = engine.get_knowledge_map(student_id, student_name=STUDENT_NAMES.get(student_id))
     if not km.topic_masteries:
         raise HTTPException(status_code=404, detail="No data for this student yet")
     return km
@@ -112,9 +136,10 @@ async def list_students():
     """List all students with basic info."""
     students = []
     for sid in engine.student_trackers:
-        km = engine.get_knowledge_map(sid)
+        km = engine.get_knowledge_map(sid, student_name=STUDENT_NAMES.get(sid))
         students.append({
             "student_id": sid,
+            "student_name": STUDENT_NAMES.get(sid),
             "overall_mastery": km.overall_mastery,
             "topics_tracked": len(km.topic_masteries),
             "last_active": km.last_active

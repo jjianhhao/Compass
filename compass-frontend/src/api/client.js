@@ -1,7 +1,7 @@
 import { MOCK_STUDENTS, MOCK_KNOWLEDGE_MAPS, MOCK_DIAGNOSES, MOCK_ACTIVITY } from '../data/mockTeacherData';
 import CSV_QUESTIONS from '../data/csvQuestions.json';
 
-const USE_MOCK = true; // flip to false when Person A/B backends are live
+const USE_MOCK = false; // flip to true for offline/mock mode
 const ENGINE_URL = 'http://localhost:8000';
 const AGENT_URL  = 'http://localhost:8001';
 
@@ -96,7 +96,7 @@ export const api = {
     const res = await fetch(`${ENGINE_URL}/api/interaction`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(event),
+      body: JSON.stringify({ ...event, student_id: resolveId(event.student_id) }),
     });
     return handleResponse(res);
   },
@@ -134,14 +134,14 @@ export const api = {
 
   getKnowledgeMap: async (studentId) => {
     if (USE_MOCK) { await delay(); return MOCK_KNOWLEDGE_MAPS[resolveId(studentId)] ?? null; }
-    const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/knowledge-map`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/knowledge-map`);
     if (!res.ok) return null;
     return res.json();
   },
 
   getVelocity: async (studentId) => {
     if (USE_MOCK) { await delay(); return null; }
-    const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/velocity`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/velocity`);
     if (!res.ok) return null;
     const data = await res.json();
     // Person B returns a dict keyed by topic name; convert to the array that VelocityChart expects
@@ -152,17 +152,12 @@ export const api = {
   },
 
   getTopicGraph: async () => {
-    // Always try the real API first, fall back to mock if unavailable
+    // Always try the real API first, fall back to inline graph data
     try {
       const res = await fetch(`${ENGINE_URL}/api/topics/graph`);
       if (res.ok) return res.json();
     } catch { /* backend unavailable */ }
-    // Return inline mock graph for IB Math AA HL
-    if (USE_MOCK) {
-      await delay();
-      return MOCK_TOPIC_GRAPH;
-    }
-    return { nodes: [], edges: [] };
+    return MOCK_TOPIC_GRAPH;
   },
 
   // Person B to add: GET /api/student/:id/activity?limit=10
@@ -171,7 +166,7 @@ export const api = {
       await delay();
       return (MOCK_ACTIVITY[resolveId(studentId)] ?? []).slice(0, limit);
     }
-    const res = await fetch(`${ENGINE_URL}/api/student/${studentId}/activity?limit=${limit}`);
+    const res = await fetch(`${ENGINE_URL}/api/student/${resolveId(studentId)}/activity?limit=${limit}`);
     if (!res.ok) return [];
     return res.json();
   },
@@ -194,50 +189,56 @@ export const api = {
   // === Question Bank + AI Grading (port 8001) ===
 
   fetchQuestions: async (difficulty = null, limit = 10, offset = 0) => {
-    if (USE_MOCK) {
-      await delay();
-      let pool = CSV_QUESTIONS;
-      if (difficulty) pool = pool.filter(q => q.difficulty === difficulty);
-      // Shuffle and pick `limit` questions
-      const shuffled = [...pool].sort(() => Math.random() - 0.5);
-      const selected = shuffled.slice(offset, offset + limit);
-      // Strip markscheme from student-facing view
-      const questions = selected.map(({ markscheme_body, ...q }) => q);
-      return { questions, total: pool.length };
+    // Try agent service first, fall back to bundled CSV questions
+    if (!USE_MOCK) {
+      try {
+        const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+        if (difficulty) params.set('difficulty', difficulty);
+        const res = await fetch(`${AGENT_URL}/api/questions?${params}`);
+        if (res.ok) return handleResponse(res);
+      } catch { /* agent service unavailable — use CSV fallback */ }
     }
-    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
-    if (difficulty) params.set('difficulty', difficulty);
-    const res = await fetch(`${AGENT_URL}/api/questions?${params}`);
-    return handleResponse(res);
+    // CSV fallback (works in both mock and live mode when agent is down)
+    await delay();
+    let pool = CSV_QUESTIONS;
+    if (difficulty) pool = pool.filter(q => q.difficulty === difficulty);
+    const shuffled = [...pool].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(offset, offset + limit);
+    const questions = selected.map(({ markscheme_body, ...q }) => q);
+    return { questions, total: pool.length };
   },
 
   gradeAnswer: async (studentId, questionId, imageBase64) => {
-    if (USE_MOCK) {
-      await delay(1200);
-      const q = CSV_QUESTIONS.find(q => q.id === questionId);
-      const marks = q?.marks ?? 6;
-      const awarded = Math.floor(Math.random() * (marks + 1));
-      const pct = Math.round((awarded / marks) * 100);
-      return {
-        marks_awarded: awarded,
-        marks_available: marks,
-        mark_percentage: pct,
-        feedback: 'Mock grading — connect the agent backend (port 8001) for real AI grading with GPT-4o Vision.',
-        strengths: awarded > marks / 2 ? ['Good attempt shown'] : [],
-        errors: awarded <= marks / 2 ? ['Review your working — some steps may be missing'] : [],
-        is_correct: pct >= 50,
-      };
+    // Try agent service for real AI grading
+    if (!USE_MOCK) {
+      try {
+        const res = await fetch(`${AGENT_URL}/api/grade`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            student_id: resolveId(studentId),
+            question_id: questionId,
+            image_base64: imageBase64,
+          }),
+        });
+        if (res.ok) return handleResponse(res);
+      } catch { /* agent service unavailable — use mock grading */ }
     }
-    const res = await fetch(`${AGENT_URL}/api/grade`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        student_id: studentId,
-        question_id: questionId,
-        image_base64: imageBase64,
-      }),
-    });
-    return handleResponse(res);
+    // Mock grading fallback
+    await delay(1200);
+    const q = CSV_QUESTIONS.find(q => q.id === questionId);
+    const marks = q?.marks ?? 6;
+    const awarded = Math.floor(Math.random() * (marks + 1));
+    const pct = Math.round((awarded / marks) * 100);
+    return {
+      marks_awarded: awarded,
+      marks_available: marks,
+      mark_percentage: pct,
+      feedback: 'Mock grading — connect the agent backend (port 8001) for real AI grading with GPT-4o Vision.',
+      strengths: awarded > marks / 2 ? ['Good attempt shown'] : [],
+      errors: awarded <= marks / 2 ? ['Review your working — some steps may be missing'] : [],
+      is_correct: pct >= 50,
+    };
   },
 
   sendChatMessage: async (message, knowledgeMap) => {

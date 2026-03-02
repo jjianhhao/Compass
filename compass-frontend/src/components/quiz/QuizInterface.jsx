@@ -75,8 +75,8 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
       const answerData = {
         question_id: current.id,
-        topic: current.subject || 'Mathematics',
-        subtopic: current.question_number || '',
+        topic: current.topic || 'sequences_series',
+        subtopic: current.subtopic || current.question_number || '',
         difficulty: current.difficulty,
         student_answer: '[handwritten]',
         correct_answer: '[markscheme]',
