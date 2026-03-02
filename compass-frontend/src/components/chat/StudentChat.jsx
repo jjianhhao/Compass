@@ -174,7 +174,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
       </div>
 
       {/* Suggestion chips */}
-      {messages.length <= 2 && (
+      {messages.length <= 4 && (
         <div className="px-4 pb-2 flex flex-wrap gap-2">
           {SUGGESTIONS.map((s) => (
             <button
@@ -217,6 +217,58 @@ export default function StudentChat({ knowledgeMap, studentName }) {
   );
 }
 
+function detectIntent(msg) {
+  const m = msg.toLowerCase();
+
+  // Intent: what should I study / priorities / where to start
+  if (
+    m.includes('study first') || m.includes('study next') ||
+    m.includes('what should i study') || m.includes('what to study') ||
+    m.includes('where to start') || m.includes('where do i start') ||
+    m.includes('what do i study') || m.includes('should i focus') ||
+    m.includes('what to focus') || m.includes('what topic') ||
+    m.includes('priorit') || m.includes('first topic') ||
+    m.includes('start with') || m.includes('begin with') ||
+    m.includes('work on first') || m.includes('study now') ||
+    m.includes('study today') || m.includes('revise first') ||
+    (m.includes('start') && (m.includes('study') || m.includes('learn')))
+  ) return 'priority';
+
+  // Intent: struggling / weak topics / difficulty
+  if (
+    m.includes('struggl') || m.includes('weak') || m.includes('difficult') ||
+    m.includes('hard topic') || m.includes('bad at') || m.includes("can't do") ||
+    m.includes('cannot do') || m.includes("don't understand") ||
+    m.includes('do not understand') || m.includes('confus') ||
+    m.includes('help with') || m.includes('worst topic') ||
+    m.includes('failing') || m.includes('lowest') ||
+    m.includes('why am i') || m.includes('why do i') ||
+    (m.includes('why') && (m.includes('integrat') || m.includes('calcul') || m.includes('trig') || m.includes('algebra')))
+  ) return 'struggling';
+
+  // Intent: improvement / progress / overall performance
+  if (
+    m.includes('improv') || m.includes('progress') ||
+    m.includes('getting better') || m.includes('am i better') ||
+    m.includes('overall') || m.includes('how am i doing') ||
+    m.includes('how am i') || m.includes('how have i') ||
+    m.includes('performance') || m.includes('how well') ||
+    m.includes('trend') || m.includes('velocity')
+  ) return 'improving';
+
+  // Intent: best topic / strengths
+  if (
+    m.includes('best topic') || m.includes('best progress') ||
+    m.includes('strongest') || m.includes('good at') ||
+    m.includes('highest mastery') || m.includes('top topic') ||
+    m.includes('excel') || m.includes('which topic') ||
+    (m.includes('best') && m.includes('topic')) ||
+    (m.includes('strong') && m.includes('topic'))
+  ) return 'best';
+
+  return 'general';
+}
+
 function generateFallbackReply(message, knowledgeMap) {
   if (!knowledgeMap) {
     return "I don't have your learning data yet. Complete a quiz first and I'll give you personalised insights!";
@@ -229,25 +281,30 @@ function generateFallbackReply(message, knowledgeMap) {
   const regressing = entries.filter((e) => e.velocity === 'regressing');
   const improving = entries.filter((e) => e.velocity === 'improving');
 
-  const msg = message.toLowerCase();
+  const intent = detectIntent(message);
 
-  if (msg.includes('struggl') || msg.includes('weak') || msg.includes('difficult')) {
-    return `Based on your data, you're finding ${formatT(weakest.topic)} most challenging — you're at ${Math.round(weakest.mastery_score * 100)}% mastery${weakest.velocity === 'regressing' ? ' and it has been regressing lately' : ''}. I'd recommend spending focused time on this before your next quiz. Would you like some tips on how to approach it?`;
+  if (intent === 'struggling') {
+    return `Based on your data, you're finding **${formatT(weakest.topic)}** most challenging — you're at ${Math.round(weakest.mastery_score * 100)}% mastery${weakest.velocity === 'regressing' ? ', and it has been declining lately' : ''}. I'd recommend focused practice on this before your next quiz.`;
   }
-  if (msg.includes('study first') || msg.includes('start') || msg.includes('priority')) {
+  if (intent === 'priority') {
     const regressingStr = regressing.length > 0
-      ? `After that, work on ${regressing.slice(0, 2).map((e) => formatT(e.topic)).join(' and ')} since they're showing a downward trend. `
+      ? ` After that, address ${regressing.slice(0, 2).map((e) => formatT(e.topic)).join(' and ')} — both are declining.`
       : '';
-    return `Your top priority should be ${formatT(weakest.topic)} (${Math.round(weakest.mastery_score * 100)}% mastery). ${regressingStr}Your strongest topic is ${formatT(strongest.topic)} at ${Math.round(strongest.mastery_score * 100)}% — maintain that!`;
+    return `Your top priority is **${formatT(weakest.topic)}** (${Math.round(weakest.mastery_score * 100)}% mastery).${regressingStr} Your strongest topic is ${formatT(strongest.topic)} at ${Math.round(strongest.mastery_score * 100)}% — just maintain that.`;
   }
-  if (msg.includes('improv') || msg.includes('progress') || msg.includes('better')) {
-    return `You're improving in ${improving.length} topic(s): ${improving.map((e) => formatT(e.topic)).join(', ')}. ${regressing.length > 0 ? `However, ${regressing.map((e) => formatT(e.topic)).join(' and ')} need attention as they're regressing.` : 'Keep up the great work!'}`;
+  if (intent === 'improving') {
+    if (improving.length === 0) {
+      return `You're not actively improving in any topics right now. ${regressing.length > 0 ? `Focus on stopping the decline in ${regressing.slice(0, 2).map((e) => formatT(e.topic)).join(' and ')}.` : 'Try doing a few quiz questions across your weaker topics to build momentum.'}`;
+    }
+    return `You're improving in **${improving.length} topic${improving.length > 1 ? 's' : ''}**: ${improving.map((e) => formatT(e.topic)).join(', ')}. ${regressing.length > 0 ? `Watch out for ${regressing.map((e) => formatT(e.topic)).join(' and ')} — those are slipping.` : 'Keep up the consistency.'}`;
   }
-  if (msg.includes('best') || msg.includes('strong')) {
-    return `Your best topic is ${formatT(strongest.topic)} at ${Math.round(strongest.mastery_score * 100)}% mastery. Well done! Keep practising to maintain this level.`;
+  if (intent === 'best') {
+    return `Your best topic is **${formatT(strongest.topic)}** at ${Math.round(strongest.mastery_score * 100)}% mastery${strongest.velocity === 'improving' ? ', and it is still improving' : ''}. Keep practising it periodically so it doesn't decay.`;
   }
 
-  return `Looking at your knowledge map, your overall average mastery is ${Math.round(entries.reduce((s, e) => s + e.mastery_score, 0) / entries.length * 100)}%. You're currently improving in ${improving.length} topics and need to focus on ${weakest.topic.replace(/_/g, ' ')}. Ask me anything specific about your performance!`;
+  // General fallback
+  const overall = Math.round(entries.reduce((s, e) => s + e.mastery_score, 0) / entries.length * 100);
+  return `Your overall average mastery is **${overall}%**. You're improving in ${improving.length} topic${improving.length !== 1 ? 's' : ''} and your biggest gap is **${formatT(weakest.topic)}** at ${Math.round(weakest.mastery_score * 100)}%. Ask me something more specific and I'll dig into the details.`;
 }
 
 function formatT(t) {
