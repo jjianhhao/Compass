@@ -303,12 +303,16 @@ export function useStudent(studentId) {
   const [knowledgeMap, setKnowledgeMap] = useState(null);
   const [velocity, setVelocity] = useState([]);
   const [agentOutput, setAgentOutput] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);       // true only until knowledge map is ready
+  const [agentLoading, setAgentLoading] = useState(false); // separate state for AI recommendations
   const [error, setError] = useState(null);
 
   const loadStudentData = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setAgentOutput(null);
+
+    let resolvedKM;
 
     try {
       const [rawKm, rawVel] = await Promise.all([
@@ -320,29 +324,35 @@ export function useStudent(studentId) {
       const apiKM = transformKnowledgeMap(rawKm);
       const baseKM = apiKM || MOCK_KNOWLEDGE_MAP;
       const localKM = computeKnowledgeMap(studentId, baseKM);
-      const resolvedKM = localKM || baseKM;
+      resolvedKM = localKM || baseKM;
       setKnowledgeMap(resolvedKM);
 
       const apiVel = transformVelocity(rawVel);
       const localVel = computeVelocity(studentId, resolvedKM, MOCK_VELOCITY);
       setVelocity(localVel || (apiVel.length > 0 ? apiVel : MOCK_VELOCITY));
 
+      // ── Phase 1 done: show the dashboard immediately ──────────────────
+      setLoading(false);
+
+      // ── Phase 2: load AI recommendations in the background ───────────
+      setAgentLoading(true);
       try {
         const diagnosis = await api.getDiagnosis(rawKm || resolvedKM);
         setAgentOutput(transformAgentOutput(diagnosis) || buildAgentOutput(resolvedKM, studentId));
       } catch {
         setAgentOutput(buildAgentOutput(resolvedKM, studentId));
+      } finally {
+        setAgentLoading(false);
       }
     } catch (err) {
       setError(err?.message || 'Failed to load student data');
       // Fall back to local quiz history on top of mock data
       const localKM = computeKnowledgeMap(studentId, MOCK_KNOWLEDGE_MAP);
-      const resolvedKM = localKM || MOCK_KNOWLEDGE_MAP;
+      resolvedKM = localKM || MOCK_KNOWLEDGE_MAP;
       const localVel = computeVelocity(studentId, resolvedKM, MOCK_VELOCITY);
       setKnowledgeMap(resolvedKM);
       setVelocity(localVel || MOCK_VELOCITY);
       setAgentOutput(buildAgentOutput(resolvedKM, studentId));
-    } finally {
       setLoading(false);
     }
   }, [studentId]);
@@ -351,5 +361,5 @@ export function useStudent(studentId) {
     if (studentId) loadStudentData();
   }, [studentId, loadStudentData]);
 
-  return { knowledgeMap, velocity, agentOutput, loading, error, refresh: loadStudentData };
+  return { knowledgeMap, velocity, agentOutput, agentLoading, loading, error, refresh: loadStudentData };
 }

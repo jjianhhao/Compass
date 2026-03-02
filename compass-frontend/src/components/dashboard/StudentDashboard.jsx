@@ -16,6 +16,7 @@ export default function StudentDashboard({
   knowledgeMap,
   velocity,
   agentOutput,
+  agentLoading,
   onStartQuiz,
 }) {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ export default function StudentDashboard({
                 <VelocityChart velocity={velocity} />
               </div>
               <div className="lg:col-span-2">
-                <RecommendationPanel agentOutput={agentOutput} onOverride={handleOverride} />
+                <RecommendationPanel agentOutput={agentOutput} agentLoading={agentLoading} onOverride={handleOverride} />
               </div>
             </div>
           </div>

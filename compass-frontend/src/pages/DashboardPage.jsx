@@ -49,7 +49,7 @@ function SkeletonDashboard() {
 export default function DashboardPage() {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const { knowledgeMap, velocity, agentOutput, loading, error, refresh } = useStudent(studentId);
+  const { knowledgeMap, velocity, agentOutput, agentLoading, loading, error, refresh } = useStudent(studentId);
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const studentName = STUDENT_NAMES[studentId] || studentId;
@@ -82,6 +82,7 @@ export default function DashboardPage() {
           knowledgeMap={knowledgeMap}
           velocity={velocity}
           agentOutput={agentOutput}
+          agentLoading={agentLoading}
           onStartQuiz={() => navigate(`/quiz/${studentId}`)}
         />
       </div>
