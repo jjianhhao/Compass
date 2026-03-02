@@ -16,6 +16,28 @@ class InteractionEvent(BaseModel):
     is_correct: bool
     time_taken_sec: float
     timestamp: datetime
+    # AI grading fields (optional, for free-response questions)
+    marks_available: Optional[int] = None
+    marks_awarded: Optional[int] = None
+    mark_percentage: Optional[float] = None
+    ai_feedback: Optional[str] = None
+
+
+# === Grading request/response ===
+class GradeRequest(BaseModel):
+    student_id: str
+    question_id: str
+    image_base64: str
+
+
+class GradeResponse(BaseModel):
+    marks_awarded: int
+    marks_available: int
+    mark_percentage: float
+    feedback: str
+    strengths: List[str]
+    errors: List[str]
+    is_correct: bool
 
 
 # === SHARED: Topic Mastery (from Person B's engine) ===

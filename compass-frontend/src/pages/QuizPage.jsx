@@ -1,29 +1,43 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import QuizInterface from '../components/quiz/QuizInterface';
-import allQuestions from '../data/questions.json';
 import { api } from '../api/client';
 import { saveInteraction } from '../api/localStore';
+
+const DIFFICULTIES = [
+  { value: '', label: 'All Difficulties' },
+  { value: 'easy', label: 'Easy (1-6 marks)' },
+  { value: 'medium', label: 'Medium (7-10 marks)' },
+  { value: 'hard', label: 'Hard (11+ marks)' },
+];
+
+const QUESTIONS_PER_QUIZ = 5;
 
 export default function QuizPage() {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const [topicFilter, setTopicFilter] = useState('all');
-  const [quizStarted, setQuizStarted] = useState(false);
+  const [difficulty, setDifficulty] = useState('');
+  const [questions, setQuestions] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const topics = useMemo(() => {
-    const unique = [...new Set(allQuestions.map((q) => q.topic))];
-    return unique.sort();
-  }, []);
-
-  const questions = useMemo(() => {
-    const filtered =
-      topicFilter === 'all'
-        ? allQuestions
-        : allQuestions.filter((q) => q.topic === topicFilter);
-    return filtered.slice(0, 10);
-  }, [topicFilter]);
+  const handleStart = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await api.fetchQuestions(difficulty || null, QUESTIONS_PER_QUIZ, 0);
+      if (!data.questions || data.questions.length === 0) {
+        setError('No questions found. Try a different difficulty.');
+        return;
+      }
+      setQuestions(data.questions);
+    } catch (err) {
+      setError(`Failed to load questions: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAnswer = async (answerData) => {
     // Always save locally so dashboard updates immediately
@@ -39,61 +53,67 @@ export default function QuizPage() {
     navigate(`/dashboard/${studentId}`);
   };
 
-  const formatTopic = (t) =>
-    t
-      .split('_')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ');
-
-  if (!quizStarted) {
+  if (questions) {
     return (
-      <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
-          <button
-            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-5"
-            onClick={() => navigate(`/dashboard/${studentId}`)}
-          >
-            <ArrowLeft size={15} /> Back to Dashboard
-          </button>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Start a Quiz</h1>
-          <p className="text-gray-500 text-sm mb-6">Select a topic or practice all topics</p>
-
-          <label className="block text-sm font-medium text-gray-700 mb-2">Topic</label>
-          <select
-            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            value={topicFilter}
-            onChange={(e) => setTopicFilter(e.target.value)}
-          >
-            <option value="all">All Topics ({allQuestions.length} questions)</option>
-            {topics.map((t) => (
-              <option key={t} value={t}>
-                {formatTopic(t)} ({allQuestions.filter((q) => q.topic === t).length} questions)
-              </option>
-            ))}
-          </select>
-
-          <div className="bg-indigo-50 rounded-xl p-3 mb-6 text-sm text-indigo-700">
-            You'll get up to <strong>10 questions</strong> from the selected topic.
-          </div>
-
-          <button
-            className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => setQuizStarted(true)}
-            disabled={questions.length === 0}
-          >
-            {questions.length === 0 ? 'No questions for this topic' : 'Start Quiz →'}
-          </button>
-        </div>
-      </div>
+      <QuizInterface
+        questions={questions}
+        studentId={studentId}
+        onAnswer={handleAnswer}
+        onComplete={handleComplete}
+      />
     );
   }
 
   return (
-    <QuizInterface
-      questions={questions}
-      studentId={studentId}
-      onAnswer={handleAnswer}
-      onComplete={handleComplete}
-    />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+        <button
+          className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-5"
+          onClick={() => navigate(`/dashboard/${studentId}`)}
+        >
+          <ArrowLeft size={15} /> Back to Dashboard
+        </button>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Start a Quiz</h1>
+        <p className="text-gray-500 text-sm mb-6">
+          IB Math AA HL free-response questions graded by AI
+        </p>
+
+        <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+        <select
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
+        >
+          {DIFFICULTIES.map((d) => (
+            <option key={d.value} value={d.value}>{d.label}</option>
+          ))}
+        </select>
+
+        <div className="bg-indigo-50 rounded-xl p-3 mb-6 text-sm text-indigo-700">
+          You'll get <strong>{QUESTIONS_PER_QUIZ} questions</strong>. Write your answers by hand or upload a photo — AI will grade your work.
+        </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+
+        <button
+          className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          onClick={handleStart}
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Loader2 size={18} className="animate-spin" />
+              Loading questions...
+            </>
+          ) : (
+            'Start Quiz →'
+          )}
+        </button>
+      </div>
+    </div>
   );
 }

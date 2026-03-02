@@ -112,6 +112,28 @@ export const api = {
     return handleResponse(res);
   },
 
+  // === Question Bank + AI Grading (port 8001) ===
+
+  fetchQuestions: async (difficulty = null, limit = 10, offset = 0) => {
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (difficulty) params.set('difficulty', difficulty);
+    const res = await fetch(`${AGENT_URL}/api/questions?${params}`);
+    return handleResponse(res);
+  },
+
+  gradeAnswer: async (studentId, questionId, imageBase64) => {
+    const res = await fetch(`${AGENT_URL}/api/grade`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        student_id: studentId,
+        question_id: questionId,
+        image_base64: imageBase64,
+      }),
+    });
+    return handleResponse(res);
+  },
+
   sendChatMessage: async (message, knowledgeMap) => {
     if (USE_MOCK) { throw new Error('backend not connected'); }
     const res = await fetch(`${AGENT_URL}/api/chat`, {
