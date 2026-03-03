@@ -71,6 +71,7 @@ rag_db/
 *.pdf
 claude-code-prompt.md
 data_math_original/
+guide-person-*.md
 
 # Vite cache
 .vite/
