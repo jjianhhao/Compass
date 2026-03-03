@@ -103,7 +103,7 @@ export default function MathInput({ value, onChange, placeholder, disabled }) {
         <input
           ref={inputRef}
           type="text"
-          className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-3 text-base font-mono text-gray-900 focus:outline-none focus:border-indigo-400 transition-colors placeholder-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-3 text-base font-mono text-gray-900 focus:outline-none focus:border-teal-400 transition-colors placeholder-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
           placeholder={placeholder || 'Type your answer here…'}
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -131,7 +131,7 @@ export default function MathInput({ value, onChange, placeholder, disabled }) {
                 type="button"
                 className={`px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
                   activeGroup === i
-                    ? 'text-indigo-600 border-b-2 border-indigo-500 bg-indigo-50'
+                    ? 'text-teal-600 border-b-2 border-teal-500 bg-teal-50'
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
                 onClick={() => setActiveGroup(i)}
@@ -147,7 +147,7 @@ export default function MathInput({ value, onChange, placeholder, disabled }) {
               <button
                 key={sym.display}
                 type="button"
-                className="min-w-[44px] h-10 px-3 bg-white border border-gray-200 rounded-lg text-sm font-mono text-gray-800 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors shadow-sm"
+                className="min-w-[44px] h-10 px-3 bg-white border border-gray-200 rounded-lg text-sm font-mono text-gray-800 hover:bg-teal-50 hover:border-teal-300 hover:text-teal-700 transition-colors shadow-sm"
                 onClick={() => insertAtCursor(sym.insert)}
                 title={`Insert ${sym.insert}`}
               >

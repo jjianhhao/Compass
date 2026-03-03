@@ -8,7 +8,7 @@ export default function QuestionCard({ option, index, selected, correct, answere
     'w-full text-left px-4 py-3.5 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 group';
 
   if (!answered) {
-    baseStyle += ' border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 cursor-pointer';
+    baseStyle += ' border-gray-200 hover:border-teal-300 hover:bg-teal-50 cursor-pointer';
   } else if (option === correct) {
     baseStyle += ' border-green-400 bg-green-50 cursor-default';
   } else if (option === selected && option !== correct) {
@@ -22,7 +22,7 @@ export default function QuestionCard({ option, index, selected, correct, answere
       ? 'bg-green-500 text-white'
       : answered && option === selected && option !== correct
       ? 'bg-red-500 text-white'
-      : 'bg-gray-100 text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-700';
+      : 'bg-gray-100 text-gray-600 group-hover:bg-teal-100 group-hover:text-teal-700';
 
   return (
     <button className={baseStyle} onClick={!answered ? onClick : undefined} disabled={answered}>

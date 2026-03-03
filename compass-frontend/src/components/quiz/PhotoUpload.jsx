@@ -95,7 +95,7 @@ const PhotoUpload = forwardRef(function PhotoUpload({ disabled = false }, ref) {
     <div className="flex flex-col items-center gap-3 py-8 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50/50">
       <p className="text-sm text-gray-400">Upload a photo of your work</p>
       <div className="flex gap-2">
-        <label className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-lg cursor-pointer transition-colors">
+        <label className="flex items-center gap-1.5 text-sm font-medium text-teal-600 bg-teal-50 hover:bg-teal-100 px-4 py-2 rounded-lg cursor-pointer transition-colors">
           <Upload size={15} /> Choose file
           <input
             ref={fileRef}
@@ -106,7 +106,7 @@ const PhotoUpload = forwardRef(function PhotoUpload({ disabled = false }, ref) {
             disabled={disabled}
           />
         </label>
-        <label className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-lg cursor-pointer transition-colors">
+        <label className="flex items-center gap-1.5 text-sm font-medium text-teal-600 bg-teal-50 hover:bg-teal-100 px-4 py-2 rounded-lg cursor-pointer transition-colors">
           <Camera size={15} /> Take photo
           <input
             ref={cameraRef}

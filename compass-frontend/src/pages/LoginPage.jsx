@@ -43,12 +43,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col items-center justify-center p-6">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-teal-50 via-white to-cyan-50 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-sm">
 
         {/* Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-1.5 rounded-full text-sm font-medium mb-5">
+          <div className="inline-flex items-center gap-2 bg-teal-600 text-white px-4 py-1.5 rounded-full text-sm font-medium mb-5">
             🧭 COMPASS
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h1>
@@ -71,7 +71,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => { setUsername(e.target.value); setError(''); }}
                 placeholder="e.g. sarah"
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition"
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-300 transition"
               />
             </div>
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => { setPassword(e.target.value); setError(''); }}
                   placeholder="Enter your password"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:border-teal-300 transition"
                 />
                 <button
                   type="button"
@@ -112,7 +112,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || !username.trim() || !password}
-              className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function LoginPage() {
         {/* Teacher link */}
         <div className="text-center mt-5">
           <button
-            className="text-xs text-indigo-500 hover:text-indigo-700 hover:underline transition-colors"
+            className="text-xs text-teal-500 hover:text-teal-700 hover:underline transition-colors"
             onClick={() => navigate('/teacher')}
           >
             Teacher view →

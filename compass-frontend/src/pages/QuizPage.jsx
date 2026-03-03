@@ -71,7 +71,7 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
         <button
           className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-5"
@@ -86,7 +86,7 @@ export default function QuizPage() {
 
         <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
         <select
-          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-700 mb-6 focus:outline-none focus:ring-2 focus:ring-teal-300"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
         >
@@ -95,7 +95,7 @@ export default function QuizPage() {
           ))}
         </select>
 
-        <div className="bg-indigo-50 rounded-xl p-3 mb-6 text-sm text-indigo-700">
+        <div className="bg-teal-50 rounded-xl p-3 mb-6 text-sm text-teal-700">
           You'll get <strong>{QUESTIONS_PER_QUIZ} questions</strong>. Write your answers by hand or upload a photo — AI will grade your work.
         </div>
 
@@ -106,7 +106,7 @@ export default function QuizPage() {
         )}
 
         <button
-          className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           onClick={handleStart}
           disabled={loading}
         >

@@ -83,7 +83,7 @@ function ExamLogger({ studentId, allTopics }) {
           <div>
             <label className="text-xs font-medium text-gray-600 block mb-1">Exam Name</label>
             <input
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
               placeholder="e.g. Mid-year Exam"
               value={form.exam_name}
               onChange={e => setForm(f => ({ ...f, exam_name: e.target.value }))}
@@ -93,7 +93,7 @@ function ExamLogger({ studentId, allTopics }) {
             <label className="text-xs font-medium text-gray-600 block mb-1">Date</label>
             <input
               type="date"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
               value={form.date}
               onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
             />
@@ -106,7 +106,7 @@ function ExamLogger({ studentId, allTopics }) {
             type="number"
             min="0"
             max="100"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="e.g. 72"
             value={form.score_pct}
             onChange={e => setForm(f => ({ ...f, score_pct: e.target.value }))}
@@ -117,7 +117,7 @@ function ExamLogger({ studentId, allTopics }) {
         <div className="relative" ref={examTopicRef}>
           <label className="text-xs font-medium text-gray-600 block mb-1">Topics Tested</label>
           <div
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm cursor-pointer focus-within:ring-2 focus-within:ring-indigo-300 min-h-[38px]"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm cursor-pointer focus-within:ring-2 focus-within:ring-teal-300 min-h-[38px]"
             onClick={() => setShowTopicDropdown(v => !v)}
           >
             {form.topics_tested.length === 0 ? (
@@ -128,7 +128,7 @@ function ExamLogger({ studentId, allTopics }) {
                   <span
                     key={t}
                     onClick={e => { e.stopPropagation(); toggleTopic(t); }}
-                    className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 transition-colors"
+                    className="bg-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 transition-colors"
                   >
                     {formatTopicName(t)} ×
                   </span>
@@ -140,7 +140,7 @@ function ExamLogger({ studentId, allTopics }) {
             <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
               <div className="p-2 border-b border-gray-100">
                 <input
-                  className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-300"
+                  className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-300"
                   placeholder="Search topics…"
                   value={topicSearch}
                   onChange={e => setTopicSearch(e.target.value)}
@@ -154,7 +154,7 @@ function ExamLogger({ studentId, allTopics }) {
                   <button
                     key={t}
                     type="button"
-                    className="w-full text-left px-3 py-2 text-xs hover:bg-indigo-50 text-gray-700"
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 text-gray-700"
                     onClick={e => { e.stopPropagation(); toggleTopic(t); }}
                   >
                     {formatTopicName(t)}
@@ -168,7 +168,7 @@ function ExamLogger({ studentId, allTopics }) {
         <div>
           <label className="text-xs font-medium text-gray-600 block mb-1">Notes (optional)</label>
           <input
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="e.g. Struggled with integration by parts"
             value={form.notes}
             onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
@@ -179,7 +179,7 @@ function ExamLogger({ studentId, allTopics }) {
 
         <button
           type="submit"
-          className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-indigo-700 transition-colors"
+          className="w-full flex items-center justify-center gap-2 bg-teal-600 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-teal-700 transition-colors"
         >
           <Plus size={14} /> Log Result
         </button>
@@ -317,7 +317,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
           <div>
             <label className="text-xs font-medium text-gray-600 block mb-1">Deadline Name</label>
             <input
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
               placeholder="e.g. Final Exam"
               value={form.deadline_name}
               onChange={e => setForm(f => ({ ...f, deadline_name: e.target.value }))}
@@ -327,7 +327,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
             <label className="text-xs font-medium text-gray-600 block mb-1">Deadline Date</label>
             <input
               type="date"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
               value={form.deadline_date}
               min={new Date().toISOString().split('T')[0]}
               onChange={e => setForm(f => ({ ...f, deadline_date: e.target.value }))}
@@ -341,14 +341,14 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
           <div className="flex border border-gray-200 rounded-lg overflow-hidden mb-2">
             <button
               type="button"
-              className={`flex-1 text-xs font-medium py-2 transition-colors ${form.mode === 'daily' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50'}`}
+              className={`flex-1 text-xs font-medium py-2 transition-colors ${form.mode === 'daily' ? 'bg-teal-50 text-teal-700' : 'text-gray-500 hover:bg-gray-50'}`}
               onClick={() => setForm(f => ({ ...f, mode: 'daily' }))}
             >
               Hours per day
             </button>
             <button
               type="button"
-              className={`flex-1 text-xs font-medium py-2 transition-colors border-l border-gray-200 ${form.mode === 'weekly' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50'}`}
+              className={`flex-1 text-xs font-medium py-2 transition-colors border-l border-gray-200 ${form.mode === 'weekly' ? 'bg-teal-50 text-teal-700' : 'text-gray-500 hover:bg-gray-50'}`}
               onClick={() => setForm(f => ({ ...f, mode: 'weekly' }))}
             >
               Days per week
@@ -361,7 +361,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
                 min="0.5"
                 max="12"
                 step="0.5"
-                className="w-24 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-24 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
                 value={form.study_hours_per_day}
                 onChange={e => setForm(f => ({ ...f, study_hours_per_day: e.target.value }))}
               />
@@ -373,7 +373,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
                 type="number"
                 min="1"
                 max="7"
-                className="w-24 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                className="w-24 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
                 value={form.study_days_per_week}
                 onChange={e => setForm(f => ({ ...f, study_days_per_week: e.target.value }))}
               />
@@ -389,7 +389,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
             <span className="text-gray-400 font-normal ml-1">(pre-filled with your weakest topics)</span>
           </label>
           <div
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm cursor-pointer focus-within:ring-2 focus-within:ring-indigo-300 min-h-[38px]"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm cursor-pointer focus-within:ring-2 focus-within:ring-teal-300 min-h-[38px]"
             onClick={() => setShowTopicDropdown(v => !v)}
           >
             {form.topics_to_cover.length === 0 ? (
@@ -402,7 +402,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
                     <span
                       key={t}
                       onClick={e => { e.stopPropagation(); toggleTopic(t); }}
-                      className="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 transition-colors"
+                      className="bg-teal-100 text-teal-700 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer hover:bg-red-100 hover:text-red-600 transition-colors"
                     >
                       {formatTopicName(t)}{mastery != null ? ` ${Math.round(mastery * 100)}%` : ''} ×
                     </span>
@@ -415,7 +415,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
             <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
               <div className="p-2 border-b border-gray-100">
                 <input
-                  className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-300"
+                  className="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-300"
                   placeholder="Search topics…"
                   value={topicSearch}
                   onChange={e => setTopicSearch(e.target.value)}
@@ -431,7 +431,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
                     <button
                       key={t}
                       type="button"
-                      className="w-full text-left px-3 py-2 text-xs hover:bg-indigo-50 text-gray-700 flex items-center justify-between"
+                      className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 text-gray-700 flex items-center justify-between"
                       onClick={e => { e.stopPropagation(); toggleTopic(t); }}
                     >
                       <span>{formatTopicName(t)}</span>
@@ -453,7 +453,7 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white text-sm font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 bg-teal-600 text-white text-sm font-semibold py-3 rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <><Loader2 size={15} className="animate-spin" /> Generating plan…</>
@@ -467,21 +467,21 @@ function StudyPlanGenerator({ studentId, knowledgeMap, allTopics }) {
       {plan && (
         <div className="space-y-3 mt-1">
           {/* Summary */}
-          <div className="bg-indigo-50 rounded-xl p-4">
+          <div className="bg-teal-50 rounded-xl p-4">
             <div className="flex items-center gap-2 mb-2">
-              <CheckCircle size={14} className="text-indigo-600" />
-              <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wide">
+              <CheckCircle size={14} className="text-teal-600" />
+              <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">
                 {plan._deadline_name ? `Plan — ${plan._deadline_name}` : 'Your Study Plan'}
               </span>
-              <span className="text-xs text-indigo-500 ml-auto">{plan.total_days} sessions</span>
+              <span className="text-xs text-teal-500 ml-auto">{plan.total_days} sessions</span>
               <button
                 onClick={() => { clearStudyPlan(studentId); setPlan(null); }}
-                className="text-xs text-indigo-400 hover:text-red-500 transition-colors ml-1 underline"
+                className="text-xs text-teal-400 hover:text-red-500 transition-colors ml-1 underline"
               >
                 Clear
               </button>
             </div>
-            <p className="text-sm text-indigo-800 leading-relaxed">{plan.plan_summary}</p>
+            <p className="text-sm text-teal-800 leading-relaxed">{plan.plan_summary}</p>
           </div>
 
           {/* Sessions */}

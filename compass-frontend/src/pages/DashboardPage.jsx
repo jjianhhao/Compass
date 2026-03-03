@@ -12,8 +12,8 @@ const STUDENT_NAMES = {
 
 function SkeletonDashboard() {
   return (
-    <div className="h-full overflow-y-auto bg-gray-50">
-      <div className="bg-white border-b border-gray-100 px-6 py-4">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-slate-50 to-teal-50/40">
+      <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="h-6 w-28 bg-gray-200 rounded-lg animate-pulse" />

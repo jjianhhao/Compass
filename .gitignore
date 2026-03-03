@@ -66,3 +66,11 @@ htmlcov/
 
 # Compass RAG database
 rag_db/
+
+# Personal/copyrighted documents
+*.pdf
+claude-code-prompt.md
+data_math_original/
+
+# Vite cache
+.vite/

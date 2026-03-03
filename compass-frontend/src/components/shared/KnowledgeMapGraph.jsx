@@ -95,10 +95,10 @@ function TopicCard({ topic, data, selected, highlighted, dimmed, onClick }) {
     <button
       onClick={onClick}
       style={{
-        background: selected ? '#eef2ff' : th.bg,
-        borderColor: selected ? '#6366f1' : th.border,
+        background: selected ? '#f0fdfa' : th.bg,
+        borderColor: selected ? '#0d9488' : th.border,
         opacity: dimmed ? 0.3 : 1,
-        outline: highlighted ? '2px solid #a5b4fc' : 'none',
+        outline: highlighted ? '2px solid #5eead4' : 'none',
         outlineOffset: 1,
         flex: '1 1 110px',
         minWidth: 100,
@@ -208,7 +208,7 @@ export default function KnowledgeMapGraph({ knowledgeMap = {} }) {
   if (loading) {
     return (
       <div className="flex items-center gap-2 p-4 text-sm text-gray-400">
-        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-400" />
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-400" />
         Loading…
       </div>
     );
@@ -255,7 +255,7 @@ export default function KnowledgeMapGraph({ knowledgeMap = {} }) {
 
       {/* Detail panel */}
       {selected && (
-        <div className="mt-2 bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-sm">
+        <div className="mt-2 bg-teal-50 border border-teal-200 rounded-xl p-3 text-sm">
           <div className="flex items-start justify-between mb-1.5">
             <div>
               <h3 className="font-bold text-gray-900 text-sm">{selected.name}</h3>
@@ -297,7 +297,7 @@ export default function KnowledgeMapGraph({ knowledgeMap = {} }) {
                 <p className="text-[10px] font-bold text-gray-500 uppercase mb-1">Unlocks</p>
                 <div className="flex flex-wrap gap-1">
                   {dependsIds.map(id => (
-                    <span key={id} className="text-xs px-2 py-0.5 rounded-full border bg-indigo-50 border-indigo-200 text-indigo-700 font-medium">
+                    <span key={id} className="text-xs px-2 py-0.5 rounded-full border bg-teal-50 border-teal-200 text-teal-700 font-medium">
                       → {nodeMap[id]?.name ?? id}
                     </span>
                   ))}

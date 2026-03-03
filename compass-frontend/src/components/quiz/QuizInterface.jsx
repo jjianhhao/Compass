@@ -70,11 +70,11 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+      <div className="h-full overflow-y-auto bg-gradient-to-br from-teal-50 via-white to-cyan-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center max-w-sm">
           <p className="text-gray-500">No questions available.</p>
           <button
-            className="mt-4 bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors"
+            className="mt-4 bg-teal-600 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-teal-700 transition-colors"
             onClick={() => onComplete?.()}
           >
             Go Back
@@ -165,7 +165,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
     const percentage = totalMarksAvailable > 0 ? Math.round((totalMarksEarned / totalMarksAvailable) * 100) : 0;
 
     return (
-      <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+      <div className="h-full overflow-y-auto bg-gradient-to-br from-teal-50 via-white to-cyan-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-lg">
           <div className="text-center mb-6">
             <Trophy className="mx-auto text-yellow-400 mb-3" size={48} />
@@ -203,7 +203,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
           <div className="flex gap-3">
             <button
-              className="flex-1 flex items-center justify-center gap-2 border border-indigo-200 text-indigo-600 text-sm font-medium py-2.5 rounded-xl hover:bg-indigo-50 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 border border-teal-200 text-teal-600 text-sm font-medium py-2.5 rounded-xl hover:bg-teal-50 transition-colors"
               onClick={() => {
                 setCurrentIndex(0);
                 setAnswered(false);
@@ -216,7 +216,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
               <RotateCcw size={14} /> Try Again
             </button>
             <button
-              className="flex-1 bg-indigo-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-indigo-700 transition-colors"
+              className="flex-1 bg-teal-600 text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-teal-700 transition-colors"
               onClick={() => onComplete?.()}
             >
               View Dashboard →
@@ -229,7 +229,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
   // ── Question screen ─────────────────────────────────────────────
   return (
-    <div className="h-full overflow-y-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-teal-50 via-white to-cyan-50 flex items-center justify-center p-6">
 
       {/* Quit warning modal */}
       {showQuitWarning && (
@@ -274,7 +274,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
             ← Dashboard
           </button>
           <div className="flex items-center gap-1.5 text-sm font-medium text-gray-500 bg-white border border-gray-100 px-3 py-1.5 rounded-full shadow-sm">
-            <Clock size={14} className="text-indigo-400" />
+            <Clock size={14} className="text-teal-400" />
             {timer}s
           </div>
         </div>
@@ -289,7 +289,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+              className="h-full bg-teal-500 rounded-full transition-all duration-500"
               style={{ width: `${((currentIndex + (answered ? 1 : 0)) / questions.length) * 100}%` }}
             />
           </div>
@@ -299,7 +299,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
           {/* Badges */}
           <div className="flex items-center gap-2 mb-4 flex-wrap">
-            <span className="text-xs bg-indigo-50 text-indigo-600 font-medium px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-teal-50 text-teal-600 font-medium px-2.5 py-1 rounded-full">
               {current.question_number || `Q${currentIndex + 1}`}
             </span>
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -311,7 +311,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
             }`}>
               {current.difficulty}
             </span>
-            <span className="text-xs bg-purple-50 text-purple-600 font-medium px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-cyan-50 text-cyan-600 font-medium px-2 py-0.5 rounded-full">
               {current.marks} marks
             </span>
           </div>
@@ -331,7 +331,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
                   type="button"
                   className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-medium py-2 transition-colors ${
                     inputTab === 'draw'
-                      ? 'bg-indigo-50 text-indigo-700 border-r border-gray-200'
+                      ? 'bg-teal-50 text-teal-700 border-r border-gray-200'
                       : 'text-gray-500 hover:bg-gray-50 border-r border-gray-200'
                   }`}
                   onClick={() => { setInputTab('draw'); setSubmitError(null); }}
@@ -342,7 +342,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
                   type="button"
                   className={`flex-1 flex items-center justify-center gap-1.5 text-sm font-medium py-2 transition-colors ${
                     inputTab === 'upload'
-                      ? 'bg-indigo-50 text-indigo-700'
+                      ? 'bg-teal-50 text-teal-700'
                       : 'text-gray-500 hover:bg-gray-50'
                   }`}
                   onClick={() => { setInputTab('upload'); setSubmitError(null); }}
@@ -361,7 +361,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
               {/* Submit button */}
               <button
-                className="w-full mt-4 bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full mt-4 bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 onClick={handleSubmit}
               >
                 Submit Answer
@@ -428,23 +428,23 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
 
               {/* Model Answer — always shown after grading */}
               {answered && (
-                <div className="border border-indigo-100 rounded-xl overflow-hidden">
+                <div className="border border-teal-100 rounded-xl overflow-hidden">
                   <button
-                    className="w-full flex items-center justify-between px-4 py-3 bg-indigo-50 hover:bg-indigo-100 transition-colors text-left"
+                    className="w-full flex items-center justify-between px-4 py-3 bg-teal-50 hover:bg-teal-100 transition-colors text-left"
                     onClick={() => setModelAnswerExpanded(v => !v)}
                   >
-                    <span className="text-xs font-semibold text-indigo-700">Model Answer & Worked Solution</span>
+                    <span className="text-xs font-semibold text-teal-700">Model Answer & Worked Solution</span>
                     {modelAnswerExpanded
-                      ? <ChevronUp size={15} className="text-indigo-400" />
-                      : <ChevronDown size={15} className="text-indigo-400" />
+                      ? <ChevronUp size={15} className="text-teal-400" />
+                      : <ChevronDown size={15} className="text-teal-400" />
                     }
                   </button>
                   {modelAnswerExpanded && (
                     <div className="px-4 py-3 space-y-3 bg-white">
                       {gradingResult.model_answer ? (
-                        <div className="bg-indigo-50 rounded-lg px-3 py-2">
-                          <span className="text-xs font-semibold text-indigo-600 block mb-1">Final Answer</span>
-                          <SafeMath className="text-sm text-indigo-900 font-medium">
+                        <div className="bg-teal-50 rounded-lg px-3 py-2">
+                          <span className="text-xs font-semibold text-teal-600 block mb-1">Final Answer</span>
+                          <SafeMath className="text-sm text-teal-900 font-medium">
                             {gradingResult.model_answer}
                           </SafeMath>
                         </div>
@@ -455,7 +455,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
                         <ol className="space-y-3">
                           {gradingResult.worked_solution.map((s, i) => (
                             <li key={i} className="flex gap-3">
-                              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold flex items-center justify-center mt-0.5">
+                              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-100 text-teal-600 text-xs font-bold flex items-center justify-center mt-0.5">
                                 {s.step ?? i + 1}
                               </span>
                               <div className="flex-1 min-w-0">
@@ -483,7 +483,7 @@ export default function QuizInterface({ questions, studentId, onAnswer, onComple
         {/* Next button */}
         {answered && (
           <button
-            className="w-full bg-indigo-600 text-white font-semibold py-3.5 rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-teal-600 text-white font-semibold py-3.5 rounded-xl hover:bg-teal-700 transition-colors flex items-center justify-center gap-2"
             onClick={handleNext}
           >
             {currentIndex + 1 >= questions.length ? 'See Results' : 'Next Question'}

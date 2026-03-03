@@ -46,7 +46,7 @@ function ReasoningTrail({ recReasoning, fullTrail, evaluatorVerdict }) {
     <div className="mt-3 border-t border-gray-100 pt-3">
       <button
         onClick={() => setOpen(o => !o)}
-        className="text-xs text-blue-600 hover:underline"
+        className="text-xs text-teal-600 hover:underline"
       >
         {open ? 'Hide' : 'Show'} full AI reasoning trail
       </button>
@@ -137,7 +137,7 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
     const doneStyle = done === 'accepted'
       ? 'border-green-300 bg-green-50'
       : done === 'modified'
-      ? 'border-blue-300 bg-blue-50'
+      ? 'border-teal-300 bg-teal-50'
       : 'border-gray-200 bg-gray-50 opacity-60';
     const doneIcon = done === 'accepted' ? '✅' : done === 'modified' ? '✏️' : '❌';
     return (
@@ -184,14 +184,14 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
           <div className="mt-3 border-t border-gray-100 pt-3 space-y-2">
             <p className="text-xs font-semibold text-gray-700">Edit recommendation:</p>
             <input
-              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-400"
               value={modTopic}
               onChange={e => setModTopic(e.target.value)}
               placeholder="Topic"
             />
             <div className="flex gap-2">
               <select
-                className="text-sm border border-gray-200 rounded px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
+                className="text-sm border border-gray-200 rounded px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-teal-400"
                 value={modDifficulty}
                 onChange={e => setModDifficulty(e.target.value)}
               >
@@ -199,14 +199,14 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
               </select>
             </div>
             <textarea
-              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-400"
               rows={2}
               value={modAction}
               onChange={e => setModAction(e.target.value)}
               placeholder="Updated action..."
             />
             <textarea
-              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-teal-400"
               rows={2}
               value={modNote}
               onChange={e => setModNote(e.target.value)}
@@ -215,7 +215,7 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
             <div className="flex gap-2">
               <button
                 onClick={handleModifySave}
-                className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700"
+                className="text-xs bg-teal-600 text-white px-3 py-1.5 rounded hover:bg-teal-700"
               >
                 Save Changes
               </button>
@@ -289,7 +289,7 @@ function RecommendationCard({ rec, index, confidence, evaluatorVerdict, fullReas
             </button>
             <button
               onClick={() => setMode('modify')}
-              className="flex-1 text-sm font-semibold bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 transition-colors"
+              className="flex-1 text-sm font-semibold bg-teal-600 text-white rounded-lg py-2 hover:bg-teal-700 transition-colors"
             >
               ✏ Modify
             </button>

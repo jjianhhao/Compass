@@ -65,7 +65,7 @@ export default function StudentRow({ student, recStatus = 'pending' }) {
   return (
     <tr
       onClick={() => navigate(`/teacher/${student.student_id}`)}
-      className={`cursor-pointer hover:bg-blue-50 transition-colors ${isAlert ? 'bg-red-50' : ''}`}
+      className={`cursor-pointer hover:bg-teal-50 transition-colors ${isAlert ? 'bg-red-50' : ''}`}
     >
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">

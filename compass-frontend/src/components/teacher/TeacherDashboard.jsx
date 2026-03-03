@@ -56,7 +56,7 @@ export default function TeacherDashboard() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600" />
     </div>
   );
 
@@ -69,28 +69,28 @@ export default function TeacherDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50/40">
       {/* Top bar */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-20">
+      <header className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-4 sticky top-0 z-20 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <span className="text-indigo-600 font-bold text-lg tracking-tight">🧭 COMPASS</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-white font-bold text-lg tracking-tight">🧭 COMPASS</span>
+            <span className="text-white/30">|</span>
             <div>
-              <span className="font-semibold text-gray-800">Teacher Dashboard</span>
-              <span className="ml-2 text-sm text-gray-400">IB Mathematics AA HL</span>
+              <span className="font-semibold text-white">Teacher Dashboard</span>
+              <span className="ml-2 text-sm text-teal-100">IB Mathematics AA HL</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => { setLoading(true); api.listStudents().then(list => { setStudents(list); const s = {}; list.forEach(st => { s[st.student_id] = getRecStatus(st.student_id); }); setRecStatuses(s); setLoading(false); }).catch(() => setLoading(false)); }}
-              className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 border border-white/30 text-teal-100 text-sm font-medium px-4 py-2 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
             >
               <RefreshCw size={14} /> Refresh
             </button>
             <button
               onClick={() => navigate('/')}
-              className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-colors"
+              className="flex items-center gap-1.5 border border-white/30 text-teal-100 text-sm font-medium px-4 py-2 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
             >
               <LogOut size={14} /> Log Out
             </button>
@@ -132,7 +132,7 @@ export default function TeacherDashboard() {
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              className="text-xs border border-gray-200 rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="text-xs border border-gray-200 rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-teal-400"
             >
               {SORT_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>

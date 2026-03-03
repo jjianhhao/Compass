@@ -111,14 +111,14 @@ export default function StudentDetail({ studentId }) {
   if (loadingKm) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600" />
       </div>
     );
   }
 
   if (kmError) return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <button onClick={() => navigate('/teacher')} className="text-sm text-blue-600 hover:underline mb-4">← Back</button>
+      <button onClick={() => navigate('/teacher')} className="text-sm text-teal-600 hover:underline mb-4">← Back</button>
       <div className="bg-red-50 border border-red-300 rounded-lg p-4 text-red-700 text-sm">
         Failed to load student data: {kmError}
       </div>
@@ -152,21 +152,21 @@ export default function StudentDetail({ studentId }) {
   return (
     <div>
       {/* Top bar */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-20">
+      <header className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-4 sticky top-0 z-20 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/teacher')}
-              className="flex items-center gap-1.5 border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 border border-white/30 text-teal-100 text-sm font-medium px-4 py-2 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
             >
               <ArrowLeft size={14} /> Class Overview
             </button>
-            <span className="text-gray-300">|</span>
-            <span className="font-semibold text-gray-800">{student_name}</span>
+            <span className="text-white/30">|</span>
+            <span className="font-semibold text-white">{student_name}</span>
           </div>
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-colors"
+            className="flex items-center gap-1.5 border border-white/30 text-teal-100 text-sm font-medium px-4 py-2 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
           >
             <LogOut size={14} /> Log Out
           </button>
@@ -262,7 +262,7 @@ export default function StudentDetail({ studentId }) {
               <h2 className="font-semibold text-gray-800 text-sm">AI Diagnosis</h2>
               <div className="flex items-center gap-2">
                 {loadingAgent && (
-                  <div className="animate-spin h-4 w-4 border-b-2 border-blue-500 rounded-full" />
+                  <div className="animate-spin h-4 w-4 border-b-2 border-teal-500 rounded-full" />
                 )}
                 {agentOutput && !loadingAgent && (
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${

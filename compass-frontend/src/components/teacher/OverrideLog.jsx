@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const ACTION_META = {
   accepted: { icon: '✅', label: 'Accepted', color: 'text-green-700 bg-green-50 border-green-200' },
-  modified: { icon: '✏️', label: 'Modified', color: 'text-blue-700 bg-blue-50 border-blue-200' },
+  modified: { icon: '✏️', label: 'Modified', color: 'text-teal-700 bg-teal-50 border-teal-200' },
   rejected: { icon: '❌', label: 'Rejected', color: 'text-red-700 bg-red-50 border-red-200' },
   student_challenged: { icon: '🙋', label: 'Student Challenged', color: 'text-purple-700 bg-purple-50 border-purple-200' },
 };

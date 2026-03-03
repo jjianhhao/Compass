@@ -43,19 +43,19 @@ function TodayStudyCard({ studentId }) {
   };
 
   return (
-    <div className={`rounded-2xl border shadow-sm mb-4 transition-all ${isDone ? 'border-green-200 bg-green-50' : 'border-indigo-200 bg-indigo-50'}`}>
+    <div className={`rounded-2xl border shadow-sm mb-4 transition-all ${isDone ? 'border-green-200 bg-green-50' : 'border-teal-200 bg-teal-50'}`}>
       {/* Header row — always visible */}
       <button
         className="w-full flex items-center justify-between px-5 py-3 text-left"
         onClick={() => setOpen(o => !o)}
       >
         <div className="flex items-center gap-3">
-          <CalendarDays size={15} className={isDone ? 'text-green-600' : 'text-indigo-600'} />
+          <CalendarDays size={15} className={isDone ? 'text-green-600' : 'text-teal-600'} />
           <div>
-            <span className={`text-xs font-semibold uppercase tracking-wide ${isDone ? 'text-green-700' : 'text-indigo-700'}`}>
+            <span className={`text-xs font-semibold uppercase tracking-wide ${isDone ? 'text-green-700' : 'text-teal-700'}`}>
               {isToday ? "Today's Study Session" : `Next Session — ${session.date}`}
             </span>
-            <p className={`text-sm font-medium mt-0.5 ${isDone ? 'text-green-800 line-through opacity-60' : 'text-indigo-900'}`}>
+            <p className={`text-sm font-medium mt-0.5 ${isDone ? 'text-green-800 line-through opacity-60' : 'text-teal-900'}`}>
               {session.focus}
             </p>
           </div>
@@ -66,7 +66,7 @@ function TodayStudyCard({ studentId }) {
             className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors ${
               isDone
                 ? 'bg-green-100 border-green-300 text-green-700 hover:bg-green-200'
-                : 'bg-white border-indigo-200 text-indigo-600 hover:bg-indigo-100'
+                : 'bg-white border-teal-200 text-teal-600 hover:bg-teal-100'
             }`}
           >
             {isDone
@@ -79,8 +79,8 @@ function TodayStudyCard({ studentId }) {
 
       {/* Expanded details */}
       {open && (
-        <div className="px-5 pb-4 flex items-center gap-4 flex-wrap border-t border-indigo-100">
-          <span className="flex items-center gap-1 text-xs text-indigo-600 mt-2">
+        <div className="px-5 pb-4 flex items-center gap-4 flex-wrap border-t border-teal-100">
+          <span className="flex items-center gap-1 text-xs text-teal-600 mt-2">
             <Clock size={11} /> {session.duration_hours}h
           </span>
           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border mt-2 ${PRIORITY_STYLES[session.priority] || PRIORITY_STYLES.medium}`}>
@@ -88,13 +88,13 @@ function TodayStudyCard({ studentId }) {
           </span>
           <div className="flex flex-wrap gap-1 mt-2">
             {session.topics.map(t => (
-              <span key={t} className="flex items-center gap-1 text-xs bg-white border border-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full">
+              <span key={t} className="flex items-center gap-1 text-xs bg-white border border-teal-200 text-teal-700 px-2 py-0.5 rounded-full">
                 <BookIcon size={9} /> {formatTopicName(t)}
               </span>
             ))}
           </div>
           {plan._deadline_name && (
-            <span className="text-xs text-indigo-400 ml-auto mt-2">
+            <span className="text-xs text-teal-400 ml-auto mt-2">
               Day {session.day} of {plan.total_days} — {plan._deadline_name}
             </span>
           )}
@@ -154,27 +154,27 @@ export default function StudentDashboard({
   ];
 
   return (
-    <div className="h-full flex flex-col overflow-hidden bg-gray-50">
+    <div className="h-full flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 to-teal-50/40">
       {/* Top bar */}
-      <header className="bg-white border-b border-gray-100 px-6 py-4 flex-shrink-0 z-20">
+      <header className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-4 flex-shrink-0 z-20 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <span className="text-indigo-600 font-bold text-lg tracking-tight">
+            <span className="text-white font-bold text-lg tracking-tight">
               🧭 COMPASS
             </span>
-            <span className="text-gray-300">|</span>
+            <span className="text-white/30">|</span>
             <div>
-              <span className="font-semibold text-gray-800">{studentName}</span>
+              <span className="font-semibold text-white">{studentName}</span>
               {overallMastery !== null && (
-                <span className="ml-2 text-sm text-gray-400">
+                <span className="ml-2 text-sm text-teal-100">
                   Overall mastery:{' '}
                   <span
                     className={`font-semibold ${
                       overallMastery >= 70
-                        ? 'text-green-600'
+                        ? 'text-green-300'
                         : overallMastery >= 40
-                        ? 'text-yellow-600'
-                        : 'text-red-500'
+                        ? 'text-yellow-300'
+                        : 'text-red-300'
                     }`}
                   >
                     {overallMastery}%
@@ -186,14 +186,14 @@ export default function StudentDashboard({
 
           <div className="flex items-center gap-3">
             <button
-              className="flex items-center gap-1.5 bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors"
+              className="flex items-center gap-1.5 bg-white text-teal-700 text-sm font-medium px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors shadow-sm"
               onClick={onStartQuiz}
             >
               <BookOpen size={14} />
               Take a Quiz
             </button>
             <button
-              className="flex items-center gap-1.5 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-colors"
+              className="flex items-center gap-1.5 border border-white/30 text-teal-100 text-sm font-medium px-4 py-2 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
               onClick={() => navigate('/')}
             >
               <LogOut size={14} />
@@ -207,13 +207,13 @@ export default function StudentDashboard({
       <div className="flex-1 overflow-hidden flex flex-col min-h-0">
         <div className="max-w-7xl w-full mx-auto px-6 pt-6 flex-shrink-0">
           {/* Tab bar */}
-          <div className="flex gap-1 mb-4 bg-white border border-gray-100 rounded-xl p-1 w-fit shadow-sm">
+          <div className="flex gap-1 mb-4 bg-white border border-teal-100 rounded-xl p-1 w-fit shadow-sm">
             {tabs.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   activeTab === id
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-teal-600 text-white shadow-sm'
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
                 onClick={() => setActiveTab(id)}

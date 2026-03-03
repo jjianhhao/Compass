@@ -99,8 +99,8 @@ export default function StudentChat({ knowledgeMap, studentName }) {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col h-full">
       <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center">
-            <Bot size={14} className="text-indigo-600" />
+          <div className="w-7 h-7 bg-teal-100 rounded-full flex items-center justify-center">
+            <Bot size={14} className="text-teal-600" />
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-800">AI Learning Companion</p>
@@ -128,7 +128,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
             <div className={`${msg.role === 'user' ? 'max-w-xs lg:max-w-sm order-2' : 'max-w-full order-1'}`}>
               {msg.role === 'ai' && (
                 <div className="flex items-center gap-1.5 mb-1 ml-1">
-                  <Bot size={11} className="text-indigo-400" />
+                  <Bot size={11} className="text-teal-400" />
                   <span className="text-xs text-gray-400">AI</span>
                   {msg.confidence && <ConfidenceBadge level={msg.confidence} />}
                 </div>
@@ -136,7 +136,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
               <div
                 className={`px-4 py-3 rounded-2xl text-sm leading-relaxed overflow-x-auto ${
                   msg.role === 'user'
-                    ? 'bg-indigo-600 text-white rounded-tr-sm'
+                    ? 'bg-teal-600 text-white rounded-tr-sm'
                     : 'bg-gray-100 text-gray-800 rounded-tl-sm'
                 }`}
               >
@@ -193,7 +193,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
           {SUGGESTIONS.map((s) => (
             <button
               key={s}
-              className="text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors"
+              className="text-xs bg-teal-50 text-teal-600 border border-teal-100 px-3 py-1.5 rounded-full hover:bg-teal-100 transition-colors"
               onClick={() => sendMessage(s)}
             >
               {s}
@@ -213,7 +213,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
         >
           <input
             type="text"
-            className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 text-gray-700 placeholder-gray-300"
+            className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300 text-gray-700 placeholder-gray-300"
             placeholder="Ask anything about your learning…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -221,7 +221,7 @@ export default function StudentChat({ knowledgeMap, studentName }) {
           <button
             type="submit"
             disabled={!input.trim() || typing}
-            className="bg-indigo-600 text-white p-2.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+            className="bg-teal-600 text-white p-2.5 rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
           >
             <Send size={15} />
           </button>

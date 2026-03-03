@@ -61,8 +61,8 @@ export default function MasteryOverview({ knowledgeMap }) {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
       {/* Overall */}
       <div className="flex items-center gap-4 mb-5 pb-5 border-b border-gray-100">
-        <div className="w-20 h-20 rounded-full flex items-center justify-center bg-indigo-50 border-4 border-indigo-100 flex-shrink-0">
-          <span className="text-2xl font-bold text-indigo-600">{overall}%</span>
+        <div className="w-20 h-20 rounded-full flex items-center justify-center bg-teal-50 border-4 border-teal-100 flex-shrink-0">
+          <span className="text-2xl font-bold text-teal-600">{overall}%</span>
         </div>
         <div>
           <p className="text-sm font-semibold text-gray-700">Overall Mastery</p>

@@ -36,7 +36,7 @@ function RecommendationCard({ rec, onOverride }) {
       <p className="text-sm text-gray-600 mb-3 leading-relaxed">{rec.action}</p>
 
       <button
-        className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors mb-2"
+        className="flex items-center gap-1 text-xs text-teal-500 hover:text-teal-700 transition-colors mb-2"
         onClick={() => setExpanded((e) => !e)}
       >
         Why this recommendation?
@@ -44,7 +44,7 @@ function RecommendationCard({ rec, onOverride }) {
       </button>
 
       {expanded && (
-        <div className="bg-indigo-50 rounded-lg px-3 py-2 text-xs text-indigo-700 leading-relaxed mb-3">
+        <div className="bg-teal-50 rounded-lg px-3 py-2 text-xs text-teal-700 leading-relaxed mb-3">
           {rec.reasoning}
         </div>
       )}
@@ -66,14 +66,14 @@ export default function RecommendationPanel({ agentOutput, agentLoading, onOverr
             <div className="h-2 w-44 bg-gray-100 rounded" />
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-400" />
-            <span className="text-xs text-indigo-400">AI analysing…</span>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-400" />
+            <span className="text-xs text-teal-400">AI analysing…</span>
           </div>
         </div>
-        <div className="bg-indigo-50 rounded-xl p-4 mb-4">
-          <div className="h-3 w-24 bg-indigo-200 rounded mb-2" />
-          <div className="h-3 w-full bg-indigo-100 rounded mb-1" />
-          <div className="h-3 w-3/4 bg-indigo-100 rounded" />
+        <div className="bg-teal-50 rounded-xl p-4 mb-4">
+          <div className="h-3 w-24 bg-teal-200 rounded mb-2" />
+          <div className="h-3 w-full bg-teal-100 rounded mb-1" />
+          <div className="h-3 w-3/4 bg-teal-100 rounded" />
         </div>
         <div className="space-y-3">
           {[0, 1, 2].map(i => (
@@ -107,12 +107,12 @@ export default function RecommendationPanel({ agentOutput, agentLoading, onOverr
       </div>
 
       {/* Summary card */}
-      <div className="bg-indigo-50 rounded-xl p-4">
+      <div className="bg-teal-50 rounded-xl p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wide">Study Plan</span>
+          <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Study Plan</span>
           <ConfidenceBadge level={overall_confidence} />
         </div>
-        <p className="text-sm text-indigo-800 leading-relaxed">{study_plan_summary}</p>
+        <p className="text-sm text-teal-800 leading-relaxed">{study_plan_summary}</p>
         <div className="flex items-center gap-1.5 mt-2">
           {approved ? (
             <span className="flex items-center gap-1 text-xs text-green-600">
