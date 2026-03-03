@@ -208,7 +208,7 @@
 <div class="subtitle">4 people × 48 hours • Each person owns a vertical slice • Microsoft Track • DLW 2026</div>
 
 <div class="principle">
-  <strong>Principle:</strong> Each person owns their feature end-to-end — backend logic, agent prompts (if applicable), and the frontend component that displays it. Build independently with mock data first, integrate at Hour 30. Nobody is blocked by anyone else. Use Claude Code and Cursor to move fast.
+  <strong>Principle:</strong> Each person owns their feature end-to-end — backend logic, agent prompts (if applicable), and the frontend component that displays it. Build independently with mock data first, integrate at Hour 30. Nobody is blocked by anyone else. Use Cursor to move fast.
 </div>
 
 <!-- SHARED CONTRACTS -->
@@ -311,7 +311,7 @@
     <ul class="task-list">
       <li><span class="phase-label ph-1">HR 0-2</span> Scaffold React app (use Cursor). Set up routing: /quiz, /student/dashboard, /teacher/dashboard. Choose a clean UI library (shadcn/ui or Tailwind).</li>
       <li><span class="phase-label ph-1">HR 2-6</span> Build the quiz interface: display a math question → student selects/types answer → submit → show correct/incorrect → auto-log the interaction event to the backend. Include a timer per question (captures time_taken).</li>
-      <li><span class="phase-label ph-2">HR 6-12</span> Create 30-50 sample O-Level A-Math questions across key topics (use your tutoring knowledge + Claude/Cursor to generate). Tag each with: topic, subtopic, difficulty, correct_answer. Store as JSON.</li>
+      <li><span class="phase-label ph-2">HR 6-12</span> Create 30-50 sample O-Level A-Math questions across key topics (use your tutoring knowledge + Cursor to generate). Tag each with: topic, subtopic, difficulty, correct_answer. Store as JSON.</li>
       <li><span class="phase-label ph-2">HR 12-18</span> Build the Student Dashboard shell: layout with panels for Knowledge Map (from Person B), Recommendations (from Person A), Learning Velocity chart, and "What to Study Next" summary. Use mock data initially.</li>
       <li><span class="phase-label ph-3">HR 18-24</span> Build the chat interface: student can ask "Why am I struggling with trigonometry?" → sends their knowledge map context to an LLM → returns a grounded, personalized explanation with confidence level shown.</li>
       <li><span class="phase-label ph-3">HR 24-30</span> Build student override flow: student sees a recommendation → clicks "I already know this" or "I revised this offline" → system logs the override → recalibrates (or flags for teacher review). Visual feedback on override.</li>

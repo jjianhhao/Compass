@@ -71,7 +71,7 @@ src/
 
 ## STEP 1: Create Sample Questions (Hour 1-6)
 
-This is your first deliverable. Create 30-50 O-Level A-Math questions. You can use Cursor/Claude to generate them — just make sure they're tagged correctly.
+This is your first deliverable. Create 30-50 O-Level A-Math questions. You can use Cursor to generate them — just make sure they're tagged correctly.
 
 ### src/data/questions.json
 ```json
